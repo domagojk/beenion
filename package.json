@@ -1,0 +1,29 @@
+{
+  "name": "beenion",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": ["**/__tests__/**/*.(js|ts)?(x)", "**/?(*.)(spec|test).(js|ts)?(x)"]
+  },
+  "author": "Domagoj Kriskovic",
+  "dependencies": {
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^20.0.2",
+    "@types/node": "^7.0.29",
+    "jest": "^20.0.4",
+    "ts-jest": "^20.0.6",
+    "typescript": "^2.4.1"
+  }
+}

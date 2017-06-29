@@ -1,0 +1,4 @@
+__tsc_output__
+.vscode
+node_modules
+package-lock.json
