@@ -10,6 +10,7 @@ const rateProject = (repository: IProjectRepository) =>
     if (typeof rating !== 'number') {
       throw new Error('invalid rating')
     }
+
     // handling domain objects and saving changes
     const project = repository.getById(projectId)
     project.rateProject(rating)
