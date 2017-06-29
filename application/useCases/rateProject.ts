@@ -14,8 +14,6 @@ const rateProject = (repository: IProjectRepository) =>
     // handling domain objects and saving changes
     const project = repository.getById(projectId)
     project.rateProject(rating)
-    project.promoteProject()
-    project.somethingElse()
     repository.save(project)
   }
 
