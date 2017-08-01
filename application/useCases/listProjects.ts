@@ -1,1 +1,0 @@
-// querying the read model

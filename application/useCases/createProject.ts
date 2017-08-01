@@ -1,17 +1,24 @@
-import Project from 'domain/project/Project'
-import { IProjectRepository } from 'domain/project/IProjectRepository'
+import createProject from 'domain/project/create'
+import { IProjectRepository } from 'domain/project/types/IProjectRepository'
+import { IPublicationRepository } from 'domain/publication/types/IPublicationRepository'
 
-const createProject = (repository: IProjectRepository) =>
-  function(
-    userId: number,
+export default (
+  publicationRepository: IPublicationRepository,
+  projectRepository: IProjectRepository
+) =>
+  async function (
     projectId: string,
+    publicationId: string,
+    userId: number,
     name: string,
     description: string,
     link: string
   ) {
-    // run type checks
     if (typeof projectId !== 'string') {
       throw new Error('invalid projectId')
+    }
+    if (typeof publicationId !== 'string') {
+      throw new Error('invalid publicationId')
     }
     if (typeof userId !== 'number') {
       throw new Error('invalid userId')
@@ -26,9 +33,17 @@ const createProject = (repository: IProjectRepository) =>
       throw new Error('invalid project link')
     }
 
-    // handling domain objects and saving changes
-    const project = new Project(projectId, userId, name, description, link)
-    repository.save(project)
-  }
+    const publicationHistory = await publicationRepository.getEventsById(publicationId)
 
-export default createProject
+    const events = createProject(
+      publicationHistory,
+      projectId,
+      publicationId,
+      userId,
+      name,
+      description,
+      link
+    )
+
+    return await projectRepository.save(projectId, events)
+  }

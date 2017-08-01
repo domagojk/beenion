@@ -10,10 +10,16 @@
       "ts",
       "js"
     ],
+    "modulePaths": [
+      "."
+    ],
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testMatch": ["**/__tests__/**/*.(js|ts)?(x)", "**/?(*.)(spec|test).(js|ts)?(x)"]
+    "testMatch": [
+      "**/__tests__/**/*.(js|ts)?(x)",
+      "**/?(*.)(spec|test).(js|ts)?(x)"
+    ]
   },
   "author": "Domagoj Kriskovic",
   "dependencies": {
@@ -24,6 +30,9 @@
     "@types/node": "^7.0.29",
     "jest": "^20.0.4",
     "ts-jest": "^20.0.6",
+    "tsconfig-paths": "^2.2.0",
+    "tslint": "^5.5.0",
+    "tslint-config-standard": "^6.0.1",
     "typescript": "^2.4.1"
   }
 }
