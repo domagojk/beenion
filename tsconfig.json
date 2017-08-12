@@ -2,9 +2,11 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "__tsc_output__",
-        "target": "es2015",
+        "target": "es2016",
         "module": "commonjs",
         "types" : ["node", "jest"],
-        "sourceMap": false
+        "sourceMap": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
     }
 }

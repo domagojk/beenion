@@ -23,6 +23,7 @@
   },
   "author": "Domagoj Kriskovic",
   "dependencies": {
+    "rxjs": "^5.4.2",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
