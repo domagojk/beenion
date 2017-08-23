@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "__tsc_output__",
-        "target": "es2016",
+        "target": "es2017",
         "module": "commonjs",
         "types" : ["node", "jest"],
         "sourceMap": false,
