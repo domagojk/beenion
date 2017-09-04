@@ -1,17 +1,34 @@
-import { UUID, PublicationStageRule, Timestamp } from 'domain/UL/types'
+import {
+  UUID,
+  Title,
+  Description,
+  ProjectStageRule,
+  PublicationPrivileges,
+  PublicationRankConditions,
+  Timestamp
+} from 'domain/types/model'
 
 export type PublicationCreated = {
   type: 'PublicationCreated'
   publicationId: UUID
   ownerId: UUID
-  title: string
-  description: string
-  conditions: PublicationStageRule[]
+  title: Title
+  description: Description
+  privileges: PublicationPrivileges
+  rankConditions: PublicationRankConditions
+  projectStageRules: ProjectStageRule[]
+  certified: boolean
   timestamp: Timestamp
 }
 
 export type PublicationDeleted = {
   type: 'PublicationDeleted'
+  publicationId: UUID
+  timestamp: Timestamp
+}
+
+export type PublicationPublished = {
+  type: 'PublicationPublished'
   publicationId: UUID
   timestamp: Timestamp
 }
@@ -30,9 +47,9 @@ export type PublicationDescriptionUpdated = {
   timestamp: Timestamp
 }
 
-export type PublicationConditionsUpdated = {
-  type: 'PublicationConditionsUpdated'
+export type ProjectStageRulesUpdated = {
+  type: 'ProjectStageRulesUpdated'
   publicationId: UUID
-  conditions: PublicationStageRule[]
+  projectStageRules: ProjectStageRule[]
   timestamp: Timestamp
 }
