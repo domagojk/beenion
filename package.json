@@ -19,17 +19,24 @@
     "testMatch": [
       "**/__tests__/**/*.(js|ts)?(x)",
       "**/?(*.)(spec|test).(js|ts)?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "/dist/"
     ]
   },
   "author": "Domagoj Kriskovic",
   "dependencies": {
+    "clamp": "^1.0.1",
     "rxjs": "^5.4.2",
+    "url-regex": "^4.1.1",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
     "@types/jest": "^20.0.2",
     "@types/node": "^7.0.29",
     "jest": "^20.0.4",
+    "jest-environment-node-debug": "^2.0.0",
+    "ntsc": "^0.2.0",
     "ts-jest": "^20.0.6",
     "tsconfig-paths": "^2.2.0",
     "tslint": "^5.5.0",
