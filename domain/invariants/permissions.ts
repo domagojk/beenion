@@ -2,11 +2,12 @@ import { Project, User, Publication, UUID, Permission } from 'domain/types/model
 import calcPublicationRank from 'domain/projections/calcPublicationRank'
 import calcBeenionRank from 'domain/projections/calcBeenionRank'
 import beenionPrivileges from './beenionPrivileges'
+import beenionRankConditions from './beenionRankConditions'
 
 const hasAccess = (p: Permission, user: User, pub?: Publication) =>
   (p.userList && p.userList.includes(user.userId)) ||
   (p.publicationRank && calcPublicationRank(user, pub) >= p.publicationRank) ||
-  (p.beenionRank && calcBeenionRank(user) >= p.beenionRank)
+  (p.beenionRank && calcBeenionRank(user, beenionRankConditions) >= p.beenionRank)
 
 export const canCreatePublication =
   (user: User) =>
