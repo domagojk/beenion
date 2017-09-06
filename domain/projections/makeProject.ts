@@ -57,6 +57,7 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
     case 'ProjectResubmitted':
       return {
         ...project,
+        stageRules: e.stageRules,
         currentStage: 0,
         reviewProcessCompleted: false,
         reviewers: [],

@@ -57,6 +57,7 @@ export type ProjectPromoted = {
 export type ProjectResubmitted = {
   type: 'ProjectResubmitted'
   projectId: UUID
+  stageRules: ProjectStageRules[]
   timestamp: Timestamp
 }
 
