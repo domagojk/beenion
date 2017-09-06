@@ -11,9 +11,9 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
       return {
         projectId: e.projectId,
         ownerId: e.ownerId,
-        stages: e.stages,
+        stageRules: e.stageRules,
         currentStage: 0,
-        stageRules: null,
+        currentStageRules: null,
         reviewers: [],
         evaluations: [],
         acceptedReviews: 0,
@@ -29,6 +29,7 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
     case 'ProjectReviewerRemoved':
       return {
         ...project,
+        evaluations: project.evaluations.filter(ev => ev.reviewerId !== e.reviewerId),
         reviewers: project.reviewers.filter(id => id !== e.reviewerId)
       }
     case 'ProjectReviewed':
@@ -48,7 +49,7 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
     case 'ProjectPromoted':
       return {
         ...project,
-        inFinalStage: project.currentStage === project.stages.length - 1,
+        inFinalStage: project.currentStage === project.stageRules.length - 1,
         currentStage: project.currentStage + 1
       }
     case 'ProjectResubmitted':
