@@ -42,6 +42,7 @@ function resubmitProject (command: {
     {
       type: 'ProjectResubmitted',
       projectId: project.projectId,
+      stageRules: publication.projectStageRules,
       timestamp: command.timestamp
     }
   ]

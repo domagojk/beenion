@@ -60,7 +60,7 @@ function createProject (command: {
       title: command.title,
       description: command.description,
       link: command.link,
-      stages: publication.projectStageRules,
+      stageRules: publication.projectStageRules,
       timestamp: command.timestamp
     }
   ]
