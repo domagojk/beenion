@@ -72,7 +72,6 @@ function createPublication (command: {
       privileges: command.privileges,
       rankConditions: command.rankConditions,
       projectStageRules: command.projectStageRules,
-      certified: permissions.canCertifyPublication(user),
       timestamp: command.timestamp
     }
   ]
