@@ -2,7 +2,7 @@ import {
   UUID,
   Title,
   Description,
-  ProjectStageRule,
+  ProjectStageRules,
   PublicationPrivileges,
   PublicationRankConditions,
   Timestamp
@@ -16,7 +16,7 @@ export type PublicationCreated = {
   description: Description
   privileges: PublicationPrivileges
   rankConditions: PublicationRankConditions
-  projectStageRules: ProjectStageRule[]
+  projectStageRules: ProjectStageRules[]
   timestamp: Timestamp
 }
 
@@ -50,6 +50,6 @@ export type PublicationDescriptionUpdated = {
 export type ProjectStageRulesUpdated = {
   type: 'ProjectStageRulesUpdated'
   publicationId: UUID
-  projectStageRules: ProjectStageRule[]
+  projectStageRules: ProjectStageRules[]
   timestamp: Timestamp
 }

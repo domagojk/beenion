@@ -3,31 +3,31 @@ import { UUID, Timestamp } from 'domain/types/model'
 export type UserCreated = {
   type: 'UserCreated'
   userId: UUID
-  username: string,
+  username: string
   timestamp: Timestamp
 }
 
 export type ReviewInvitationAccepted = {
   type: 'ReviewInvitationAccepted'
   userId: UUID
-  projectId: UUID,
-  publicationId: UUID,
+  projectId: UUID
+  publicationId: UUID
   timestamp: Timestamp
 }
 
 export type ReviewInvitationDeclined = {
   type: 'ReviewInvitationDeclined'
   userId: UUID
-  projectId: UUID,
-  publicationId: UUID,
+  projectId: UUID
+  publicationId: UUID
   timestamp: Timestamp
 }
 
 export type ReviewInvitationExpired = {
   type: 'ReviewInvitationExpired'
   userId: UUID
-  projectId: UUID,
-  publicationId: UUID,
+  projectId: UUID
+  publicationId: UUID
   timestamp: Timestamp
 }
 
@@ -36,7 +36,7 @@ export type ReviewUpvotedWithGold = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   reviewId: UUID
   timestamp: Timestamp
 }
@@ -46,7 +46,7 @@ export type ReviewUpvotedWithSilver = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   reviewId: UUID
   timestamp: Timestamp
 }
@@ -56,7 +56,7 @@ export type ReviewUpvotedWithBronze = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   reviewId: UUID
   timestamp: Timestamp
 }
@@ -66,7 +66,7 @@ export type ReviewDownvotedWithGold = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   reviewId: UUID
   timestamp: Timestamp
 }
@@ -76,7 +76,7 @@ export type ReviewDownvotedWithSilver = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   reviewId: UUID
   timestamp: Timestamp
 }
@@ -86,7 +86,7 @@ export type ReviewDownvotedWithBronze = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   reviewId: UUID
   timestamp: Timestamp
 }
@@ -96,7 +96,7 @@ export type ProjectUpvotedWithGold = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   timestamp: Timestamp
 }
 
@@ -105,7 +105,7 @@ export type ProjectUpvotedWithSilver = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   timestamp: Timestamp
 }
 
@@ -114,7 +114,7 @@ export type ProjectUpvotedWithBronze = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   timestamp: Timestamp
 }
 
@@ -123,7 +123,7 @@ export type ProjectDownvotedWithGold = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   timestamp: Timestamp
 }
 
@@ -132,7 +132,7 @@ export type ProjectDownvotedWithSilver = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   timestamp: Timestamp
 }
 
@@ -141,7 +141,7 @@ export type ProjectDownvotedWithBronze = {
   voterId: UUID
   userId: UUID
   projectId: UUID
-  publicationId: UUID,
+  publicationId: UUID
   timestamp: Timestamp
 }
 
