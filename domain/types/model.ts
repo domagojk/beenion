@@ -92,14 +92,11 @@ export type Project = {
   ownerId: UUID
   stageRules: ProjectStageRules[]
   currentStage: number
-  currentStageRules: ProjectStageRules
   reviewers: UUID[]
   evaluations: {
     reviewerId: UUID
     evaluation: Evaluation
   }[]
-  acceptedReviews: number
-  inFinalStage: boolean
   reviewProcessCompleted: boolean
   banned: boolean
 }

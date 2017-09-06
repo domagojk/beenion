@@ -13,11 +13,8 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
         ownerId: e.ownerId,
         stageRules: e.stageRules,
         currentStage: 0,
-        currentStageRules: null,
         reviewers: [],
         evaluations: [],
-        acceptedReviews: 0,
-        inFinalStage: false,
         reviewProcessCompleted: false,
         banned: false
       }
@@ -33,8 +30,6 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
         reviewers: project.reviewers.filter(id => id !== e.reviewerId)
       }
     case 'ProjectReviewed':
-      const hasAccepted = review => review.evaluation === 'accept'
-
       return {
         ...project,
         evaluations: [
@@ -43,30 +38,29 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
             evaluation: e.evaluation,
             reviewerId: e.reviewerId
           }
-        ],
-        acceptedReviews: project.evaluations.filter(hasAccepted).length
+        ]
       }
     case 'ProjectPromoted':
+      if (project.currentStage === project.stageRules.length - 1) {
+        return {
+          ...project,
+          reviewProcessCompleted: true,
+          currentStage: null,
+          reviewers: null,
+          evaluations: null
+        }
+      }
       return {
         ...project,
-        inFinalStage: project.currentStage === project.stageRules.length - 1,
         currentStage: project.currentStage + 1
       }
     case 'ProjectResubmitted':
       return {
         ...project,
         currentStage: 0,
-        inFinalStage: false,
         reviewProcessCompleted: false,
         reviewers: [],
-        evaluations: [],
-        acceptedReviews: 0
-      }
-    case 'ProjectAccepted':
-    case 'ProjectRejected':
-      return {
-        ...project,
-        reviewProcessCompleted: true
+        evaluations: []
       }
     case 'ProjectBanned':
       return {

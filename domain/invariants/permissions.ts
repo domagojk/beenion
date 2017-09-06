@@ -40,9 +40,14 @@ export const canUpdateProject =
     hasAccess(pub.privileges.canUpdateProject, user, pub)
 
 export const canInviteReviewer =
-  (reviewer: User, pub: Publication, project: Project) =>
-    project.reviewers.length < project.currentStageRules.maxReviewers &&
-    hasAccess(project.currentStageRules.canReview, reviewer, pub)
+  (reviewer: User, pub: Publication, project: Project) => {
+    const rules = project.stageRules[project.currentStage]
+
+    return (
+      project.reviewers.length < rules.maxReviewers &&
+      hasAccess(rules.canReview, reviewer, pub)
+    )
+  }
 
 export const canResubmitProject =
   (user: User, project: Project, pub: Publication) =>
@@ -62,19 +67,14 @@ export const canReviewProject =
     project.reviewers.includes(reviewer.userId)
 
 export const canPromoteProject =
-  (project: Project) =>
-    project.evaluations.length === project.reviewers.length &&
-    project.acceptedReviews >= project.currentStageRules.threshold
+  (project: Project) => {
+    const rules = project.stageRules[project.currentStage]
+    const accepted = r => r.evaluation === 'accept'
 
-export const canAcceptProject =
-  (project: Project) =>
-    !project.banned &&
-    !project.reviewProcessCompleted &&
-    project.inFinalStage &&
-    project.acceptedReviews >= project.currentStageRules.threshold
-
-export const canRejectProject =
-  (project: Project) =>
-    !project.banned &&
-    !project.reviewProcessCompleted &&
-    project.acceptedReviews < project.currentStageRules.threshold
+    return (
+      !project.banned &&
+      !project.reviewProcessCompleted &&
+      project.evaluations.length === project.reviewers.length &&
+      project.evaluations.filter(accepted).length >= rules.threshold
+    )
+  }

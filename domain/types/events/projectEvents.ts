@@ -89,18 +89,6 @@ export type ProjectReviewed = {
   timestamp: Timestamp
 }
 
-export type ProjectAccepted = {
-  type: 'ProjectAccepted'
-  projectId: UUID
-  timestamp: Timestamp
-}
-
-export type ProjectRejected = {
-  type: 'ProjectRejected'
-  projectId: UUID
-  timestamp: Timestamp
-}
-
 export type ProjectBanned = {
   type: 'ProjectBanned'
   userId: UUID

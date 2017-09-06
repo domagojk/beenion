@@ -14,8 +14,6 @@ export type ProjectEvent =
 | ProjectEvents.ProjectReviewerInviteFailed
 | ProjectEvents.ProjectReviewerRemoved
 | ProjectEvents.ProjectReviewed
-| ProjectEvents.ProjectAccepted
-| ProjectEvents.ProjectRejected
 | ProjectEvents.ProjectBanned
 | ProjectEvents.ProjectUnbanned
 

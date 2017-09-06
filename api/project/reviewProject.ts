@@ -48,26 +48,8 @@ function reviewProject (command: {
     projectId: project.projectId,
     timestamp: command.timestamp
   }
-  const projectAccepted: ProjectEvent = {
-    type: 'ProjectAccepted',
-    projectId: project.projectId,
-    timestamp: command.timestamp
-  }
-  const projectRejected: ProjectEvent = {
-    type: 'ProjectRejected',
-    projectId: project.projectId,
-    timestamp: command.timestamp
-  }
 
   const newProject = makeProject([projectReviewed], project)
-
-  if (permissions.canAcceptProject(newProject)) {
-    return [projectReviewed, projectPromoted, projectAccepted]
-  }
-
-  if (permissions.canRejectProject(newProject)) {
-    return [projectReviewed, projectPromoted, projectRejected]
-  }
 
   if (permissions.canPromoteProject(newProject)) {
     return [projectReviewed, projectPromoted]

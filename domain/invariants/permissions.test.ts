@@ -1,5 +1,5 @@
 import * as permissions from './permissions'
-import { Project, User, Publication, Evaluation } from 'domain/types/model'
+import { Project, User, Publication } from 'domain/types/model'
 
 const positiveRankCondition = { factor: 1, max: 100, min: 0 }
 const negativeRankCondition = { factor: -1, max: 0, min: -100 }
@@ -74,7 +74,6 @@ const genericProject: Project = {
   ownerId: 'test-projectowner-uuid',
   stageRules: genericPublication.projectStageRules,
   currentStage: 0,
-  currentStageRules: genericPublication.projectStageRules[0],
   reviewers: ['test-user1-uuid', 'test-user2-uuid', 'test-user3-uuid'],
   evaluations: [
     {
@@ -90,63 +89,11 @@ const genericProject: Project = {
       evaluation: 'reject'
     }
   ],
-  acceptedReviews: 2,
-  inFinalStage: false,
   reviewProcessCompleted: false,
   banned: false
 }
 
 describe('project invariants', () => {
-  it('should not accept project (no reviewers)', () => {
-    const project: Project = {
-      ...genericProject,
-      reviewers: [],
-      evaluations: [],
-      acceptedReviews: 0
-    }
-
-    expect(permissions.canAcceptProject(project)).toBe(false)
-  })
-
-  it('should not accept project (threshold not reached)', () => {
-    const project: Project = {
-      ...genericProject,
-      stageRules: genericProject.stageRules.map(rules => ({
-        ...rules,
-        threshold: 3
-      })),
-      currentStageRules: {
-        ...genericProject.currentStageRules,
-        threshold: 3
-      }
-    }
-
-    expect(permissions.canAcceptProject(project)).toBe(false)
-  })
-
-  it('should not accept project (not in final stage)', () => {
-    const project: Project = {
-      ...genericProject
-    }
-
-    expect(permissions.canAcceptProject(project)).toBe(false)
-  })
-
-  it('should accept project', () => {
-    const project: Project = {
-      ...genericProject,
-      currentStage: 2,
-      currentStageRules: genericProject.stageRules[1],
-      inFinalStage: true,
-      acceptedReviews: 3,
-      evaluations: genericProject.evaluations.map(ev => ({
-        ...ev,
-        evaluation: 'accept' as Evaluation
-      }))
-    }
-
-    expect(permissions.canAcceptProject(project)).toBe(true)
-  })
 
   it('should not delete project - not owner nor sufficient rank', () => {
     const user = {
