@@ -1,11 +1,11 @@
 import createProject from 'api/project/createProject'
 import deleteProject from 'api/project/deleteProject'
-import { eventsFromStream, save } from 'infrastructure/eventstore/inMemory'
+import { getById, save } from 'infrastructure/eventstore/inMemory'
 
 app.post('/project/create', async function (req, res) {
   try {
-    const publicationHistory = await eventsFromStream(req.publicationId)
-    const userHistory = await eventsFromStream(req.userId)
+    const publicationHistory = await getById(req.publicationId)
+    const userHistory = await getById(req.userId)
 
     const events = createProject({
       publicationHistory,
@@ -31,9 +31,9 @@ app.post('/project/create', async function (req, res) {
 
 app.post('/project/delete', async function (req, res) {
   try {
-    const projectHistory = await eventsFromStream(req.projectId)
-    const publicationHistory = await eventsFromStream(req.publicationId)
-    const userHistory = await eventsFromStream(req.userId)
+    const projectHistory = await getById(req.projectId)
+    const publicationHistory = await getById(req.publicationId)
+    const userHistory = await getById(req.userId)
 
     const events = deleteProject({
       projectHistory,
