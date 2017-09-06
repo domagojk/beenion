@@ -2,7 +2,7 @@ import makeProject from './makeProject'
 import { Project } from 'domain/types/model'
 import { ProjectEvent } from 'domain/types/events'
 
-describe('makeProject projection', () => {
+describe('Project projection', () => {
   const projectCreatedEvent: ProjectEvent = {
     type: 'ProjectCreated',
     projectId: 'test-project-uuid',
@@ -41,9 +41,9 @@ describe('makeProject projection', () => {
   it('should create a project object', () => {
     const projectEvents = [projectCreatedEvent]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual(genericProject)
+    expect(project).toEqual(genericProject)
   })
 
   it('should add in reviewers list', () => {
@@ -63,9 +63,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       reviewers: ['test-reviewer1-uuid', 'test-reviewer2-uuid']
     })
@@ -94,9 +94,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       reviewers: ['test-reviewer2-uuid']
     })
@@ -120,9 +120,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       reviewers: ['test-reviewer1-uuid'],
       evaluations: [
@@ -158,9 +158,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       stageRules: [
         {
@@ -207,9 +207,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       stageRules: null,
       reviewProcessCompleted: true,
@@ -250,9 +250,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       stageRules: [
         {
@@ -279,9 +279,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       banned: true
     })
@@ -304,9 +304,9 @@ describe('makeProject projection', () => {
       }
     ]
 
-    const user = makeProject(projectEvents)
+    const project = makeProject(projectEvents)
 
-    expect(user).toEqual({
+    expect(project).toEqual({
       ...genericProject,
       banned: false
     })
