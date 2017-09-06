@@ -1,5 +1,5 @@
 import { User, Publication } from 'domain/types/model'
-import clamp from 'clamp'
+import * as clamp from 'clamp'
 
 const calcPublicationRank = (user: User, publication: Publication): number => {
   const analytics = user.publicationAnalytics[publication.publicationId]

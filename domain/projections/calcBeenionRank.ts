@@ -1,5 +1,5 @@
 import { User } from 'domain/types/model'
-import clamp from 'clamp'
+import * as clamp from 'clamp'
 import rankConditions from 'domain/invariants/beenionRankConditions'
 
 const calcBeenionRank = (user: User): number => {
