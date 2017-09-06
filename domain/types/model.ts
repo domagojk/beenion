@@ -23,7 +23,6 @@ export type PublicationPrivileges = {
   canDeletePublication: Permission
   canCreateProject: Permission
   canDeleteProject: Permission
-  canPublishProject: Permission
   canBanProject: Permission
   canUpdateProject: Permission
   canResubmitProject: Permission

@@ -27,12 +27,6 @@ export type PublicationDeleted = {
   timestamp: Timestamp
 }
 
-export type PublicationPublished = {
-  type: 'PublicationPublished'
-  publicationId: UUID
-  timestamp: Timestamp
-}
-
 export type PublicationTitleUpdated = {
   type: 'PublicationTitleUpdated'
   publicationId: UUID

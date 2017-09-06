@@ -24,7 +24,6 @@ const genericPublication: Publication = {
     canDeletePublication: { beenionRank: 100 },
     canCreateProject: { beenionRank: 100 },
     canDeleteProject: { beenionRank: 100 },
-    canPublishProject: { beenionRank: 100 },
     canBanProject: { beenionRank: 100 },
     canUpdateProject: { beenionRank: 100 },
     canResubmitProject: { beenionRank: 100 },

@@ -55,7 +55,6 @@ export const isPublicationPrivileges =
     isPermission(x.canDeletePublication) &&
     isPermission(x.canCreateProject) &&
     isPermission(x.canDeleteProject) &&
-    isPermission(x.canPublishProject) &&
     isPermission(x.canBanProject) &&
     isPermission(x.canUpdateProject) &&
     isPermission(x.canResubmitProject) &&
