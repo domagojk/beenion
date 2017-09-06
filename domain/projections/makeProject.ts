@@ -45,6 +45,7 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
         return {
           ...project,
           reviewProcessCompleted: true,
+          stageRules: null,
           currentStage: null,
           reviewers: null,
           evaluations: null
