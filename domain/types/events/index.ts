@@ -21,7 +21,7 @@ export type ProjectEvent =
 
 export type PublicationEvent =
 | PublicationEvents.PublicationCreated
-| PublicationEvents.PublicationStagesUpdated
+| PublicationEvents.ProjectStageRulesUpdated
 | PublicationEvents.PublicationDeleted
 | PublicationEvents.PublicationTitleUpdated
 | PublicationEvents.PublicationDescriptionUpdated

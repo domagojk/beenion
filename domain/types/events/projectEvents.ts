@@ -1,6 +1,6 @@
 import {
   UUID,
-  ProjectStageRule,
+  ProjectStageRules,
   Timestamp,
   Title,
   Description,
@@ -12,7 +12,7 @@ export type ProjectCreated = {
   type: 'ProjectCreated'
   projectId: UUID
   publicationId: UUID
-  stages: ProjectStageRule[]
+  stageRules: ProjectStageRules[]
   ownerId: UUID
   title: Title
   description: Description

@@ -81,7 +81,7 @@ export type BeenionRankConditions = {
   }
 }
 
-export type ProjectStageRule = {
+export type ProjectStageRules = {
   maxReviewers: number
   threshold: number
   canReview: Permission
@@ -90,9 +90,9 @@ export type ProjectStageRule = {
 export type Project = {
   projectId: UUID
   ownerId: UUID
-  stages: ProjectStageRule[]
+  stageRules: ProjectStageRules[]
   currentStage: number
-  stageRules: ProjectStageRule
+  currentStageRules: ProjectStageRules
   reviewers: UUID[]
   evaluations: {
     reviewerId: UUID
@@ -108,7 +108,7 @@ export type Publication = {
   publicationId: UUID
   privileges: PublicationPrivileges
   rankConditions: PublicationRankConditions
-  projectStageRules: ProjectStageRule[]
+  projectStageRules: ProjectStageRules[]
 }
 
 export type User = {

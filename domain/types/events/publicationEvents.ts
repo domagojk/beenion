@@ -17,12 +17,12 @@ export type PublicationCreated = {
   privileges: PublicationPrivileges
   rankConditions: PublicationRankConditions
   projectStageRules: ProjectStageRule[]
-  certified: boolean
   timestamp: Timestamp
 }
 
 export type PublicationDeleted = {
   type: 'PublicationDeleted'
+  userId: UUID
   publicationId: UUID
   timestamp: Timestamp
 }
