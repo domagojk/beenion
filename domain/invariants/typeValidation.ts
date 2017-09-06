@@ -8,7 +8,7 @@ import {
   Timestamp,
   UUID,
   Permission,
-  ProjectStageRule,
+  ProjectStageRules,
   PublicationPrivileges,
   PublicationRankConditions
 } from 'domain/types/model'
@@ -87,17 +87,16 @@ export const isPublicationRankConditions =
     isRankCondition(x.ReviewDownvotedWithSilver) &&
     isRankCondition(x.ReviewDownvotedWithBronze)
 
-export const isProjectStageRule =
-  (x: ProjectStageRule): x is ProjectStageRule =>
-    typeof x === 'object' &&
-    typeof x.maxReviewers === 'number' &&
-    typeof x.threshold === 'number' &&
-    isPermission(x.canReview)
-
 export const isProjectStageRules =
-  (x: ProjectStageRule[]): x is ProjectStageRule[] =>
+  (x: ProjectStageRules[]): x is ProjectStageRules[] =>
     Array.isArray(x) &&
-    x.filter(isProjectStageRule).length === x.length
+    x.filter(
+      rule =>
+        typeof rule === 'object' &&
+        typeof rule.maxReviewers === 'number' &&
+        typeof rule.threshold === 'number' &&
+        isPermission(rule.canReview)
+    ).length === x.length
 
 export const isPublicationEvent =
   (x: PublicationEvent): x is PublicationEvent =>
