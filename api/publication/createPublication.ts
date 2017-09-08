@@ -4,8 +4,8 @@ import {
   Title,
   Timestamp,
   PublicationPrivileges,
-  PublicationRankConditions,
-  ProjectStageRule
+  RankConditions,
+  ProjectStageRules
 } from 'domain/types/model'
 import { UserEvent, PublicationEvent } from 'domain/types/events'
 import makeUser from 'domain/projections/makeUser'
@@ -17,8 +17,8 @@ function createPublication (command: {
   userHistory: UserEvent[]
   publicationId: UUID
   privileges: PublicationPrivileges
-  rankConditions: PublicationRankConditions
-  projectStageRules: ProjectStageRule[]
+  rankConditions: RankConditions
+  projectStageRules: ProjectStageRules[]
   title: Title
   description: Description
   timestamp: Timestamp
@@ -44,7 +44,7 @@ function createPublication (command: {
     throw new TypeError(errorCodes.INVALID_PUBLICATION_PRIVILEGES)
   }
 
-  if (!validate.isPublicationRankConditions(command.rankConditions)) {
+  if (!validate.isRankConditions(command.rankConditions)) {
     throw new TypeError(errorCodes.INVALID_PUBLICATION_RANK_CONDITIONS)
   }
 

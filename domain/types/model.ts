@@ -1,3 +1,5 @@
+import { UserEvent } from './events'
+
 export type Timestamp = number
 
 export type UUID = string
@@ -12,78 +14,56 @@ export type Username = string
 
 export type Evaluation = 'accept' | 'reject'
 
-export type Permission = {
+export type PrivilegeConditions = {
   beenionRank: number
   publicationRank?: number
-  userList?: UUID[]
+  userAccessList?: UUID[]
+}
+
+export type RankConditions = {
+  events: {
+    [event in UserEvent['type']]?: {
+      factor: number,
+      group: string
+    }
+  },
+  groups: {
+    [key: string]: {
+      min: number,
+      max: number
+    }
+  }
 }
 
 export type PublicationPrivileges = {
-  canUpdatePublication: Permission
-  canDeletePublication: Permission
-  canCreateProject: Permission
-  canDeleteProject: Permission
-  canBanProject: Permission
-  canUpdateProject: Permission
-  canResubmitProject: Permission
-  canVoteWithGold: Permission
-  canVoteWithSilver: Permission
-  canVoteWithBronze: Permission
+  canUpdatePublication: PrivilegeConditions
+  canDeletePublication: PrivilegeConditions
+  canCreateProject: PrivilegeConditions
+  canDeleteProject: PrivilegeConditions
+  canBanProject: PrivilegeConditions
+  canUpdateProject: PrivilegeConditions
+  canResubmitProject: PrivilegeConditions
+  canVoteWithGold: PrivilegeConditions
+  canVoteWithSilver: PrivilegeConditions
+  canVoteWithBronze: PrivilegeConditions
 }
 
 export type BeenionPrivileges = {
-  canCreatePublication: Permission
-  canDeletePublication: Permission
-  canVoteWithGold: Permission
-  canVoteWithSilver: Permission
-  canVoteWithBronze: Permission
+  canCreatePublication: PrivilegeConditions
+  canDeletePublication: PrivilegeConditions
+  canVoteWithGold: PrivilegeConditions
+  canVoteWithSilver: PrivilegeConditions
+  canVoteWithBronze: PrivilegeConditions
 }
 
-export type PublicationRankMetric =
-  | 'ReviewInvitationAccepted'
-  | 'ReviewInvitationDeclined'
-  | 'ReviewInvitationExpired'
-  | 'ProjectUpvotedWithGold'
-  | 'ProjectUpvotedWithSilver'
-  | 'ProjectUpvotedWithBronze'
-  | 'ProjectDownvotedWithGold'
-  | 'ProjectDownvotedWithSilver'
-  | 'ProjectDownvotedWithBronze'
-  | 'ReviewUpvotedWithGold'
-  | 'ReviewUpvotedWithSilver'
-  | 'ReviewUpvotedWithBronze'
-  | 'ReviewDownvotedWithGold'
-  | 'ReviewDownvotedWithSilver'
-  | 'ReviewDownvotedWithBronze'
-
-export type BeenionRankMetric =
-  | 'UserUpvotedWithGold'
-  | 'UserUpvotedWithSilver'
-  | 'UserUpvotedWithBronze'
-  | 'UserDownvotedWithGold'
-  | 'UserDownvotedWithSilver'
-  | 'UserDownvotedWithBronze'
-
-export type PublicationRankConditions = {
-  [metric in PublicationRankMetric]: {
-    factor: number
-    min: number
-    max: number
-  }
-}
-
-export type BeenionRankConditions = {
-  [metric in BeenionRankMetric]: {
-    factor: number
-    min: number
-    max: number
-  }
+export type EventAnalytics = {
+  [event in UserEvent['type']]?: number
 }
 
 export type ProjectStageRules = {
   maxReviewers: number
   threshold: number
-  canReview: Permission
+  canReview: PrivilegeConditions
 }
 
 export type Project = {
@@ -103,18 +83,14 @@ export type Project = {
 export type Publication = {
   publicationId: UUID
   privileges: PublicationPrivileges
-  rankConditions: PublicationRankConditions
+  rankConditions: RankConditions
   projectStageRules: ProjectStageRules[]
 }
 
 export type User = {
   userId: UUID
-  beenionAnalytics: {
-    [metric in BeenionRankMetric]: number
-  }
+  beenionAnalytics: EventAnalytics
   publicationAnalytics: {
-    [publicationId: string]: {
-      [metric in PublicationRankMetric]: number
-    }
+    [publicationId: string]: EventAnalytics
   }
 }

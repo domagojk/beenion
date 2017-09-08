@@ -7,10 +7,10 @@ import {
   Evaluation,
   Timestamp,
   UUID,
-  Permission,
+  PrivilegeConditions,
   ProjectStageRules,
   PublicationPrivileges,
-  PublicationRankConditions
+  RankConditions
 } from 'domain/types/model'
 
 export const isTitle =
@@ -41,9 +41,9 @@ export const isURL =
   (x: URL): x is URL =>
     urlRegex({exact: true}).test(x)
 
-export const isPermission =
-  (x: Permission): x is Permission =>
-    x.userList !== undefined && Array.isArray(x.userList) ||
+export const isPrivilegeConditions =
+  (x: PrivilegeConditions): x is PrivilegeConditions =>
+    x.userAccessList !== undefined && Array.isArray(x.userAccessList) ||
     x.beenionRank !== undefined && typeof x.beenionRank === 'number' ||
     x.publicationRank !== undefined && typeof x.publicationRank === 'number' ||
     false
@@ -51,41 +51,31 @@ export const isPermission =
 export const isPublicationPrivileges =
   (x: PublicationPrivileges): x is PublicationPrivileges =>
     typeof x === 'object' &&
-    isPermission(x.canUpdatePublication) &&
-    isPermission(x.canDeletePublication) &&
-    isPermission(x.canCreateProject) &&
-    isPermission(x.canDeleteProject) &&
-    isPermission(x.canBanProject) &&
-    isPermission(x.canUpdateProject) &&
-    isPermission(x.canResubmitProject) &&
-    isPermission(x.canVoteWithGold) &&
-    isPermission(x.canVoteWithSilver) &&
-    isPermission(x.canVoteWithBronze)
+    isPrivilegeConditions(x.canUpdatePublication) &&
+    isPrivilegeConditions(x.canDeletePublication) &&
+    isPrivilegeConditions(x.canCreateProject) &&
+    isPrivilegeConditions(x.canDeleteProject) &&
+    isPrivilegeConditions(x.canBanProject) &&
+    isPrivilegeConditions(x.canUpdateProject) &&
+    isPrivilegeConditions(x.canResubmitProject) &&
+    isPrivilegeConditions(x.canVoteWithGold) &&
+    isPrivilegeConditions(x.canVoteWithSilver) &&
+    isPrivilegeConditions(x.canVoteWithBronze)
 
-const isRankCondition = (x) =>
-  typeof x === 'object' &&
-  typeof x.factor === 'number' &&
-  (x.max === undefined || typeof x.max === 'number') &&
-  (x.min === undefined || typeof x.min === 'number')
-
-export const isPublicationRankConditions =
-  (x: PublicationRankConditions): x is PublicationRankConditions =>
+export const isRankConditions =
+  (x: RankConditions): x is RankConditions =>
     typeof x === 'object' &&
-    isRankCondition(x.ReviewInvitationAccepted) &&
-    isRankCondition(x.ReviewInvitationDeclined) &&
-    isRankCondition(x.ReviewInvitationExpired) &&
-    isRankCondition(x.ProjectUpvotedWithGold) &&
-    isRankCondition(x.ProjectUpvotedWithSilver) &&
-    isRankCondition(x.ProjectUpvotedWithBronze) &&
-    isRankCondition(x.ProjectDownvotedWithGold) &&
-    isRankCondition(x.ProjectDownvotedWithSilver) &&
-    isRankCondition(x.ProjectDownvotedWithBronze) &&
-    isRankCondition(x.ReviewUpvotedWithGold) &&
-    isRankCondition(x.ReviewUpvotedWithSilver) &&
-    isRankCondition(x.ReviewUpvotedWithBronze) &&
-    isRankCondition(x.ReviewDownvotedWithGold) &&
-    isRankCondition(x.ReviewDownvotedWithSilver) &&
-    isRankCondition(x.ReviewDownvotedWithBronze)
+    Object.keys(x.events)
+      .filter(e =>
+        typeof x.events[e].factor === 'number'
+      )
+      .length === Object.keys(x.events).length &&
+    Object.keys(x.groups)
+      .filter(g =>
+        typeof x.groups[g].min === 'number' &&
+        typeof x.groups[g].max === 'number'
+      )
+      .length === Object.keys(x.groups).length
 
 export const isProjectStageRules =
   (x: ProjectStageRules[]): x is ProjectStageRules[] =>
@@ -95,7 +85,7 @@ export const isProjectStageRules =
         typeof rule === 'object' &&
         typeof rule.maxReviewers === 'number' &&
         typeof rule.threshold === 'number' &&
-        isPermission(rule.canReview)
+        isPrivilegeConditions(rule.canReview)
     ).length === x.length
 
 export const isPublicationEvent =

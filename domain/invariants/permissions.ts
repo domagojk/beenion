@@ -1,44 +1,50 @@
-import { Project, User, Publication, UUID, Permission } from 'domain/types/model'
-import calcPublicationRank from 'domain/projections/calcPublicationRank'
-import calcBeenionRank from 'domain/projections/calcBeenionRank'
-import beenionPrivileges from './beenionPrivileges'
-import beenionRankConditions from './beenionRankConditions'
-
-const hasAccess = (p: Permission, user: User, pub?: Publication) =>
-  (p.userList && p.userList.includes(user.userId)) ||
-  (p.publicationRank && calcPublicationRank(user, pub) >= p.publicationRank) ||
-  (p.beenionRank && calcBeenionRank(user, beenionRankConditions) >= p.beenionRank)
+import { Project, User, Publication, UUID } from 'domain/types/model'
+import beenionprivileges from './beenionprivileges'
+import { isInAccessList, hasBeenionRank, hasPublicationRank } from './accessValidation'
 
 export const canCreatePublication =
   (user: User) =>
-    hasAccess(beenionPrivileges.canCreatePublication, user)
+    isInAccessList(beenionprivileges.canCreatePublication, user) ||
+    hasBeenionRank(beenionprivileges.canCreatePublication, user)
 
 export const canUpdatePublication =
   (user: User, pub: Publication) =>
-    hasAccess(pub.privileges.canUpdatePublication, user, pub)
+    isInAccessList(pub.privileges.canUpdatePublication, user) ||
+    hasBeenionRank(pub.privileges.canUpdatePublication, user) ||
+    hasPublicationRank(pub.privileges.canUpdatePublication, user, pub)
 
 export const canDeletePublication =
   (user: User, pub: Publication) =>
-    hasAccess(pub.privileges.canDeletePublication, user, pub)
+    isInAccessList(pub.privileges.canDeletePublication, user) ||
+    hasBeenionRank(pub.privileges.canDeletePublication, user) ||
+    hasPublicationRank(pub.privileges.canDeletePublication, user, pub)
 
 export const canCreateProject =
   (user: User, pub: Publication) =>
-    hasAccess(pub.privileges.canCreateProject, user, pub)
+    isInAccessList(pub.privileges.canCreateProject, user) ||
+    hasBeenionRank(pub.privileges.canCreateProject, user) ||
+    hasPublicationRank(pub.privileges.canCreateProject, user, pub)
 
 export const canDeleteProject =
   (user: User, project: Project, pub: Publication) =>
     project.ownerId === user.userId ||
-    hasAccess(pub.privileges.canDeleteProject, user, pub)
+    isInAccessList(pub.privileges.canDeleteProject, user) ||
+    hasBeenionRank(pub.privileges.canDeleteProject, user) ||
+    hasPublicationRank(pub.privileges.canDeleteProject, user, pub)
 
 export const canBanProject =
   (user: User, project: Project, pub: Publication) =>
     !project.banned &&
-    hasAccess(pub.privileges.canBanProject, user, pub)
+    isInAccessList(pub.privileges.canBanProject, user) ||
+    hasBeenionRank(pub.privileges.canBanProject, user) ||
+    hasPublicationRank(pub.privileges.canBanProject, user, pub)
 
 export const canUpdateProject =
   (user: User, pub: Publication, project: Project) =>
     project.ownerId === user.userId ||
-    hasAccess(pub.privileges.canUpdateProject, user, pub)
+    isInAccessList(pub.privileges.canUpdateProject, user) ||
+    hasBeenionRank(pub.privileges.canUpdateProject, user) ||
+    hasPublicationRank(pub.privileges.canUpdateProject, user, pub)
 
 export const canInviteReviewer =
   (reviewer: User, pub: Publication, project: Project) => {
@@ -46,7 +52,9 @@ export const canInviteReviewer =
 
     return (
       project.reviewers.length < rules.maxReviewers &&
-      hasAccess(rules.canReview, reviewer, pub)
+      isInAccessList(rules.canReview, reviewer) ||
+      hasBeenionRank(rules.canReview, reviewer) ||
+      hasPublicationRank(rules.canReview, reviewer, pub)
     )
   }
 
@@ -55,7 +63,9 @@ export const canResubmitProject =
     !project.banned &&
     project.reviewProcessCompleted &&
     project.ownerId === user.userId &&
-    hasAccess(pub.privileges.canResubmitProject, user, pub)
+    isInAccessList(pub.privileges.canResubmitProject, user) ||
+    hasBeenionRank(pub.privileges.canResubmitProject, user) ||
+    hasPublicationRank(pub.privileges.canResubmitProject, user, pub)
 
 export const canRemoveReviewer =
   (reviewerId: UUID, project: Project) =>

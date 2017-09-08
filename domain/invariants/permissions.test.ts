@@ -1,9 +1,6 @@
 import * as permissions from './permissions'
 import { Project, User, Publication } from 'domain/types/model'
 
-const positiveRankCondition = { factor: 1, max: 100, min: 0 }
-const negativeRankCondition = { factor: -1, max: 0, min: -100 }
-
 const genericUser: User = {
   userId: 'test-user-uuid',
   publicationAnalytics: {},
@@ -32,21 +29,21 @@ const genericPublication: Publication = {
     canVoteWithBronze: { beenionRank: 100 }
   },
   rankConditions: {
-    ReviewInvitationAccepted: positiveRankCondition,
-    ReviewInvitationDeclined: negativeRankCondition,
-    ReviewInvitationExpired: negativeRankCondition,
-    ProjectUpvotedWithGold: positiveRankCondition,
-    ProjectUpvotedWithSilver: positiveRankCondition,
-    ProjectUpvotedWithBronze: positiveRankCondition,
-    ProjectDownvotedWithGold: negativeRankCondition,
-    ProjectDownvotedWithSilver: negativeRankCondition,
-    ProjectDownvotedWithBronze: negativeRankCondition,
-    ReviewUpvotedWithGold: positiveRankCondition,
-    ReviewUpvotedWithSilver: positiveRankCondition,
-    ReviewUpvotedWithBronze: positiveRankCondition,
-    ReviewDownvotedWithGold: negativeRankCondition,
-    ReviewDownvotedWithSilver: negativeRankCondition,
-    ReviewDownvotedWithBronze: negativeRankCondition
+    ReviewInvitationAccepted: { factor: 1, max: 100, min: 0 },
+    ReviewInvitationDeclined: { factor: -1, max: 0, min: -100 },
+    ReviewInvitationExpired: { factor: -1, max: 0, min: -100 },
+    ProjectUpvotedWithGold: { factor: 1, max: 100, min: 0 },
+    ProjectUpvotedWithSilver: { factor: 1, max: 100, min: 0 },
+    ProjectUpvotedWithBronze: { factor: 1, max: 100, min: 0 },
+    ProjectDownvotedWithGold: { factor: -1, max: 0, min: -100 },
+    ProjectDownvotedWithSilver: { factor: -1, max: 0, min: -100 },
+    ProjectDownvotedWithBronze: { factor: -1, max: 0, min: -100 },
+    ReviewUpvotedWithGold: { factor: 1, max: 100, min: 0 },
+    ReviewUpvotedWithSilver: { factor: 1, max: 100, min: 0 },
+    ReviewUpvotedWithBronze: { factor: 1, max: 100, min: 0 },
+    ReviewDownvotedWithGold: { factor: -1, max: 0, min: -100 },
+    ReviewDownvotedWithSilver: { factor: -1, max: 0, min: -100 },
+    ReviewDownvotedWithBronze: { factor: -1, max: 0, min: -100 }
   },
   projectStageRules: [
     {
