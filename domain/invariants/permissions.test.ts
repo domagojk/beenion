@@ -29,21 +29,32 @@ const genericPublication: Publication = {
     canVoteWithBronze: { beenionRank: 100 }
   },
   rankConditions: {
-    ReviewInvitationAccepted: { factor: 1, max: 100, min: 0 },
-    ReviewInvitationDeclined: { factor: -1, max: 0, min: -100 },
-    ReviewInvitationExpired: { factor: -1, max: 0, min: -100 },
-    ProjectUpvotedWithGold: { factor: 1, max: 100, min: 0 },
-    ProjectUpvotedWithSilver: { factor: 1, max: 100, min: 0 },
-    ProjectUpvotedWithBronze: { factor: 1, max: 100, min: 0 },
-    ProjectDownvotedWithGold: { factor: -1, max: 0, min: -100 },
-    ProjectDownvotedWithSilver: { factor: -1, max: 0, min: -100 },
-    ProjectDownvotedWithBronze: { factor: -1, max: 0, min: -100 },
-    ReviewUpvotedWithGold: { factor: 1, max: 100, min: 0 },
-    ReviewUpvotedWithSilver: { factor: 1, max: 100, min: 0 },
-    ReviewUpvotedWithBronze: { factor: 1, max: 100, min: 0 },
-    ReviewDownvotedWithGold: { factor: -1, max: 0, min: -100 },
-    ReviewDownvotedWithSilver: { factor: -1, max: 0, min: -100 },
-    ReviewDownvotedWithBronze: { factor: -1, max: 0, min: -100 }
+    events: {
+      ReviewInvitationAccepted: { factor: 1, group: 'invitation' },
+      ReviewInvitationDeclined: { factor: -1, group: 'invitation' },
+      ReviewInvitationExpired: { factor: -1, group: 'invitation' },
+      ProjectUpvotedWithGold: { factor: 1, group: 'projectGold' },
+      ProjectUpvotedWithSilver: { factor: 1, group: 'projectSilver' },
+      ProjectUpvotedWithBronze: { factor: 1, group: 'projectBronze' },
+      ProjectDownvotedWithGold: { factor: -1, group: 'projectGold' },
+      ProjectDownvotedWithSilver: { factor: -1, group: 'projectSilver' },
+      ProjectDownvotedWithBronze: { factor: -1, group: 'projectBronze' },
+      ReviewUpvotedWithGold: { factor: 1, group: 'reviewGold' },
+      ReviewUpvotedWithSilver: { factor: 1, group: 'reviewSilver' },
+      ReviewUpvotedWithBronze: { factor: 1, group: 'reviewBronze' },
+      ReviewDownvotedWithGold: { factor: -1, group: 'reviewGold' },
+      ReviewDownvotedWithSilver: { factor: -1, group: 'reviewSilver' },
+      ReviewDownvotedWithBronze: { factor: -1, group: 'reviewBronze' }
+    },
+    groups: {
+      invitation: { min: -100, max: 100 },
+      projectGold: { min: -100, max: 100 },
+      projectSilver: { min: -100, max: 100 },
+      projectBronze: { min: -100, max: 100 },
+      reviewGold: { min: -100, max: 100 },
+      reviewSilver: { min: -100, max: 100 },
+      reviewBronze: { min: -100, max: 100 }
+    }
   },
   projectStageRules: [
     {
