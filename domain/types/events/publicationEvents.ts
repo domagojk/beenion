@@ -4,7 +4,7 @@ import {
   Description,
   ProjectStageRules,
   PublicationPrivileges,
-  PublicationRankConditions,
+  RankConditions,
   Timestamp
 } from 'domain/types/model'
 
@@ -15,7 +15,7 @@ export type PublicationCreated = {
   title: Title
   description: Description
   privileges: PublicationPrivileges
-  rankConditions: PublicationRankConditions
+  rankConditions: RankConditions
   projectStageRules: ProjectStageRules[]
   timestamp: Timestamp
 }
