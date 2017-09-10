@@ -1,5 +1,5 @@
-import { User, Publication, PrivilegeConditions } from 'domain/types/model'
-import calcRank from 'domain/projections/calcRank'
+import { User, Publication, PrivilegeConditions } from './types/model'
+import calcRank from './calcRank'
 import beenionRankConditions from './beenionRankConditions'
 
 export const isInAccessList =

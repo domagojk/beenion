@@ -1,9 +1,9 @@
-import { User, Publication } from 'domain/types/model'
+import { User, Publication } from './types/model'
 import {
   isInAccessList,
   hasBeenionRank,
   hasPublicationRank
-} from './accessValidation'
+} from './privilegeValidation'
 
 const genericUser: User = {
   userId: 'test-user-uuid',
