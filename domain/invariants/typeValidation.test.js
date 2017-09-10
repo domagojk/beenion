@@ -24,7 +24,7 @@ describe('type validation', () => {
   })
 
   it('it should validate Evaluation type', () => {
-    expect(validate.isEvaluation('accept')).toBe(true)
+    expect(validate.isEvaluation('approve')).toBe(true)
     expect(validate.isEvaluation('reject')).toBe(true)
     expect(validate.isEvaluation('rand')).toBe(false)
     expect(validate.isEvaluation()).toBe(false)
