@@ -16,6 +16,7 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
         reviewers: [],
         evaluations: [],
         reviewProcessCompleted: false,
+        approved: false,
         banned: false
       }
     case 'ProjectReviewerInvited':
@@ -41,19 +42,29 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
         ]
       }
     case 'ProjectPromoted':
-      if (project.currentStage === project.stageRules.length - 1) {
-        return {
-          ...project,
-          reviewProcessCompleted: true,
-          stageRules: null,
-          currentStage: null,
-          reviewers: null,
-          evaluations: null
-        }
-      }
       return {
         ...project,
         currentStage: project.currentStage + 1
+      }
+    case 'ProjectRejected':
+      return {
+        ...project,
+        reviewProcessCompleted: true,
+        approved: false,
+        stageRules: null,
+        currentStage: null,
+        reviewers: null,
+        evaluations: null
+      }
+    case 'ProjectApproved':
+      return {
+        ...project,
+        reviewProcessCompleted: true,
+        approved: true,
+        stageRules: null,
+        currentStage: null,
+        reviewers: null,
+        evaluations: null
       }
     case 'ProjectResubmitted':
       return {

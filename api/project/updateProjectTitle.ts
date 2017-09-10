@@ -39,7 +39,7 @@ function updateProjectTitle (command: {
   const publication = makePublication(command.publicationHistory)
   const user = makeUser(command.userHistory)
 
-  if (!canUpdateProject(user, publication, project)) {
+  if (!canUpdateProject(user, project, publication)) {
     throw new Error((errorCodes.UPDATE_PROJECT_NOT_ALLOWED))
   }
 

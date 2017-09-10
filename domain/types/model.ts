@@ -12,7 +12,7 @@ export type Description = string
 
 export type Username = string
 
-export type Evaluation = 'accept' | 'reject'
+export type Evaluation = 'approve' | 'reject'
 
 export type PrivilegeConditions = {
   beenionRank: number
@@ -77,6 +77,7 @@ export type Project = {
     evaluation: Evaluation
   }[]
   reviewProcessCompleted: boolean
+  approved: boolean
   banned: boolean
 }
 

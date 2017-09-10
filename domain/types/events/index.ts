@@ -9,6 +9,8 @@ export type ProjectEvent =
 | ProjectEvents.ProjectLinkUpdated
 | ProjectEvents.ProjectTitleUpdated
 | ProjectEvents.ProjectPromoted
+| ProjectEvents.ProjectApproved
+| ProjectEvents.ProjectRejected
 | ProjectEvents.ProjectResubmitted
 | ProjectEvents.ProjectReviewerInvited
 | ProjectEvents.ProjectReviewerInviteFailed

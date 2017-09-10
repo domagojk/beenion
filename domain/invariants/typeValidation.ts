@@ -36,7 +36,7 @@ export const isDescription =
 
 export const isEvaluation =
   (x: Evaluation): x is Evaluation =>
-    x === 'accept' ||
+    x === 'approve' ||
     x === 'reject'
 
 export const isTimestamp =
@@ -156,6 +156,8 @@ export const isProjectEvent =
       ProjectLinkUpdated: isEvent,
       ProjectTitleUpdated: isEvent,
       ProjectPromoted: isEvent,
+      ProjectApproved: isEvent,
+      ProjectRejected: isEvent,
       ProjectResubmitted: isEvent,
       ProjectReviewerInvited: isEvent,
       ProjectReviewerInviteFailed: isEvent,

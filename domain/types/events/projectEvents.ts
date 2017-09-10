@@ -54,6 +54,18 @@ export type ProjectPromoted = {
   timestamp: Timestamp
 }
 
+export type ProjectApproved = {
+  type: 'ProjectApproved'
+  projectId: UUID
+  timestamp: Timestamp
+}
+
+export type ProjectRejected = {
+  type: 'ProjectRejected'
+  projectId: UUID
+  timestamp: Timestamp
+}
+
 export type ProjectResubmitted = {
   type: 'ProjectResubmitted'
   projectId: UUID

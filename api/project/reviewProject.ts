@@ -32,7 +32,7 @@ function reviewProject (command: {
   const reviewer = makeUser(command.reviewerHistory)
   const project = makeProject(command.projectHistory)
 
-  if (!permissions.canReviewProject(project, reviewer)) {
+  if (!permissions.canReviewProject(reviewer, project)) {
     throw new Error(errorCodes.REVIEW_PROJECT_NOT_ALLOWED)
   }
 
@@ -48,10 +48,26 @@ function reviewProject (command: {
     projectId: project.projectId,
     timestamp: command.timestamp
   }
+  const projectApproved: ProjectEvent = {
+    type: 'ProjectApproved',
+    projectId: project.projectId,
+    timestamp: command.timestamp
+  }
+  const projectRejected: ProjectEvent = {
+    type: 'ProjectRejected',
+    projectId: project.projectId,
+    timestamp: command.timestamp
+  }
 
-  const newProject = makeProject([projectReviewed], project)
+  const reviewedProject = makeProject([projectReviewed], project)
 
-  if (permissions.canPromoteProject(newProject)) {
+  if (permissions.canApproveProject(reviewedProject)) {
+    return [projectReviewed, projectApproved]
+  }
+  if (permissions.canRejectProject(reviewedProject)) {
+    return [projectReviewed, projectRejected]
+  }
+  if (permissions.canPromoteProject(reviewedProject)) {
     return [projectReviewed, projectPromoted]
   }
 

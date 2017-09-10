@@ -34,7 +34,7 @@ function inviteProjectReviewer (command: {
   const reviewer = makeUser(command.reviewerHistory)
   const project = makeProject(command.projectHistory)
 
-  if (canInviteReviewer(reviewer, publication, project)) {
+  if (canInviteReviewer(reviewer, project, publication)) {
     return [
       {
         type: 'ProjectReviewerInvited',

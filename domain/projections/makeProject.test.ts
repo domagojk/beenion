@@ -35,6 +35,7 @@ describe('Project projection', () => {
       }
     ],
     reviewProcessCompleted: false,
+    approved: false,
     banned: false
   }
 
@@ -115,7 +116,7 @@ describe('Project projection', () => {
         type: 'ProjectReviewed',
         projectId: 'test-project-uuid',
         reviewerId: 'test-reviewer1-uuid',
-        evaluation: 'accept',
+        evaluation: 'approve',
         timestamp: Date.now()
       }
     ]
@@ -127,7 +128,7 @@ describe('Project projection', () => {
       reviewers: ['test-reviewer1-uuid'],
       evaluations: [
         {
-          evaluation: 'accept',
+          evaluation: 'approve',
           reviewerId: 'test-reviewer1-uuid'
         }
       ]
@@ -178,7 +179,7 @@ describe('Project projection', () => {
     })
   })
 
-  it('should complete project review', () => {
+  it('should reject project', () => {
     const projectEvents: ProjectEvent[] = [
       {
         ...projectCreatedEvent,
@@ -196,12 +197,7 @@ describe('Project projection', () => {
         ]
       },
       {
-        type: 'ProjectPromoted',
-        projectId: 'test-project-uuid',
-        timestamp: Date.now()
-      },
-      {
-        type: 'ProjectPromoted',
+        type: 'ProjectRejected',
         projectId: 'test-project-uuid',
         timestamp: Date.now()
       }
@@ -213,6 +209,43 @@ describe('Project projection', () => {
       ...genericProject,
       stageRules: null,
       reviewProcessCompleted: true,
+      currentStage: null,
+      reviewers: null,
+      evaluations: null
+    })
+  })
+
+  it('should approve project', () => {
+    const projectEvents: ProjectEvent[] = [
+      {
+        ...projectCreatedEvent,
+        stageRules: [
+          {
+            canReview: { beenionRank: 0 },
+            maxReviewers: 1,
+            threshold: 2
+          },
+          {
+            canReview: { beenionRank: 0 },
+            maxReviewers: 3,
+            threshold: 2
+          }
+        ]
+      },
+      {
+        type: 'ProjectApproved',
+        projectId: 'test-project-uuid',
+        timestamp: Date.now()
+      }
+    ]
+
+    const project = makeProject(projectEvents)
+
+    expect(project).toEqual({
+      ...genericProject,
+      stageRules: null,
+      reviewProcessCompleted: true,
+      approved: true,
       currentStage: null,
       reviewers: null,
       evaluations: null
