@@ -17,16 +17,46 @@ const genericUser: User = {
 const genericPublication: Publication = {
   publicationId: 'test-publication-uuid',
   privileges: {
-    canUpdatePublication: { beenionRank: 100 },
-    canDeletePublication: { beenionRank: 100 },
-    canCreateProject: { beenionRank: 100 },
-    canDeleteProject: { beenionRank: 100 },
-    canBanProject: { beenionRank: 100 },
-    canUpdateProject: { beenionRank: 100 },
-    canResubmitProject: { beenionRank: 100 },
-    canVoteWithGold: { beenionRank: 100 },
-    canVoteWithSilver: { beenionRank: 100 },
-    canVoteWithBronze: { beenionRank: 100 }
+    canUpdatePublication: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canDeletePublication: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canCreateProject: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canDeleteProject: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canBanProject: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canUpdateProject: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canResubmitProject: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canVoteWithGold: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canVoteWithSilver: {
+      beenionRank: 100,
+      publicationRank: 100
+    },
+    canVoteWithBronze: {
+      beenionRank: 10,
+      publicationRank: 100
+    }
   },
   rankConditions: {
     events: {
@@ -85,11 +115,11 @@ const genericProject: Project = {
   evaluations: [
     {
       reviewerId: 'test-user1-uuid',
-      evaluation: 'accept'
+      evaluation: 'approve'
     },
     {
       reviewerId: 'test-user2-uuid',
-      evaluation: 'accept'
+      evaluation: 'approve'
     },
     {
       reviewerId: 'test-user3-uuid',
@@ -97,29 +127,12 @@ const genericProject: Project = {
     }
   ],
   reviewProcessCompleted: false,
+  approved: false,
   banned: false
 }
 
 describe('project invariants', () => {
-
-  it('should not delete project - not owner nor sufficient rank', () => {
-    const user = {
-      ...genericUser
-    }
-    const publication = {
-      ...genericPublication,
-      privileges: {
-        ...genericPublication.privileges,
-        canDeleteProject: { beenionRank: 10 }
-      }
-    }
-    const project = {
-      ...genericProject
-    }
-    expect(permissions.canDeleteProject(user, project, publication)).toBe(false)
-  })
-
-  it('should delete project - sufficient rank', () => {
+  it('should accept project commands - large beenionRank', () => {
     const user = {
       ...genericUser,
       beenionAnalytics: {
@@ -128,34 +141,102 @@ describe('project invariants', () => {
       }
     }
     const publication = {
-      ...genericPublication,
-      privileges: {
-        ...genericPublication.privileges,
-        canDeleteProject: { beenionRank: 10 }
-      }
+      ...genericPublication
     }
     const project = {
       ...genericProject
     }
+
+    expect(permissions.canCreateProject(user, publication)).toBe(true)
     expect(permissions.canDeleteProject(user, project, publication)).toBe(true)
+    expect(permissions.canBanProject(user, project, publication)).toBe(true)
+    expect(permissions.canUpdateProject(user, project, publication)).toBe(true)
   })
 
-  it('should delete project - project owner', () => {
+  it('should accept project commands - large publicationRank', () => {
     const user = {
       ...genericUser,
-      userId: 'test-user'
+      publicationAnalytics: {
+        'test-publication-uuid': {
+          ReviewUpvotedWithGold: 1000
+        }
+      }
+    }
+    const publication = {
+      ...genericPublication
+    }
+    const project = {
+      ...genericProject
+    }
+
+    expect(permissions.canCreateProject(user, publication)).toBe(true)
+    expect(permissions.canDeleteProject(user, project, publication)).toBe(true)
+    expect(permissions.canBanProject(user, project, publication)).toBe(true)
+    expect(permissions.canUpdateProject(user, project, publication)).toBe(true)
+  })
+
+  it('should not accept project commands - large beenionRank or publicationRank', () => {
+    const user = {
+      ...genericUser,
+      beenionAnalytics: {
+        ...genericUser.beenionAnalytics,
+        UserUpvotedWithGold: 100
+      },
+      publicationAnalytics: {
+        'test-publication-uuid': {
+          ReviewUpvotedWithGold: 1000
+        }
+      }
+    }
+    const publication = {
+      ...genericPublication
+    }
+    const project = {
+      ...genericProject
+    }
+
+    expect(permissions.canInviteReviewer(user, project, publication)).toBe(false)
+    expect(permissions.canResubmitProject(user, project, publication)).toBe(false)
+    expect(permissions.canReviewProject(user, project)).toBe(false)
+  })
+
+  it('should not accept project commands - insufficent beenionRank or publicationRank', () => {
+    const user = {
+      ...genericUser,
+      beenionAnalytics: {
+        ...genericUser.beenionAnalytics,
+        UserUpvotedWithGold: 1
+      },
+      publicationAnalytics: {
+        'test-publication-uuid': {
+          ReviewUpvotedWithGold: 1
+        }
+      }
     }
     const publication = {
       ...genericPublication,
       privileges: {
         ...genericPublication.privileges,
-        canDeleteProject: { beenionRank: 10 }
+        canCreateProject: { beenionRank: 500 }
       }
+    }
+
+    expect(permissions.canCreateProject(user, publication)).toBe(false)
+  })
+
+  it('should accept project commands - project owner', () => {
+    const user = {
+      ...genericUser,
+      userId: 'test-user'
+    }
+    const publication = {
+      ...genericPublication
     }
     const project = {
       ...genericProject,
       ownerId: 'test-user'
     }
     expect(permissions.canDeleteProject(user, project, publication)).toBe(true)
+    expect(permissions.canUpdateProject(user, project, publication)).toBe(true)
   })
 })
