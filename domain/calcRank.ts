@@ -1,4 +1,4 @@
-import { EventAnalytics, RankConditions } from 'domain/types/model'
+import { EventAnalytics, RankConditions } from './types/model'
 import * as clamp from 'clamp'
 
 const calcRank =

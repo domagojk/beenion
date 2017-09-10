@@ -1,5 +1,5 @@
 import * as urlRegex from 'url-regex'
-import { PublicationEvent, UserEvent, ProjectEvent } from 'domain/types/events'
+import { PublicationEvent, UserEvent, ProjectEvent } from './types/events'
 import {
   Description,
   URL,
@@ -11,7 +11,7 @@ import {
   ProjectStageRules,
   PublicationPrivileges,
   RankConditions
-} from 'domain/types/model'
+} from './types/model'
 
 export const isString =
   (x: string): x is string =>

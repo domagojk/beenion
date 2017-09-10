@@ -1,6 +1,6 @@
 import makeProject from './makeProject'
-import { Project } from 'domain/types/model'
-import { ProjectEvent } from 'domain/types/events'
+import { Project } from './types/model'
+import { ProjectEvent } from './types/events'
 
 describe('Project projection', () => {
   const projectCreatedEvent: ProjectEvent = {

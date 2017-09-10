@@ -1,9 +1,9 @@
 import { Timestamp, UUID } from 'domain/types/model'
 import { ProjectEvent } from 'domain/types/events'
-import makeProject from 'domain/projections/makeProject'
-import { canRemoveReviewer } from 'domain/invariants/permissions'
-import * as validate from 'domain/invariants/typeValidation'
-import * as errorCodes from 'domain/invariants/errorCodes'
+import makeProject from 'domain/makeProject'
+import { canRemoveReviewer } from 'domain/permissions'
+import * as validate from 'domain/typeValidation'
+import * as errorCodes from 'domain/errorCodes'
 
 function removeProjectReviewer (command: {
   reviewerId: UUID,

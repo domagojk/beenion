@@ -1,6 +1,6 @@
-import { Project, User, Publication, UUID } from 'domain/types/model'
+import { Project, User, Publication, UUID } from './types/model'
 import beenionprivileges from './beenionprivileges'
-import { isInAccessList, hasBeenionRank, hasPublicationRank } from './accessValidation'
+import { isInAccessList, hasBeenionRank, hasPublicationRank } from './privilegeValidation'
 
 export const canCreatePublication =
   (user: User) =>

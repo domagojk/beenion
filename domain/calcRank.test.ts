@@ -1,4 +1,4 @@
-import { RankConditions, EventAnalytics } from 'domain/types/model'
+import { RankConditions, EventAnalytics } from './types/model'
 import calcRank from './calcRank'
 
 describe('calc Publication Rank', () => {

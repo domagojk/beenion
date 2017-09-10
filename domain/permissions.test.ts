@@ -1,5 +1,5 @@
 import * as permissions from './permissions'
-import { Project, User, Publication, Evaluation } from 'domain/types/model'
+import { Project, User, Publication, Evaluation } from './types/model'
 
 const genericUser: User = {
   userId: 'test-user-uuid',

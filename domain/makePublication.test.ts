@@ -1,6 +1,6 @@
 import makePublication from './makePublication'
-import { RankConditions, PublicationPrivileges } from 'domain/types/model'
-import { PublicationEvent } from 'domain/types/events'
+import { RankConditions, PublicationPrivileges } from './types/model'
+import { PublicationEvent } from './types/events'
 
 describe('Publication projection', () => {
   const genericPrivileges: PublicationPrivileges = {

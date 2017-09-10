@@ -8,10 +8,10 @@ import {
   ProjectStageRules
 } from 'domain/types/model'
 import { UserEvent, PublicationEvent } from 'domain/types/events'
-import makeUser from 'domain/projections/makeUser'
-import * as permissions from 'domain/invariants/permissions'
-import * as validate from 'domain/invariants/typeValidation'
-import * as errorCodes from 'domain/invariants/errorCodes'
+import makeUser from 'domain/makeUser'
+import * as permissions from 'domain/permissions'
+import * as validate from 'domain/typeValidation'
+import * as errorCodes from 'domain/errorCodes'
 
 function createPublication (command: {
   userHistory: UserEvent[]

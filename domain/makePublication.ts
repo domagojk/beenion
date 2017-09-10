@@ -1,5 +1,5 @@
-import { PublicationEvent } from 'domain/types/events'
-import { Publication } from 'domain/types/model'
+import { PublicationEvent } from './types/events'
+import { Publication } from './types/model'
 
 const publication =
   (history: PublicationEvent[], initialState?: Publication): Publication =>

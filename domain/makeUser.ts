@@ -1,5 +1,5 @@
-import { UserEvent } from 'domain/types/events'
-import { User } from 'domain/types/model'
+import { UserEvent } from './types/events'
+import { User } from './types/model'
 
 const makeUser = (userHistory: UserEvent[], initialState?: User): User =>
   userHistory.reduce(userReducer, initialState)

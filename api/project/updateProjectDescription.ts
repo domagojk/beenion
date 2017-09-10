@@ -1,11 +1,11 @@
 import { Timestamp, Description } from 'domain/types/model'
 import { UserEvent, PublicationEvent, ProjectEvent } from 'domain/types/events'
-import makeUser from 'domain/projections/makeUser'
-import makePublication from 'domain/projections/makePublication'
-import makeProject from 'domain/projections/makeProject'
-import { canUpdateProject } from 'domain/invariants/permissions'
-import * as validate from 'domain/invariants/typeValidation'
-import * as errorCodes from 'domain/invariants/errorCodes'
+import makeUser from 'domain/makeUser'
+import makePublication from 'domain/makePublication'
+import makeProject from 'domain/makeProject'
+import { canUpdateProject } from 'domain/permissions'
+import * as validate from 'domain/typeValidation'
+import * as errorCodes from 'domain/errorCodes'
 
 function updateProjectDescription (command: {
   userHistory: UserEvent[]

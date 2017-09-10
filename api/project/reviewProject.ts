@@ -1,10 +1,10 @@
 import { Evaluation, Timestamp } from 'domain/types/model'
 import { UserEvent, ProjectEvent } from 'domain/types/events'
-import makeProject from 'domain/projections/makeProject'
-import makeUser from 'domain/projections/makeUser'
-import * as permissions from 'domain/invariants/permissions'
-import * as validate from 'domain/invariants/typeValidation'
-import * as errorCodes from 'domain/invariants/errorCodes'
+import makeProject from 'domain/makeProject'
+import makeUser from 'domain/makeUser'
+import * as permissions from 'domain/permissions'
+import * as validate from 'domain/typeValidation'
+import * as errorCodes from 'domain/errorCodes'
 
 function reviewProject (command: {
   reviewerHistory: UserEvent[]

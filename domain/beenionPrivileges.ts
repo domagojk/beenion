@@ -1,4 +1,4 @@
-import { BeenionPrivileges } from 'domain/types/model'
+import { BeenionPrivileges } from './types/model'
 
 const beenionPrivileges: BeenionPrivileges = {
   canCreatePublication: { beenionRank: 0 },

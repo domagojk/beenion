@@ -1,5 +1,5 @@
-import { ProjectEvent } from 'domain/types/events'
-import { Project } from 'domain/types/model'
+import { ProjectEvent } from './types/events'
+import { Project } from './types/model'
 
 const makeProject =
   (history: ProjectEvent[], initialState?: Project): Project =>

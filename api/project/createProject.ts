@@ -1,10 +1,10 @@
 import { UUID, Description, Timestamp, Title, URL } from 'domain/types/model'
 import { UserEvent, PublicationEvent, ProjectEvent } from 'domain/types/events'
-import makeUser from 'domain/projections/makeUser'
-import makePublication from 'domain/projections/makePublication'
-import { canCreateProject } from 'domain/invariants/permissions'
-import * as validate from 'domain/invariants/typeValidation'
-import * as errorCodes from 'domain/invariants/errorCodes'
+import makeUser from 'domain/makeUser'
+import makePublication from 'domain/makePublication'
+import { canCreateProject } from 'domain/permissions'
+import * as validate from 'domain/typeValidation'
+import * as errorCodes from 'domain/errorCodes'
 
 function createProject (command: {
   userHistory: UserEvent[]

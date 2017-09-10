@@ -1,4 +1,4 @@
-import { RankConditions } from 'domain/types/model'
+import { RankConditions } from './types/model'
 
 const beenionRankConditions: RankConditions = {
   events: {

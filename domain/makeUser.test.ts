@@ -1,5 +1,5 @@
 import makeUser from './makeUser'
-import { UserEvent } from 'domain/types/events'
+import { UserEvent } from './types/events'
 
 describe('makeUser projection', () => {
   it('should create an user object', () => {
