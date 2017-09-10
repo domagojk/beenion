@@ -1,4 +1,5 @@
 /dist
+/coverage
 .vscode
 .idea
 node_modules
