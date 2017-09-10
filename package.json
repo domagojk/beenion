@@ -11,6 +11,7 @@
       "ts",
       "js"
     ],
+    "collectCoverage": true,
     "modulePaths": [
       "."
     ],
