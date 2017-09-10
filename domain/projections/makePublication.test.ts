@@ -1,8 +1,9 @@
 import makePublication from './makePublication'
+import { RankConditions, PublicationPrivileges } from 'domain/types/model'
 import { PublicationEvent } from 'domain/types/events'
 
 describe('Publication projection', () => {
-  const genericPrivileges = {
+  const genericPrivileges: PublicationPrivileges = {
     canUpdatePublication: { beenionRank: 10 },
     canDeletePublication: { beenionRank: 10 },
     canCreateProject: { beenionRank: 10 },
@@ -15,22 +16,33 @@ describe('Publication projection', () => {
     canVoteWithBronze: { beenionRank: 10 }
   }
 
-  const genericRankConditions = {
-    ReviewInvitationAccepted: { factor: 1, max: 100, min: 0 },
-    ReviewInvitationDeclined: { factor: -1, max: 0, min: -100 },
-    ReviewInvitationExpired: { factor: -1, max: 0, min: -100 },
-    ProjectUpvotedWithGold: { factor: 1, max: 100, min: 0 },
-    ProjectUpvotedWithSilver: { factor: 1, max: 100, min: 0 },
-    ProjectUpvotedWithBronze: { factor: 1, max: 100, min: 0 },
-    ProjectDownvotedWithGold: { factor: -1, max: 0, min: -100 },
-    ProjectDownvotedWithSilver: { factor: -1, max: 0, min: -100 },
-    ProjectDownvotedWithBronze: { factor: -1, max: 0, min: -100 },
-    ReviewUpvotedWithGold: { factor: 1, max: 100, min: 0 },
-    ReviewUpvotedWithSilver: { factor: 1, max: 100, min: 0 },
-    ReviewUpvotedWithBronze: { factor: 1, max: 100, min: 0 },
-    ReviewDownvotedWithGold: { factor: -1, max: 0, min: -100 },
-    ReviewDownvotedWithSilver: { factor: -1, max: 0, min: -100 },
-    ReviewDownvotedWithBronze: { factor: -1, max: 0, min: -100 }
+  const genericRankConditions: RankConditions = {
+    events: {
+      ReviewInvitationAccepted: { factor: 1, group: 'invitation' },
+      ReviewInvitationDeclined: { factor: -1, group: 'invitation' },
+      ReviewInvitationExpired: { factor: -1, group: 'invitation' },
+      ProjectUpvotedWithGold: { factor: 1, group: 'projectGold' },
+      ProjectUpvotedWithSilver: { factor: 1, group: 'projectSilver' },
+      ProjectUpvotedWithBronze: { factor: 1, group: 'projectBronze' },
+      ProjectDownvotedWithGold: { factor: -1, group: 'projectGold' },
+      ProjectDownvotedWithSilver: { factor: -1, group: 'projectSilver' },
+      ProjectDownvotedWithBronze: { factor: -1, group: 'projectBronze' },
+      ReviewUpvotedWithGold: { factor: 1, group: 'reviewGold' },
+      ReviewUpvotedWithSilver: { factor: 1, group: 'reviewSilver' },
+      ReviewUpvotedWithBronze: { factor: 1, group: 'reviewBronze' },
+      ReviewDownvotedWithGold: { factor: -1, group: 'reviewGold' },
+      ReviewDownvotedWithSilver: { factor: -1, group: 'reviewSilver' },
+      ReviewDownvotedWithBronze: { factor: -1, group: 'reviewBronze' }
+    },
+    groups: {
+      invitation: { min: -100, max: 100 },
+      projectGold: { min: -100, max: 100 },
+      projectSilver: { min: -100, max: 100 },
+      projectBronze: { min: -100, max: 100 },
+      reviewGold: { min: -100, max: 100 },
+      reviewSilver: { min: -100, max: 100 },
+      reviewBronze: { min: -100, max: 100 }
+    }
   }
 
   const genericProjectStageRules = [
