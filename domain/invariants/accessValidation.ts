@@ -18,7 +18,7 @@ export const hasBeenionRank =
 export const hasPublicationRank =
   (privilegeCond: PrivilegeConditions, user: User, pub: Publication) =>
     privilegeCond.publicationRank !== undefined &&
-    user.publicationAnalytics[pub.publicationId] &&
+    user.publicationAnalytics[pub.publicationId] !== undefined &&
     calcRank(
       user.publicationAnalytics[pub.publicationId],
       pub.rankConditions
