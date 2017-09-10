@@ -120,6 +120,7 @@ describe('calc Beenion Rank', () => {
   }
 
   it('should calculate beenion rank', () => {
+    expect(calcRank(undefined, rankConditions)).toBe(0)
     expect(calcRank(genericBeenionAnalytics, rankConditions)).toBe(0)
 
     expect(
