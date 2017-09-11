@@ -37,7 +37,7 @@ export type PublicationTitleUpdated = {
 export type PublicationDescriptionUpdated = {
   type: 'PublicationDescriptionUpdated'
   publicationId: UUID
-  describtion: string
+  description: Description
   timestamp: Timestamp
 }
 
