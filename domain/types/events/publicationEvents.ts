@@ -34,6 +34,13 @@ export type PublicationTitleUpdated = {
   timestamp: Timestamp
 }
 
+export type PublicationRankConditionsUpdated = {
+  type: 'PublicationRankConditionsUpdated'
+  publicationId: UUID
+  rankConditions: RankConditions
+  timestamp: Timestamp
+}
+
 export type PublicationDescriptionUpdated = {
   type: 'PublicationDescriptionUpdated'
   publicationId: UUID

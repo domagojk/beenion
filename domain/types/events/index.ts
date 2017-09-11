@@ -25,6 +25,7 @@ export type PublicationEvent =
 | PublicationEvents.PublicationDeleted
 | PublicationEvents.PublicationTitleUpdated
 | PublicationEvents.PublicationDescriptionUpdated
+| PublicationEvents.PublicationRankConditionsUpdated
 
 export type UserEvent =
 | UserEvents.UserCreated
