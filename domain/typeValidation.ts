@@ -130,10 +130,12 @@ export const isPublicationEvent =
     }
     const validation: PublicationEventValidation = {
       PublicationCreated: isEvent,
-      ProjectStageRulesUpdated: isEvent,
       PublicationDeleted: isEvent,
       PublicationTitleUpdated: isEvent,
-      PublicationDescriptionUpdated: isEvent
+      PublicationDescriptionUpdated: isEvent,
+      PublicationRankConditionsUpdated: isEvent,
+      PublicationPrivilegesUpdated: isEvent,
+      ProjectStageRulesUpdated: isEvent
     }
 
     return (
