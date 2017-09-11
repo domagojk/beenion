@@ -21,11 +21,12 @@ export type ProjectEvent =
 
 export type PublicationEvent =
 | PublicationEvents.PublicationCreated
-| PublicationEvents.ProjectStageRulesUpdated
 | PublicationEvents.PublicationDeleted
 | PublicationEvents.PublicationTitleUpdated
 | PublicationEvents.PublicationDescriptionUpdated
 | PublicationEvents.PublicationRankConditionsUpdated
+| PublicationEvents.PublicationPrivilegesUpdated
+| PublicationEvents.ProjectStageRulesUpdated
 
 export type UserEvent =
 | UserEvents.UserCreated
