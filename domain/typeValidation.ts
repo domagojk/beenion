@@ -1,235 +1,257 @@
 import * as urlRegex from 'url-regex'
 import { PublicationEvent, UserEvent, ProjectEvent } from './types/events'
 import {
+  UserId,
+  ProjectId,
+  PublicationId,
+  PublicationPrivilege,
+  PublicationPermission,
+  Title,
   Description,
   URL,
-  Title,
   Evaluation,
-  Timestamp,
-  UUID,
-  PrivilegeConditions,
-  ProjectStageRules,
-  PublicationPrivileges,
-  RankConditions
+  RankRange,
+  RankGroup,
+  RankFactor,
+  Medal,
+  Rating,
+  Stage,
+  StageRule,
+  Timestamp
 } from './types/model'
 
-export const isString =
-  (x: string): x is string =>
-    typeof x === 'string'
+export const isString = (val) =>
+  typeof val === 'string'
 
-export const isNumber =
-  (x: number): x is number =>
-    typeof x === 'number'
+export const isNumber = (val) =>
+  typeof val === 'number'
 
-export const isObject =
-  (x: object): x is object =>
-    typeof x === 'object'
+export const isObject = (val) =>
+  typeof val === 'object'
 
-export const isTitle =
-  (x: Title): x is Title =>
-    isString(x) &&
-    x.length < 100
+export const isEvent = (val) =>
+  isObject(val) &&
+  isString(val.type) &&
+  isTimestamp(val.timestamp)
 
-export const isDescription =
-  (x: Description): x is Description =>
-    isString(x)
+export const isTitle = (val): val is Title =>
+  isString(val) &&
+  val.length < 100
 
-export const isEvaluation =
-  (x: Evaluation): x is Evaluation =>
-    x === 'approve' ||
-    x === 'reject'
+export const isDescription = (val): val is Description =>
+  isString(val)
 
-export const isTimestamp =
-  (x: Timestamp): x is Timestamp =>
-    isNumber(x) &&
-    // not before 01/01/2017
-    x > 1483228800000 &&
-    // not after 01/01/2100
-    x < 4102444800000
+export const isEvaluation = (val): val is Evaluation =>
+  val === 'approve' ||
+  val === 'reject'
 
-export const isUUID =
-  (x: UUID): x is UUID =>
-    isString(x)
+export const isTimestamp = (val): val is Timestamp =>
+  isNumber(val) &&
+  // not before 01/01/2017
+  val > 1483228800000 &&
+  // not after 01/01/2100
+  val < 4102444800000
 
-export const isURL =
-  (x: URL): x is URL =>
-    urlRegex({exact: true}).test(x)
+export const isUserId = (val): val is UserId =>
+  isString(val)
 
-export const isPrivilegeConditions =
-  (x: PrivilegeConditions): x is PrivilegeConditions =>
-    isObject(x) &&
-    (x.beenionRank !== undefined || x.publicationRank !== undefined) &&
-    (!x.userAccessList || Array.isArray(x.userAccessList)) &&
-    (!x.userAccessList ||
-      x.userAccessList.filter(isUUID).length === x.userAccessList.length) &&
-    (!x.beenionRank || isNumber(x.beenionRank)) &&
-    (!x.publicationRank || isNumber(x.publicationRank)) &&
-    (!x.publicationRank || isNumber(x.publicationRank))
+export const isProjectId = (val): val is ProjectId =>
+  isString(val)
 
-export const isPublicationPrivileges =
-  (x: PublicationPrivileges): x is PublicationPrivileges => {
-    type PublicationPrivilegesValidation = {
-      [eventType in keyof PublicationPrivileges]: (x) => boolean
-    }
-    const validation: PublicationPrivilegesValidation = {
-      canUpdatePublication: isPrivilegeConditions,
-      canDeletePublication: isPrivilegeConditions,
-      canCreateProject: isPrivilegeConditions,
-      canDeleteProject: isPrivilegeConditions,
-      canBanProject: isPrivilegeConditions,
-      canUpdateProject: isPrivilegeConditions,
-      canResubmitProject: isPrivilegeConditions,
-      canVoteWithGold: isPrivilegeConditions,
-      canVoteWithSilver: isPrivilegeConditions,
-      canVoteWithBronze: isPrivilegeConditions
-    }
+export const isPublicationId = (val): val is PublicationId =>
+  isString(val)
 
-    return (
-      isObject(x) &&
-      Object.keys(x)
-        .filter(privilege => validation[privilege])
-        .filter(privilege => validation[privilege](x[privilege]))
-        .length === Object.keys(validation).length
-    )
+export const isMedal = (val): val is Medal =>
+  val === 'gold' ||
+  val === 'silver' ||
+  val === 'bronze'
+
+export const isRating = (val): val is Rating =>
+  val === 'upvote' ||
+  val === 'downvote'
+
+export const isURL = (val): val is URL =>
+  urlRegex({exact: true}).test(val)
+
+export const isRankRange = (val): val is RankRange =>
+  isObject(val) &&
+  isNumber(val.min) &&
+  (val.max === undefined || isNumber(val.max))
+
+export const isRankGroup = (val): val is RankGroup =>
+  isString(val)
+
+export const isRankFactor = (val): val is RankFactor =>
+  isNumber(val)
+
+export const isStage = (val): val is Stage =>
+  val === 0 || val === 1 || val === 2 || val === 3 || val === 4
+
+export const isStageRule = (val): val is StageRule =>
+  isObject(val) &&
+  isNumber(val.maxReviewers) &&
+  isNumber(val.threshold)
+
+export const isPublicationPermission = (val): val is PublicationPermission =>
+  isObject(val) &&
+  (val.beenionRank !== undefined || val.publicationRank !== undefined) &&
+  (!val.users || Array.isArray(val.users)) &&
+  (!val.users ||
+    val.users.filter(isUserId).length === val.users.length) &&
+  (!val.beenionRank || isNumber(val.beenionRank)) &&
+  (!val.publicationRank || isNumber(val.publicationRank))
+
+export const isPublicationPrivilege = (val): val is PublicationPrivilege => {
+  type PossiblePrivileges = {
+    [privilege in PublicationPrivilege]: boolean
+  }
+  const possiblePrivileges: PossiblePrivileges = {
+    canUpdatePublication: true,
+    canUpdatePrivilege: true,
+    canUpdateRankCalcParams: true,
+    canUpdateStageRules: true,
+    canUpdateEditor: true,
+    canDeletePublication: true,
+    canReviewInStage0: true,
+    canReviewInStage1: true,
+    canReviewInStage2: true,
+    canReviewInStage3: true,
+    canReviewInStage4: true,
+    canCreateProject: true,
+    canDeleteProject: true,
+    canRejectApprovedProject: true,
+    canBanProject: true,
+    canUpdateProject: true,
+    canResubmitProject: true,
+    canVoteWithGold: true,
+    canVoteWithSilver: true,
+    canVoteWithBronze: true
   }
 
-export const isRankConditions =
-  (x: RankConditions): x is RankConditions =>
-    isObject(x) &&
-    isObject(x.events) &&
-    isObject(x.groups) &&
-    Object.values(x.events)
-      .filter(e => !isNumber(e.factor))
-      .length === 0 &&
-    Object.values(x.groups)
-      .filter(g => !isNumber(g.min) || !isNumber(g.max))
-      .length === 0
-
-export const isProjectStageRules =
-  (x: ProjectStageRules[]): x is ProjectStageRules[] =>
-    Array.isArray(x) &&
-    x.length > 0 &&
-    x.filter(
-      rule =>
-        isObject(rule) &&
-        isNumber(rule.maxReviewers) &&
-        isNumber(rule.threshold) &&
-        isPrivilegeConditions(rule.canReview)
-    ).length === x.length
-
-export const isEvent =
-  (x: UserEvent | PublicationEvent | ProjectEvent) =>
-    isObject(x) &&
-    isString(x.type) &&
-    isTimestamp(x.timestamp)
-
-export const isPublicationEvent =
-  (x: PublicationEvent): x is PublicationEvent => {
-    type PublicationEventValidation = {
-      [eventType in PublicationEvent['type']]: (x) => boolean
-    }
-    const validation: PublicationEventValidation = {
-      PublicationCreated: isEvent,
-      PublicationDeleted: isEvent,
-      PublicationTitleUpdated: isEvent,
-      PublicationDescriptionUpdated: isEvent,
-      PublicationRankConditionsUpdated: isEvent,
-      PublicationPrivilegesUpdated: isEvent,
-      ProjectStageRulesUpdated: isEvent
-    }
-
-    return (
-      isObject(x) &&
-      isUUID(x.publicationId) &&
-      validation[x.type] !== undefined &&
-      validation[x.type](x)
-    )
+  return (
+    isString(val) &&
+    possiblePrivileges[val] === true
+  )
+}
+export const isPublicationEventType = (val): val is PublicationEvent['type'] => {
+  type PossibleEvents = {
+    [eventType in PublicationEvent['type']]: boolean
+  }
+  const possibleEvents: PossibleEvents = {
+    PublicationCreated: true,
+    PublicationDeleted: true,
+    PublicationTitleDefined: true,
+    PublicationDescriptionDefined: true,
+    PublicationRankCalcEventDefined: true,
+    PublicationRankCalcEventRemoved: true,
+    PublicationRankCalcGroupDefined: true,
+    PublicationRankCalcGroupRemoved: true,
+    PublicationEditorAdded: true,
+    PublicationEditorConfirmed: true,
+    PublicationEditorRemoved: true,
+    PublicationPrivilegeDefined: true,
+    PublicationPrivilegeRemoved: true,
+    PublicationStageRuleDefined: true,
+    PublicationStageRuleRemoved: true
   }
 
-export const isProjectEvent =
-  (x: ProjectEvent): x is ProjectEvent => {
-    type ProjectEventValidation = {
-      [eventType in ProjectEvent['type']]: (x) => boolean
-    }
-    const validation: ProjectEventValidation = {
-      ProjectCreated: isEvent,
-      ProjectDeleted: isEvent,
-      ProjectDescriptionUpdated: isEvent,
-      ProjectLinkUpdated: isEvent,
-      ProjectTitleUpdated: isEvent,
-      ProjectPromoted: isEvent,
-      ProjectApproved: isEvent,
-      ProjectRejected: isEvent,
-      ProjectResubmitted: isEvent,
-      ProjectReviewerInvited: isEvent,
-      ProjectReviewerInviteFailed: isEvent,
-      ProjectReviewerRemoved: isEvent,
-      ProjectReviewed: isEvent,
-      ProjectBanned: isEvent,
-      ProjectUnbanned: isEvent
-    }
-
-    return (
-      isObject(x) &&
-      isUUID(x.projectId) &&
-      validation[x.type] !== undefined &&
-      validation[x.type](x)
-    )
+  return (
+    isString(val) &&
+    possibleEvents[val] === true
+  )
+}
+export const isProjectEventType = (val): val is ProjectEvent['type'] => {
+  type PossibleEvents = {
+    [eventType in ProjectEvent['type']]: boolean
+  }
+  const possibleEvents: PossibleEvents = {
+    ProjectCreated: true,
+    ProjectDeleted: true,
+    ProjectStageRulesDefined: true,
+    ProjectDescriptionDefined: true,
+    ProjectLinkDefined: true,
+    ProjectTitleDefined: true,
+    ProjectPromoted: true,
+    ProjectApproved: true,
+    ProjectRejected: true,
+    ApprovedProjectRejected: true,
+    ProjectResubmitted: true,
+    ProjectReviewerInvited: true,
+    ProjectReviewerRemoved: true,
+    ProjectReviewed: true,
+    ProjectBanned: true,
+    ProjectUnbanned: true
   }
 
-export const isUserEvent =
-  (x: UserEvent): x is UserEvent => {
-    type UserEventValidation = {
-      [eventType in UserEvent['type']]: (x) => boolean
-    }
-
-    const validation: UserEventValidation = {
-      UserCreated: isEvent,
-      ReviewInvitationAccepted: isEvent,
-      ReviewInvitationDeclined: isEvent,
-      ReviewInvitationExpired: isEvent,
-      ReviewUpvotedWithGold: isEvent,
-      ReviewUpvotedWithSilver: isEvent,
-      ReviewUpvotedWithBronze: isEvent,
-      ReviewDownvotedWithGold: isEvent,
-      ReviewDownvotedWithSilver: isEvent,
-      ReviewDownvotedWithBronze: isEvent,
-      ProjectUpvotedWithGold: isEvent,
-      ProjectUpvotedWithSilver: isEvent,
-      ProjectUpvotedWithBronze: isEvent,
-      ProjectDownvotedWithGold: isEvent,
-      ProjectDownvotedWithSilver: isEvent,
-      ProjectDownvotedWithBronze: isEvent,
-      UserUpvotedWithGold: isEvent,
-      UserUpvotedWithSilver: isEvent,
-      UserUpvotedWithBronze: isEvent,
-      UserDownvotedWithGold: isEvent,
-      UserDownvotedWithSilver: isEvent,
-      UserDownvotedWithBronze: isEvent
-    }
-
-    return (
-      isEvent(x) &&
-      isUUID(x.userId) &&
-      validation[x.type] !== undefined &&
-      validation[x.type](x)
-    )
+  return (
+    isString(val) &&
+    possibleEvents[val] === true
+  )
+}
+export const isUserEventType = (val): val is UserEvent['type'] => {
+  type PossibleEvents = {
+    [eventType in UserEvent['type']]: boolean
   }
 
-export const isPublicationHistory =
-  (x: PublicationEvent[]): x is PublicationEvent[] =>
-    Array.isArray(x) &&
-    x.length > 0 &&
-    x.filter(isPublicationEvent).length === x.length
+  const possibleEvents: PossibleEvents = {
+    UserCreated: true,
+    UserAccountMerged: true,
+    ReviewInvitationDeclined: true,
+    ReviewInvitationExpired: true,
+    ProjectUpvotedWithGold: true,
+    ProjectUpvotedWithSilver: true,
+    ProjectUpvotedWithBronze: true,
+    ProjectDownvotedWithGold: true,
+    ProjectDownvotedWithSilver: true,
+    ProjectDownvotedWithBronze: true,
+    ProjectVoteWithdrawn: true,
+    ReviewUpvotedWithGold: true,
+    ReviewUpvotedWithSilver: true,
+    ReviewUpvotedWithBronze: true,
+    ReviewDownvotedWithGold: true,
+    ReviewDownvotedWithSilver: true,
+    ReviewDownvotedWithBronze: true,
+    ReviewVoteWithdrawn: true,
+    UserUpvotedWithGold: true,
+    UserUpvotedWithSilver: true,
+    UserUpvotedWithBronze: true,
+    UserDownvotedWithGold: true,
+    UserDownvotedWithSilver: true,
+    UserDownvotedWithBronze: true,
+    UserVoteWithdrawn: true
+  }
 
-export const isProjectHistory =
-  (x: ProjectEvent[]): x is ProjectEvent[] =>
-    Array.isArray(x) &&
-    x.length > 0 &&
-    x.filter(isProjectEvent).length === x.length
+  return (
+    isString(val) &&
+    possibleEvents[val] === true
+  )
+}
+export const isPublicationEvent = (val): val is PublicationEvent =>
+  isEvent(val) &&
+  isPublicationId(val.publicationId) &&
+  isPublicationEventType(val.type)
 
-export const isUserHistory =
-  (x: UserEvent[]): x is UserEvent[] =>
-    Array.isArray(x) &&
-    x.length > 0 &&
-    x.filter(isUserEvent).length === x.length
+export const isProjectEvent = (val): val is ProjectEvent =>
+  isEvent(val) &&
+  isProjectId(val.projectId) &&
+  isProjectEventType(val.type)
+
+export const isUserEvent = (val): val is UserEvent =>
+  isEvent(val) &&
+  isUserId(val.userId) &&
+  isUserEventType(val.type)
+
+export const isUserHistory = (val): val is UserEvent[] =>
+  Array.isArray(val) &&
+  val.length > 0 &&
+  val.filter(isUserEvent).length === val.length
+
+export const isPublicationHistory = (val): val is PublicationEvent[] =>
+  Array.isArray(val) &&
+  val.length > 0 &&
+  val.filter(isPublicationEvent).length === val.length
+
+export const isProjectHistory = (val): val is ProjectEvent[] =>
+  Array.isArray(val) &&
+  val.length > 0 &&
+  val.filter(isProjectEvent).length === val.length

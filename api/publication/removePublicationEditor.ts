@@ -1,44 +1,43 @@
-import { ProjectEvent } from 'domain/types/events'
-import { canBanProject } from 'domain/businessRules'
-import { PROJECT_UNBAN_NOT_ALLOWED } from 'domain/errorCodes'
+import { PublicationEvent } from 'domain/types/events'
+import { canRemovePublicationEditor } from 'domain/businessRules'
+import { PUBLICATION_REMOVE_EDITOR_NOT_ALLOWED } from 'domain/errorCodes'
 import reduceToUser from 'domain/reduceToUser'
 import reduceToPublication from 'domain/reduceToPublication'
-import reduceToProject from 'domain/reduceToProject'
 import {
   createUserHistory,
+  createUserId,
   createPublicationHistory,
-  createProjectHistory,
   createTimestamp
 } from 'domain/typeFactories'
 
-function unbanProject (command: {
+function removePublicationEditor (command: {
   userHistory: object[]
   publicationHistory: object[]
-  projectHistory: object[]
+  editorId: string,
   timestamp: number
-}): ProjectEvent[] {
+}): PublicationEvent[] {
 
   const userHistory = createUserHistory(command.userHistory)
-  const projectHistory = createProjectHistory(command.projectHistory)
+  const editorId = createUserId(command.editorId)
   const publicationHistory = createPublicationHistory(command.publicationHistory)
   const timestamp = createTimestamp(command.timestamp)
 
   const user = reduceToUser(userHistory)
-  const project = reduceToProject(projectHistory)
   const publication = reduceToPublication(publicationHistory)
 
-  if (!canBanProject(user, project, publication)) {
-    throw new Error(PROJECT_UNBAN_NOT_ALLOWED)
+  if (!canRemovePublicationEditor(editorId, user, publication)) {
+    throw new Error(PUBLICATION_REMOVE_EDITOR_NOT_ALLOWED)
   }
 
   return [
     {
-      type: 'ProjectUnbanned',
-      projectId: project.projectId,
+      type: 'PublicationEditorRemoved',
+      publicationId: publication.publicationId,
       userId: user.userId,
+      editorId,
       timestamp
     }
   ]
 }
 
-export default unbanProject
+export default removePublicationEditor

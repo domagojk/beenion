@@ -1,6 +1,8 @@
 import {
-  UUID,
-  ProjectStageRules,
+  UserId,
+  ProjectId,
+  PublicationId,
+  StageRule,
   Timestamp,
   Title,
   Description,
@@ -10,108 +12,113 @@ import {
 
 export type ProjectCreated = {
   type: 'ProjectCreated'
-  projectId: UUID
-  publicationId: UUID
-  stageRules: ProjectStageRules[]
-  ownerId: UUID
-  title: Title
-  description: Description
-  link: URL
+  projectId: ProjectId
+  publicationId: PublicationId
+  ownerId: UserId
   timestamp: Timestamp
 }
 
 export type ProjectDeleted = {
   type: 'ProjectDeleted'
-  projectId: UUID
-  userId: UUID
+  projectId: ProjectId
+  userId: UserId
   timestamp: Timestamp
 }
 
-export type ProjectDescriptionUpdated = {
-  type: 'ProjectDescriptionUpdated'
-  projectId: UUID
+export type ProjectStageRulesDefined = {
+  type: 'ProjectStageRulesDefined'
+  projectId: ProjectId
+  stageRules: StageRule[]
+  timestamp: Timestamp
+}
+
+export type ProjectDescriptionDefined = {
+  type: 'ProjectDescriptionDefined'
+  projectId: ProjectId
   description: Description
   timestamp: Timestamp
 }
 
-export type ProjectLinkUpdated = {
-  type: 'ProjectLinkUpdated'
-  projectId: UUID
+export type ProjectLinkDefined = {
+  type: 'ProjectLinkDefined'
+  projectId: ProjectId
   link: URL
   timestamp: Timestamp
 }
 
-export type ProjectTitleUpdated = {
-  type: 'ProjectTitleUpdated'
-  projectId: UUID
+export type ProjectTitleDefined = {
+  type: 'ProjectTitleDefined'
+  projectId: ProjectId
   title: Title
   timestamp: Timestamp
 }
 
 export type ProjectPromoted = {
   type: 'ProjectPromoted'
-  projectId: UUID
+  userId: UserId
+  projectId: ProjectId
   timestamp: Timestamp
 }
 
 export type ProjectApproved = {
   type: 'ProjectApproved'
-  projectId: UUID
+  userId: UserId
+  projectId: ProjectId
   timestamp: Timestamp
 }
 
 export type ProjectRejected = {
   type: 'ProjectRejected'
-  projectId: UUID
+  userId: UserId
+  projectId: ProjectId
+  timestamp: Timestamp
+}
+
+export type ApprovedProjectRejected = {
+  type: 'ApprovedProjectRejected'
+  userId: UserId
+  projectId: ProjectId
   timestamp: Timestamp
 }
 
 export type ProjectResubmitted = {
   type: 'ProjectResubmitted'
-  projectId: UUID
-  stageRules: ProjectStageRules[]
+  projectId: ProjectId
   timestamp: Timestamp
 }
 
 export type ProjectReviewerInvited = {
   type: 'ProjectReviewerInvited'
-  projectId: UUID
-  reviewerId: UUID
-  timestamp: Timestamp
-}
-
-export type ProjectReviewerInviteFailed = {
-  type: 'ProjectReviewerInviteFailed'
-  projectId: UUID
-  reviewerId: UUID
+  projectId: ProjectId
+  reviewerId: UserId
   timestamp: Timestamp
 }
 
 export type ProjectReviewerRemoved = {
   type: 'ProjectReviewerRemoved'
-  projectId: UUID
-  reviewerId: UUID
+  projectId: ProjectId
+  reviewerId: UserId
   timestamp: Timestamp
 }
 
 export type ProjectReviewed = {
   type: 'ProjectReviewed'
-  projectId: UUID
-  reviewerId: UUID
+  projectId: ProjectId
+  reviewerId: UserId
   evaluation: Evaluation
   timestamp: Timestamp
 }
 
 export type ProjectBanned = {
   type: 'ProjectBanned'
-  userId: UUID
-  projectId: UUID
+  userId: UserId
+  projectId: ProjectId
   timestamp: Timestamp
 }
 
 export type ProjectUnbanned = {
   type: 'ProjectUnbanned'
-  userId: UUID
-  projectId: UUID
+  userId: UserId
+  projectId: ProjectId
   timestamp: Timestamp
 }

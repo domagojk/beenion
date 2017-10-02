@@ -5,15 +5,16 @@ import * as UserEvents from './userEvents'
 export type ProjectEvent =
 | ProjectEvents.ProjectCreated
 | ProjectEvents.ProjectDeleted
-| ProjectEvents.ProjectDescriptionUpdated
-| ProjectEvents.ProjectLinkUpdated
-| ProjectEvents.ProjectTitleUpdated
+| ProjectEvents.ProjectStageRulesDefined
+| ProjectEvents.ProjectDescriptionDefined
+| ProjectEvents.ProjectLinkDefined
+| ProjectEvents.ProjectTitleDefined
 | ProjectEvents.ProjectPromoted
 | ProjectEvents.ProjectApproved
 | ProjectEvents.ProjectRejected
+| ProjectEvents.ApprovedProjectRejected
 | ProjectEvents.ProjectResubmitted
 | ProjectEvents.ProjectReviewerInvited
-| ProjectEvents.ProjectReviewerInviteFailed
 | ProjectEvents.ProjectReviewerRemoved
 | ProjectEvents.ProjectReviewed
 | ProjectEvents.ProjectBanned
@@ -22,15 +23,23 @@ export type ProjectEvent =
 export type PublicationEvent =
 | PublicationEvents.PublicationCreated
 | PublicationEvents.PublicationDeleted
-| PublicationEvents.PublicationTitleUpdated
-| PublicationEvents.PublicationDescriptionUpdated
-| PublicationEvents.PublicationRankConditionsUpdated
-| PublicationEvents.PublicationPrivilegesUpdated
-| PublicationEvents.ProjectStageRulesUpdated
+| PublicationEvents.PublicationTitleDefined
+| PublicationEvents.PublicationDescriptionDefined
+| PublicationEvents.PublicationRankCalcEventDefined
+| PublicationEvents.PublicationRankCalcEventRemoved
+| PublicationEvents.PublicationRankCalcGroupDefined
+| PublicationEvents.PublicationRankCalcGroupRemoved
+| PublicationEvents.PublicationEditorAdded
+| PublicationEvents.PublicationEditorConfirmed
+| PublicationEvents.PublicationEditorRemoved
+| PublicationEvents.PublicationPrivilegeDefined
+| PublicationEvents.PublicationPrivilegeRemoved
+| PublicationEvents.PublicationStageRuleDefined
+| PublicationEvents.PublicationStageRuleRemoved
 
 export type UserEvent =
 | UserEvents.UserCreated
-| UserEvents.ReviewInvitationAccepted
+| UserEvents.UserAccountMerged
 | UserEvents.ReviewInvitationDeclined
 | UserEvents.ReviewInvitationExpired
 | UserEvents.ProjectUpvotedWithGold
@@ -39,15 +48,18 @@ export type UserEvent =
 | UserEvents.ProjectDownvotedWithGold
 | UserEvents.ProjectDownvotedWithSilver
 | UserEvents.ProjectDownvotedWithBronze
+| UserEvents.ProjectVoteWithdrawn
 | UserEvents.ReviewUpvotedWithGold
 | UserEvents.ReviewUpvotedWithSilver
 | UserEvents.ReviewUpvotedWithBronze
 | UserEvents.ReviewDownvotedWithGold
 | UserEvents.ReviewDownvotedWithSilver
 | UserEvents.ReviewDownvotedWithBronze
+| UserEvents.ReviewVoteWithdrawn
 | UserEvents.UserUpvotedWithGold
 | UserEvents.UserUpvotedWithSilver
 | UserEvents.UserUpvotedWithBronze
 | UserEvents.UserDownvotedWithGold
 | UserEvents.UserDownvotedWithSilver
 | UserEvents.UserDownvotedWithBronze
+| UserEvents.UserVoteWithdrawn

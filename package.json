@@ -11,7 +11,7 @@
       "ts",
       "js"
     ],
-    "collectCoverage": true,
+    "collectCoverage": false,
     "modulePaths": [
       "."
     ],
@@ -20,7 +20,7 @@
     },
     "testMatch": [
       "**/__tests__/**/*.(js|ts)?(x)",
-      "**/?(*.)(spec|test).(js|ts)?(x)"
+      "**/?(*.)(test).(js|ts)?(x)"
     ],
     "testPathIgnorePatterns": [
       "/dist/"
@@ -41,7 +41,7 @@
     "ntsc": "^0.2.0",
     "ts-jest": "^20.0.6",
     "tsconfig-paths": "^2.2.0",
-    "tslint": "^5.5.0",
+    "tslint": "^5.7.0",
     "tslint-config-standard": "^6.0.1",
     "typescript": "^2.4.1"
   }

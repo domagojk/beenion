@@ -1,73 +1,69 @@
-import { Evaluation, Timestamp } from 'domain/types/model'
-import { UserEvent, ProjectEvent } from 'domain/types/events'
-import makeProject from 'domain/makeProject'
-import makeUser from 'domain/makeUser'
-import * as permissions from 'domain/permissions'
-import * as validate from 'domain/typeValidation'
-import * as errorCodes from 'domain/errorCodes'
+import { ProjectEvent } from 'domain/types/events'
+import * as rules from 'domain/businessRules'
+import { PROJECT_REVIEW_NOT_ALLOWED } from 'domain/errorCodes'
+import reduceToProject from 'domain/reduceToProject'
+import reduceToUser from 'domain/reduceToUser'
+import {
+  createUserHistory,
+  createEvaluation,
+  createProjectHistory,
+  createTimestamp
+} from 'domain/typeFactories'
 
 function reviewProject (command: {
-  reviewerHistory: UserEvent[]
-  projectHistory: ProjectEvent[]
-  evaluation: Evaluation
-  timestamp: Timestamp
+  reviewerHistory: object[]
+  projectHistory: object[]
+  evaluation: string
+  timestamp: number
 }): ProjectEvent[] {
 
-  if (!validate.isUserHistory(command.reviewerHistory)) {
-    throw new TypeError(errorCodes.INVALID_USER_HISTORY)
-  }
+  const reviewerHistory = createUserHistory(command.reviewerHistory)
+  const projectHistory = createProjectHistory(command.projectHistory)
+  const evaluation = createEvaluation(command.evaluation)
+  const timestamp = createTimestamp(command.timestamp)
 
-  if (!validate.isProjectHistory(command.projectHistory)) {
-    throw new TypeError(errorCodes.INVALID_PROJECT_HISTORY)
-  }
+  const reviewer = reduceToUser(reviewerHistory)
+  const project = reduceToProject(projectHistory)
 
-  if (!validate.isEvaluation(command.evaluation)) {
-    throw new TypeError(errorCodes.INVALID_EVALUATION)
-  }
-
-  if (!validate.isTimestamp(command.timestamp)) {
-    throw new TypeError(errorCodes.INVALID_TIMESTAMP)
-  }
-
-  const reviewer = makeUser(command.reviewerHistory)
-  const project = makeProject(command.projectHistory)
-
-  if (!permissions.canReviewProject(reviewer, project)) {
-    throw new Error(errorCodes.REVIEW_PROJECT_NOT_ALLOWED)
+  if (!rules.canReviewProject(reviewer, project)) {
+    throw new Error(PROJECT_REVIEW_NOT_ALLOWED)
   }
 
   const projectReviewed: ProjectEvent = {
     type: 'ProjectReviewed',
     projectId: project.projectId,
     reviewerId: reviewer.userId,
-    evaluation: command.evaluation,
-    timestamp: command.timestamp
+    evaluation,
+    timestamp
   }
   const projectPromoted: ProjectEvent = {
     type: 'ProjectPromoted',
+    userId: reviewer.userId,
     projectId: project.projectId,
-    timestamp: command.timestamp
+    timestamp
   }
   const projectApproved: ProjectEvent = {
     type: 'ProjectApproved',
+    userId: reviewer.userId,
     projectId: project.projectId,
-    timestamp: command.timestamp
+    timestamp
   }
   const projectRejected: ProjectEvent = {
     type: 'ProjectRejected',
+    userId: reviewer.userId,
     projectId: project.projectId,
-    timestamp: command.timestamp
+    timestamp
   }
 
-  const reviewedProject = makeProject([projectReviewed], project)
+  const reviewedProject = reduceToProject([projectReviewed], project)
 
-  if (permissions.canApproveProject(reviewedProject)) {
+  if (rules.canApproveProject(reviewedProject)) {
     return [projectReviewed, projectApproved]
   }
-  if (permissions.canRejectProject(reviewedProject)) {
+  if (rules.canRejectProject(reviewedProject)) {
     return [projectReviewed, projectRejected]
   }
-  if (permissions.canPromoteProject(reviewedProject)) {
+  if (rules.canPromoteProject(reviewedProject)) {
     return [projectReviewed, projectPromoted]
   }
 

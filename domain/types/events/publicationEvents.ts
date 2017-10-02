@@ -1,63 +1,128 @@
+import { UserEvent } from 'domain/types/events'
 import {
-  UUID,
+  PublicationId,
+  UserId,
   Title,
   Description,
-  ProjectStageRules,
-  PublicationPrivileges,
-  RankConditions,
+  PublicationPrivilege,
+  PublicationPermission,
+  Stage,
+  RankRange,
+  StageRule,
+  RankGroup,
+  RankFactor,
   Timestamp
 } from 'domain/types/model'
 
 export type PublicationCreated = {
   type: 'PublicationCreated'
-  publicationId: UUID
-  ownerId: UUID
-  title: Title
-  description: Description
-  privileges: PublicationPrivileges
-  rankConditions: RankConditions
-  projectStageRules: ProjectStageRules[]
+  publicationId: PublicationId
+  ownerId: UserId
   timestamp: Timestamp
 }
 
 export type PublicationDeleted = {
   type: 'PublicationDeleted'
-  userId: UUID
-  publicationId: UUID
+  userId: UserId
+  publicationId: PublicationId
   timestamp: Timestamp
 }
 
-export type PublicationTitleUpdated = {
-  type: 'PublicationTitleUpdated'
-  publicationId: UUID
-  title: string
+export type PublicationTitleDefined = {
+  type: 'PublicationTitleDefined'
+  publicationId: PublicationId
+  title: Title
   timestamp: Timestamp
 }
 
-export type PublicationDescriptionUpdated = {
-  type: 'PublicationDescriptionUpdated'
-  publicationId: UUID
+export type PublicationDescriptionDefined = {
+  type: 'PublicationDescriptionDefined'
+  publicationId: PublicationId
   description: Description
   timestamp: Timestamp
 }
 
-export type PublicationPrivilegesUpdated = {
-  type: 'PublicationPrivilegesUpdated'
-  publicationId: UUID
-  privileges: PublicationPrivileges
+export type PublicationRankCalcEventDefined = {
+  type: 'PublicationRankCalcEventDefined'
+  publicationId: PublicationId
+  userEventType: UserEvent['type']
+  factor: RankFactor
+  group: RankGroup
   timestamp: Timestamp
 }
 
-export type PublicationRankConditionsUpdated = {
-  type: 'PublicationRankConditionsUpdated'
-  publicationId: UUID
-  rankConditions: RankConditions
+export type PublicationRankCalcEventRemoved = {
+  type: 'PublicationRankCalcEventRemoved'
+  publicationId: PublicationId
+  userEventType: UserEvent['type']
   timestamp: Timestamp
 }
 
-export type ProjectStageRulesUpdated = {
-  type: 'ProjectStageRulesUpdated'
-  publicationId: UUID
-  projectStageRules: ProjectStageRules[]
+export type PublicationRankCalcGroupDefined = {
+  type: 'PublicationRankCalcGroupDefined'
+  publicationId: PublicationId
+  group: RankGroup
+  rankRange: RankRange
+  timestamp: Timestamp
+}
+
+export type PublicationRankCalcGroupRemoved = {
+  type: 'PublicationRankCalcGroupRemoved'
+  publicationId: PublicationId
+  group: RankGroup
+  timestamp: Timestamp
+}
+
+export type PublicationPrivilegeDefined = {
+  type: 'PublicationPrivilegeDefined'
+  publicationId: PublicationId
+  privilege: PublicationPrivilege
+  permission: PublicationPermission
+  timestamp: Timestamp
+}
+
+export type PublicationPrivilegeRemoved = {
+  type: 'PublicationPrivilegeRemoved'
+  publicationId: PublicationId
+  privilege: PublicationPrivilege
+  timestamp: Timestamp
+}
+
+export type PublicationStageRuleDefined = {
+  type: 'PublicationStageRuleDefined'
+  publicationId: PublicationId
+  stage: Stage
+  stageRule: StageRule
+  timestamp: Timestamp
+}
+
+export type PublicationStageRuleRemoved = {
+  type: 'PublicationStageRuleRemoved'
+  publicationId: PublicationId
+  stage: Stage
+  timestamp: Timestamp
+}
+
+export type PublicationEditorAdded = {
+  type: 'PublicationEditorAdded'
+  publicationId: PublicationId
+  userId: UserId
+  editorId: UserId
+  timestamp: Timestamp
+}
+
+export type PublicationEditorConfirmed = {
+  type: 'PublicationEditorConfirmed'
+  publicationId: PublicationId
+  editorId: UserId
+  confirmedEditorId: UserId
+  timestamp: Timestamp
+}
+
+export type PublicationEditorRemoved = {
+  type: 'PublicationEditorRemoved'
+  publicationId: PublicationId
+  userId: UserId
+  editorId: UserId
   timestamp: Timestamp
 }

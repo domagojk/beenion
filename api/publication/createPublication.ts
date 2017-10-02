@@ -1,78 +1,62 @@
+import { PublicationEvent } from 'domain/types/events'
+import { canCreatePublication } from 'domain/businessRules'
+import { PUBLICATION_CREATE_NOT_ALLOWED } from 'domain/errorCodes'
+import reduceToUser from 'domain/reduceToUser'
 import {
-  UUID,
-  Description,
-  Title,
-  Timestamp,
-  PublicationPrivileges,
-  RankConditions,
-  ProjectStageRules
-} from 'domain/types/model'
-import { UserEvent, PublicationEvent } from 'domain/types/events'
-import makeUser from 'domain/makeUser'
-import { canCreatePublication } from 'domain/permissions'
-import * as validate from 'domain/typeValidation'
-import * as errorCodes from 'domain/errorCodes'
+  createUserHistory,
+  createPublicationId,
+  createTitle,
+  createDescription,
+  createTimestamp
+} from 'domain/typeFactories'
 
 function createPublication (command: {
-  userHistory: UserEvent[]
-  publicationId: UUID
-  privileges: PublicationPrivileges
-  rankConditions: RankConditions
-  projectStageRules: ProjectStageRules[]
-  title: Title
-  description: Description
-  timestamp: Timestamp
+  userHistory: object[]
+  publicationId: string
+  title: string
+  description: string
+  timestamp: number
 }): PublicationEvent[] {
 
-  if (!validate.isUserHistory(command.userHistory)) {
-    throw new TypeError(errorCodes.INVALID_USER_HISTORY)
-  }
+  const userHistory = createUserHistory(command.userHistory)
+  const publicationId = createPublicationId(command.publicationId)
+  const title = createTitle(command.title)
+  const description = createDescription(command.description)
+  const timestamp = createTimestamp(command.timestamp)
 
-  if (!validate.isUUID(command.publicationId)) {
-    throw new TypeError(errorCodes.INVALID_UUID)
-  }
-
-  if (!validate.isTitle(command.title)) {
-    throw new TypeError(errorCodes.INVALID_TITLE)
-  }
-
-  if (!validate.isDescription(command.description)) {
-    throw new TypeError(errorCodes.INVALID_DESCRIPTION)
-  }
-
-  if (!validate.isPublicationPrivileges(command.privileges)) {
-    throw new TypeError(errorCodes.INVALID_PUBLICATION_PRIVILEGES)
-  }
-
-  if (!validate.isRankConditions(command.rankConditions)) {
-    throw new TypeError(errorCodes.INVALID_PUBLICATION_RANK_CONDITIONS)
-  }
-
-  if (!validate.isProjectStageRules(command.projectStageRules)) {
-    throw new TypeError(errorCodes.INVALID_PROJECT_STAGE_RULES)
-  }
-
-  if (!validate.isTimestamp(command.timestamp)) {
-    throw new TypeError(errorCodes.INVALID_TIMESTAMP)
-  }
-
-  const user = makeUser(command.userHistory)
+  const user = reduceToUser(userHistory)
 
   if (!canCreatePublication(user)) {
-    throw new Error(errorCodes.CREATE_PUBLICATION_NOT_ALLOWED)
+    throw new Error(PUBLICATION_CREATE_NOT_ALLOWED)
   }
 
   return [
     {
       type: 'PublicationCreated',
-      publicationId: command.publicationId,
+      publicationId,
       ownerId: user.userId,
-      title: command.title,
-      description: command.description,
-      privileges: command.privileges,
-      rankConditions: command.rankConditions,
-      projectStageRules: command.projectStageRules,
-      timestamp: command.timestamp
+      timestamp
+    },
+    {
+      type: 'PublicationTitleDefined',
+      publicationId,
+      title,
+      timestamp
+    },
+    {
+      type: 'PublicationDescriptionDefined',
+      publicationId,
+      description,
+      timestamp
+    },
+    {
+      type: 'PublicationPrivilegeDefined',
+      publicationId,
+      privilege: 'canUpdatePublication',
+      permission: {
+        users: [user.userId]
+      },
+      timestamp
     }
   ]
 }

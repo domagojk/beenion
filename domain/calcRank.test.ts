@@ -1,211 +1,190 @@
-import { RankConditions, EventAnalytics } from './types/model'
+import { RankCalcParams } from './types/model'
 import calcRank from './calcRank'
 
-describe('calc Publication Rank', () => {
-  const genericRankConditions: RankConditions = {
-    events: {
-      ReviewInvitationAccepted: { factor: 1, group: 'invitation' },
-      ReviewInvitationDeclined: { factor: -1, group: 'invitation' },
-      ReviewInvitationExpired: { factor: -1, group: 'invitation' },
-      ProjectUpvotedWithGold: { factor: 1, group: 'projectGold' },
-      ProjectUpvotedWithSilver: { factor: 1, group: 'projectSilver' },
-      ProjectUpvotedWithBronze: { factor: 1, group: 'projectBronze' },
-      ProjectDownvotedWithGold: { factor: -1, group: 'projectGold' },
-      ProjectDownvotedWithSilver: { factor: -1, group: 'projectSilver' },
-      ProjectDownvotedWithBronze: { factor: -1, group: 'projectBronze' },
-      ReviewUpvotedWithGold: { factor: 1, group: 'reviewGold' },
-      ReviewUpvotedWithSilver: { factor: 1, group: 'reviewSilver' },
-      ReviewUpvotedWithBronze: { factor: 1, group: 'reviewBronze' },
-      ReviewDownvotedWithGold: { factor: -1, group: 'reviewGold' },
-      ReviewDownvotedWithSilver: { factor: -1, group: 'reviewSilver' },
-      ReviewDownvotedWithBronze: { factor: -1, group: 'reviewBronze' }
-    },
-    groups: {
-      invitation: { min: -100, max: 100 },
-      projectGold: { min: -100, max: 100 },
-      projectSilver: { min: -100, max: 100 },
-      projectBronze: { min: -100, max: 100 },
-      reviewGold: { min: -100, max: 100 },
-      reviewSilver: { min: -100, max: 100 },
-      reviewBronze: { min: -100, max: 100 }
-    }
-  }
+describe('calc Rank', () => {
+  const genericRankConditions = {
+    events: [
+      { eventType: 'ReviewInvitationAccepted', factor: 1, group: 'invitation' },
+      { eventType: 'ReviewInvitationDeclined', factor: -1, group: 'invitation' },
+      { eventType: 'ReviewInvitationExpired', factor: -1, group: 'invitation' },
+      { eventType: 'UserUpvotedWithGold', factor: 3, group: 'userGold' },
+      { eventType: 'UserUpvotedWithSilver', factor: 2, group: 'userSilver' },
+      { eventType: 'UserUpvotedWithBronze', factor: 1, group: 'userBronze' },
+      { eventType: 'UserDownvotedWithGold', factor: -3, group: 'userGold' },
+      { eventType: 'UserDownvotedWithSilver', factor: -2, group: 'userSilver' },
+      { eventType: 'UserDownvotedWithBronze', factor: -1, group: 'userBronze' },
+      { eventType: 'ProjectUpvotedWithGold', factor: 3, group: 'projectGold' },
+      { eventType: 'ProjectUpvotedWithSilver', factor: 2, group: 'projectSilver' },
+      { eventType: 'ProjectUpvotedWithBronze', factor: 1, group: 'projectBronze' },
+      { eventType: 'ProjectDownvotedWithGold', factor: -3, group: 'projectGold' },
+      { eventType: 'ProjectDownvotedWithSilver', factor: -2, group: 'projectSilver' },
+      { eventType: 'ProjectDownvotedWithBronze', factor: -1, group: 'projectBronze' },
+      { eventType: 'ReviewUpvotedWithGold', factor: 3, group: 'reviewGold' },
+      { eventType: 'ReviewUpvotedWithSilver', factor: 2, group: 'reviewSilver' },
+      { eventType: 'ReviewUpvotedWithBronze', factor: 1, group: 'reviewBronze' },
+      { eventType: 'ReviewDownvotedWithGold', factor: -3, group: 'reviewGold' },
+      { eventType: 'ReviewDownvotedWithSilver', factor: -2, group: 'reviewSilver' },
+      { eventType: 'ReviewDownvotedWithBronze', factor: -1, group: 'reviewBronze' }
+    ],
+    groups: [
+      { group: 'invitation', rankRange: { min: -3, max: 3 } },
+      { group: 'userGold', rankRange: { min: -9, max: 9 } },
+      { group: 'userSilver', rankRange: { min: -3, max: 3 } },
+      { group: 'userBronze', rankRange: { min: -3, max: 3 } },
+      { group: 'projectGold', rankRange: { min: -9, max: 9 } },
+      { group: 'projectSilver', rankRange: { min: -3, max: 3 } },
+      { group: 'projectBronze', rankRange: { min: -3, max: 3 } },
+      { group: 'reviewGold', rankRange: { min: -9, max: 9 } },
+      { group: 'reviewSilver', rankRange: { min: -3, max: 3 } },
+      { group: 'reviewBronze', rankRange: { min: -3, max: 3} }
+    ]
+  } as RankCalcParams
 
   it('should calculate publication rank', () => {
-    expect(calcRank({}, genericRankConditions)).toBe(0)
+    expect(calcRank([], genericRankConditions)).toBe(0)
 
     expect(
       calcRank(
-        {
-          ProjectUpvotedWithGold: 1
-        },
-        genericRankConditions
-      )
-    ).toBe(1)
-
-    expect(
-      calcRank(
-        {
-          ProjectUpvotedWithGold: 1,
-          ProjectUpvotedWithSilver: 1,
-          ProjectUpvotedWithBronze: 1
-        },
+        [
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          }
+        ],
         genericRankConditions
       )
     ).toBe(3)
 
     expect(
       calcRank(
-        {
-          ProjectUpvotedWithGold: 1,
-          ProjectUpvotedWithSilver: 1,
-          ProjectUpvotedWithBronze: 1,
-          ProjectDownvotedWithGold: 1,
-          ProjectDownvotedWithSilver: 1,
-          ProjectDownvotedWithBronze: 1
-        },
+        [
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithSilver'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithBronze'
+          }
+        ],
+        genericRankConditions
+      )
+    ).toBe(6)
+
+    expect(
+      calcRank(
+        [
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithSilver'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithBronze'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithSilver'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithBronze'
+          }
+        ],
         genericRankConditions
       )
     ).toBe(0)
 
     expect(
       calcRank(
-        {
-          ProjectUpvotedWithGold: 200,
-          ProjectUpvotedWithSilver: 200,
-          ProjectUpvotedWithBronze: 200
-        },
+        [
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithSilver'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithSilver'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithSilver'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithSilver'
+          }
+        ],
         genericRankConditions
       )
-    ).toBe(300)
+    ).toBe(6)
 
     expect(
       calcRank(
-        {
-          ProjectUpvotedWithGold: 200,
-          ProjectUpvotedWithSilver: 200,
-          ProjectUpvotedWithBronze: 200,
-          ProjectDownvotedWithGold: 1
-        },
+        [
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserUpvotedWithGold'
+          },
+          {
+            category: 'UserVotes',
+            eventType: 'UserDownvotedWithGold'
+          }
+        ],
         genericRankConditions
       )
-    ).toBe(300)
-  })
-})
-
-describe('calc Beenion Rank', () => {
-  const genericBeenionAnalytics: EventAnalytics = {
-    UserDownvotedWithBronze: 0,
-    UserDownvotedWithGold: 0,
-    UserDownvotedWithSilver: 0,
-    UserUpvotedWithBronze: 0,
-    UserUpvotedWithGold: 0,
-    UserUpvotedWithSilver: 0
-  }
-
-  const rankConditions: RankConditions = {
-    events: {
-      UserUpvotedWithGold: { factor: 100, group: 'gold' },
-      UserDownvotedWithGold: { factor: -100, group: 'gold' },
-      UserUpvotedWithSilver: { factor: 10, group: 'silver' },
-      UserDownvotedWithSilver: { factor: -10, group: 'silver' },
-      UserUpvotedWithBronze: { factor: 1, group: 'bronze' },
-      UserDownvotedWithBronze: { factor: -1, group: 'bronze' }
-    },
-    groups: {
-      gold: { min: -1000, max: 1000 },
-      silver: { min: -100, max: 100 },
-      bronze: { min: -100, max: 100 }
-    }
-  }
-
-  it('should calculate beenion rank', () => {
-    expect(calcRank(undefined, rankConditions)).toBe(0)
-    expect(calcRank(genericBeenionAnalytics, rankConditions)).toBe(0)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserUpvotedWithGold: 1
-        },
-        rankConditions
-      )
-    ).toBe(100)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserUpvotedWithSilver: 1
-        },
-        rankConditions
-      )
-    ).toBe(10)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserUpvotedWithBronze: 1
-        },
-        rankConditions
-      )
-    ).toBe(1)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserDownvotedWithGold: 10,
-          UserUpvotedWithGold: 10
-        },
-        rankConditions
-      )
-    ).toBe(0)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserDownvotedWithGold: 10
-        },
-        rankConditions
-      )
-    ).toBe(-1000)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserDownvotedWithGold: 15
-        },
-        rankConditions
-      )
-    ).toBe(-1000)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserDownvotedWithGold: 15,
-          UserDownvotedWithSilver: 100,
-          UserDownvotedWithBronze: 100
-        },
-        rankConditions
-      )
-    ).toBe(-1200)
-
-    expect(
-      calcRank(
-        {
-          ...genericBeenionAnalytics,
-          UserUpvotedWithGold: 15,
-          UserUpvotedWithSilver: 100,
-          UserUpvotedWithBronze: 100
-        },
-        rankConditions
-      )
-    ).toBe(1200)
+    ).toBe(9)
   })
 })

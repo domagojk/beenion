@@ -1,6 +1,6 @@
 import { ProjectEvent } from 'domain/types/events'
-import { canBanProject } from 'domain/businessRules'
-import { PROJECT_UNBAN_NOT_ALLOWED } from 'domain/errorCodes'
+import { canRejectApprovedProject } from 'domain/businessRules'
+import { PROJECT_DELETE_NOT_ALLOWED } from 'domain/errorCodes'
 import reduceToUser from 'domain/reduceToUser'
 import reduceToPublication from 'domain/reduceToPublication'
 import reduceToProject from 'domain/reduceToProject'
@@ -11,7 +11,7 @@ import {
   createTimestamp
 } from 'domain/typeFactories'
 
-function unbanProject (command: {
+function rejectProject (command: {
   userHistory: object[]
   publicationHistory: object[]
   projectHistory: object[]
@@ -23,17 +23,17 @@ function unbanProject (command: {
   const publicationHistory = createPublicationHistory(command.publicationHistory)
   const timestamp = createTimestamp(command.timestamp)
 
-  const user = reduceToUser(userHistory)
   const project = reduceToProject(projectHistory)
   const publication = reduceToPublication(publicationHistory)
+  const user = reduceToUser(userHistory)
 
-  if (!canBanProject(user, project, publication)) {
-    throw new Error(PROJECT_UNBAN_NOT_ALLOWED)
+  if (!canRejectApprovedProject(user, project, publication)) {
+    throw new Error(PROJECT_DELETE_NOT_ALLOWED)
   }
 
   return [
     {
-      type: 'ProjectUnbanned',
+      type: 'ProjectRejected',
       projectId: project.projectId,
       userId: user.userId,
       timestamp
@@ -41,4 +41,4 @@ function unbanProject (command: {
   ]
 }
 
-export default unbanProject
+export default rejectProject

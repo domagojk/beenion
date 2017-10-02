@@ -1,41 +1,34 @@
-import { Timestamp } from 'domain/types/model'
-import { UserEvent, PublicationEvent, ProjectEvent } from 'domain/types/events'
-import makeUser from 'domain/makeUser'
-import makePublication from 'domain/makePublication'
-import makeProject from 'domain/makeProject'
-import { canBanProject } from 'domain/permissions'
-import * as validate from 'domain/typeValidation'
-import * as errorCodes from 'domain/errorCodes'
+import { ProjectEvent } from 'domain/types/events'
+import { canBanProject } from 'domain/businessRules'
+import { PROJECT_BAN_NOT_ALLOWED } from 'domain/errorCodes'
+import reduceToUser from 'domain/reduceToUser'
+import reduceToPublication from 'domain/reduceToPublication'
+import reduceToProject from 'domain/reduceToProject'
+import {
+  createUserHistory,
+  createPublicationHistory,
+  createProjectHistory,
+  createTimestamp
+} from 'domain/typeFactories'
 
 function banProject (command: {
-  userHistory: UserEvent[]
-  publicationHistory: PublicationEvent[]
-  projectHistory: ProjectEvent[]
-  timestamp: Timestamp
+  userHistory: object[]
+  publicationHistory: object[]
+  projectHistory: object[]
+  timestamp: number
 }): ProjectEvent[] {
 
-  if (!validate.isUserHistory(command.userHistory)) {
-    throw new TypeError(errorCodes.INVALID_USER_HISTORY)
-  }
+  const userHistory = createUserHistory(command.userHistory)
+  const projectHistory = createProjectHistory(command.projectHistory)
+  const publicationHistory = createPublicationHistory(command.publicationHistory)
+  const timestamp = createTimestamp(command.timestamp)
 
-  if (!validate.isProjectHistory(command.projectHistory)) {
-    throw new TypeError(errorCodes.INVALID_PUBLICATION_HISTORY)
-  }
-
-  if (!validate.isPublicationHistory(command.publicationHistory)) {
-    throw new TypeError(errorCodes.INVALID_PUBLICATION_HISTORY)
-  }
-
-  if (!validate.isTimestamp(command.timestamp)) {
-    throw new TypeError(errorCodes.INVALID_TIMESTAMP)
-  }
-
-  const project = makeProject(command.projectHistory)
-  const publication = makePublication(command.publicationHistory)
-  const user = makeUser(command.userHistory)
+  const project = reduceToProject(projectHistory)
+  const publication = reduceToPublication(publicationHistory)
+  const user = reduceToUser(userHistory)
 
   if (!canBanProject(user, project, publication)) {
-    throw new Error(errorCodes.BAN_PROJECT_NOT_ALLOWED)
+    throw new Error(PROJECT_BAN_NOT_ALLOWED)
   }
 
   return [
@@ -43,7 +36,7 @@ function banProject (command: {
       type: 'ProjectBanned',
       projectId: project.projectId,
       userId: user.userId,
-      timestamp: command.timestamp
+      timestamp
     }
   ]
 }

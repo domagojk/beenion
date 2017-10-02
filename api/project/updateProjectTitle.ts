@@ -1,54 +1,45 @@
-import { Timestamp, Title } from 'domain/types/model'
-import { UserEvent, PublicationEvent, ProjectEvent } from 'domain/types/events'
-import makeUser from 'domain/makeUser'
-import makePublication from 'domain/makePublication'
-import makeProject from 'domain/makeProject'
-import { canUpdateProject } from 'domain/permissions'
-import * as validate from 'domain/typeValidation'
-import * as errorCodes from 'domain/errorCodes'
+import { ProjectEvent } from 'domain/types/events'
+import { canUpdateProject } from 'domain/businessRules'
+import { PROJECT_UPDATE_NOT_ALLOWED } from 'domain/errorCodes'
+import reduceToUser from 'domain/reduceToUser'
+import reduceToPublication from 'domain/reduceToPublication'
+import reduceToProject from 'domain/reduceToProject'
+import {
+  createUserHistory,
+  createPublicationHistory,
+  createProjectHistory,
+  createTitle,
+  createTimestamp
+} from 'domain/typeFactories'
 
 function updateProjectTitle (command: {
-  userHistory: UserEvent[]
-  publicationHistory: PublicationEvent[]
-  projectHistory: ProjectEvent[]
-  title: Title,
-  timestamp: Timestamp
+  userHistory: object[]
+  publicationHistory: object[]
+  projectHistory: object[]
+  title: string,
+  timestamp: number
 }): ProjectEvent[] {
 
-  if (!validate.isUserHistory(command.userHistory)) {
-    throw new Error(errorCodes.INVALID_USER_HISTORY)
-  }
+  const userHistory = createUserHistory(command.userHistory)
+  const projectHistory = createProjectHistory(command.projectHistory)
+  const publicationHistory = createPublicationHistory(command.publicationHistory)
+  const title = createTitle(command.title)
+  const timestamp = createTimestamp(command.timestamp)
 
-  if (!validate.isProjectHistory(command.projectHistory)) {
-    throw new Error(errorCodes.INVALID_PROJECT_HISTORY)
-  }
-
-  if (!validate.isPublicationHistory(command.publicationHistory)) {
-    throw new Error(errorCodes.INVALID_PUBLICATION_HISTORY)
-  }
-
-  if (!validate.isTitle(command.title)) {
-    throw new Error(errorCodes.INVALID_TITLE)
-  }
-
-  if (!validate.isTimestamp(command.timestamp)) {
-    throw new Error(errorCodes.INVALID_TIMESTAMP)
-  }
-
-  const project = makeProject(command.projectHistory)
-  const publication = makePublication(command.publicationHistory)
-  const user = makeUser(command.userHistory)
+  const project = reduceToProject(projectHistory)
+  const publication = reduceToPublication(publicationHistory)
+  const user = reduceToUser(userHistory)
 
   if (!canUpdateProject(user, project, publication)) {
-    throw new Error((errorCodes.UPDATE_PROJECT_NOT_ALLOWED))
+    throw new Error(PROJECT_UPDATE_NOT_ALLOWED)
   }
 
   return [
     {
-      type: 'ProjectTitleUpdated',
+      type: 'ProjectTitleDefined',
       projectId: project.projectId,
-      title: command.title,
-      timestamp: command.timestamp
+      title,
+      timestamp
     }
   ]
 }

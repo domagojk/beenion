@@ -1,54 +1,39 @@
-import makeProject from './makeProject'
+import reduceToProject from './reduceToProject'
 import { Project } from './types/model'
 import { ProjectEvent } from './types/events'
 
 describe('Project projection', () => {
-  const projectCreatedEvent: ProjectEvent = {
+  const projectCreatedEvent = {
     type: 'ProjectCreated',
     projectId: 'test-project-uuid',
     publicationId: 'test-publication-uuid',
-    stageRules: [
-      {
-        canReview: { beenionRank: 0 },
-        maxReviewers: 3,
-        threshold: 2
-      }
-    ],
     ownerId: 'test-user-uuid',
-    title: 'test title',
-    description: 'test description',
-    link: 'http://testurl.com',
     timestamp: Date.now()
-  }
+  } as ProjectEvent
 
-  const genericProject: Project = {
-    currentStage: 0,
-    evaluations: [],
-    ownerId: 'test-user-uuid',
+  const genericProject = {
     projectId: 'test-project-uuid',
+    ownerId: 'test-user-uuid',
+    stageRules: null,
+    lastStage: null,
+    currentStage: 0,
     reviewers: [],
-    stageRules: [
-      {
-        canReview: { beenionRank: 0 },
-        maxReviewers: 3,
-        threshold: 2
-      }
-    ],
+    evaluations: [],
     reviewProcessCompleted: false,
     approved: false,
     banned: false
-  }
+  } as Project
 
   it('should create a project object', () => {
     const projectEvents = [projectCreatedEvent]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
-    expect(project).toEqual(genericProject)
+    expect(project).toEqual({...genericProject})
   })
 
   it('should add in reviewers list', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
       projectCreatedEvent,
       {
         type: 'ProjectReviewerInvited',
@@ -62,9 +47,9 @@ describe('Project projection', () => {
         reviewerId: 'test-reviewer2-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
@@ -73,7 +58,7 @@ describe('Project projection', () => {
   })
 
   it('should remove from reviewers list', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
       projectCreatedEvent,
       {
         type: 'ProjectReviewerInvited',
@@ -93,9 +78,9 @@ describe('Project projection', () => {
         reviewerId: 'test-reviewer1-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
@@ -104,7 +89,7 @@ describe('Project projection', () => {
   })
 
   it('should add in evaluations list', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
       projectCreatedEvent,
       {
         type: 'ProjectReviewerInvited',
@@ -119,9 +104,9 @@ describe('Project projection', () => {
         evaluation: 'approve',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
@@ -136,173 +121,120 @@ describe('Project projection', () => {
   })
 
   it('should promote project to next stage', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
+      projectCreatedEvent,
       {
-        ...projectCreatedEvent,
+        type: 'ProjectStageRulesDefined',
+        projectId: 'test-project-uuid',
         stageRules: [
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 1,
-            threshold: 2
-          },
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 3,
-            threshold: 2
-          }
-        ]
+          { maxReviewers: 1, threshold: 2 },
+          { maxReviewers: 3, threshold: 2 }
+        ],
+        timestamp: Date.now()
       },
       {
         type: 'ProjectPromoted',
         projectId: 'test-project-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
       stageRules: [
-        {
-          canReview: { beenionRank: 0 },
-          maxReviewers: 1,
-          threshold: 2
-        },
-        {
-          canReview: { beenionRank: 0 },
-          maxReviewers: 3,
-          threshold: 2
-        }
+        { maxReviewers: 1, threshold: 2 },
+        { maxReviewers: 3, threshold: 2 }
       ],
+      lastStage: 1,
       currentStage: 1
     })
   })
 
   it('should reject project', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
+      projectCreatedEvent,
       {
-        ...projectCreatedEvent,
+        type: 'ProjectStageRulesDefined',
+        projectId: 'test-project-uuid',
         stageRules: [
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 1,
-            threshold: 2
-          },
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 3,
-            threshold: 2
-          }
-        ]
+          { maxReviewers: 1, threshold: 2 },
+          { maxReviewers: 3, threshold: 2 }
+        ],
+        timestamp: Date.now()
       },
       {
         type: 'ProjectRejected',
         projectId: 'test-project-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
-      stageRules: null,
-      reviewProcessCompleted: true,
-      currentStage: null,
-      reviewers: null,
-      evaluations: null
+      reviewProcessCompleted: true
     })
   })
 
   it('should approve project', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
+      projectCreatedEvent,
       {
-        ...projectCreatedEvent,
+        type: 'ProjectStageRulesDefined',
+        projectId: 'test-project-uuid',
         stageRules: [
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 1,
-            threshold: 2
-          },
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 3,
-            threshold: 2
-          }
-        ]
+          { maxReviewers: 1, threshold: 2 },
+          { maxReviewers: 3, threshold: 2 }
+        ],
+        timestamp: Date.now()
       },
       {
         type: 'ProjectApproved',
         projectId: 'test-project-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
-      stageRules: null,
       reviewProcessCompleted: true,
-      approved: true,
-      currentStage: null,
-      reviewers: null,
-      evaluations: null
+      approved: true
     })
   })
 
-  it('should reset project data with new rules', () => {
-    const projectEvents: ProjectEvent[] = [
+  it('should reset project data', () => {
+    const projectEvents = [
+      projectCreatedEvent,
       {
-        ...projectCreatedEvent,
+        type: 'ProjectStageRulesDefined',
+        projectId: 'test-project-uuid',
         stageRules: [
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 1,
-            threshold: 2
-          },
-          {
-            canReview: { beenionRank: 0 },
-            maxReviewers: 3,
-            threshold: 2
-          }
-        ]
+          { maxReviewers: 1, threshold: 2 },
+          { maxReviewers: 3, threshold: 2 }
+        ],
+        timestamp: Date.now()
       },
       {
         type: 'ProjectResubmitted',
         projectId: 'test-project-uuid',
-        stageRules: [
-          {
-            canReview: { beenionRank: 100 },
-            maxReviewers: 10,
-            threshold: 5
-          }
-        ],
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
-      ...genericProject,
-      stageRules: [
-        {
-          canReview: { beenionRank: 100 },
-          maxReviewers: 10,
-          threshold: 5
-        }
-      ],
-      currentStage: 0,
-      reviewProcessCompleted: false,
-      reviewers: [],
-      evaluations: []
+      ...genericProject
     })
   })
 
   it('should ban project', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
       projectCreatedEvent,
       {
         type: 'ProjectBanned',
@@ -310,9 +242,9 @@ describe('Project projection', () => {
         projectId: 'test-project-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,
@@ -321,7 +253,7 @@ describe('Project projection', () => {
   })
 
   it('should unban project', () => {
-    const projectEvents: ProjectEvent[] = [
+    const projectEvents = [
       projectCreatedEvent,
       {
         type: 'ProjectBanned',
@@ -335,9 +267,9 @@ describe('Project projection', () => {
         projectId: 'test-project-uuid',
         timestamp: Date.now()
       }
-    ]
+    ] as ProjectEvent[]
 
-    const project = makeProject(projectEvents)
+    const project = reduceToProject(projectEvents)
 
     expect(project).toEqual({
       ...genericProject,

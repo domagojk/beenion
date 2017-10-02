@@ -1,23 +1,34 @@
 import { ProjectEvent } from './types/events'
-import { Project } from './types/model'
+import { Project, Stage } from './types/model'
 
-const makeProject =
+const reduceToProject =
   (history: ProjectEvent[], initialState?: Project): Project =>
     history.reduce(projectReducer, initialState)
 
 const projectReducer = (project: Project, e: ProjectEvent): Project => {
+  const defaultValues = {
+    stageRules: null,
+    lastStage: null,
+    currentStage: 0,
+    reviewers: [],
+    evaluations: [],
+    reviewProcessCompleted: false,
+    approved: false,
+    banned: false
+  }
+
   switch (e.type) {
     case 'ProjectCreated':
       return {
+        ...defaultValues,
         projectId: e.projectId,
-        ownerId: e.ownerId,
+        ownerId: e.ownerId
+      }
+    case 'ProjectStageRulesDefined':
+      return {
+        ...project,
         stageRules: e.stageRules,
-        currentStage: 0,
-        reviewers: [],
-        evaluations: [],
-        reviewProcessCompleted: false,
-        approved: false,
-        banned: false
+        lastStage: e.stageRules.length - 1 as Stage
       }
     case 'ProjectReviewerInvited':
       return {
@@ -49,40 +60,34 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
     case 'ProjectRejected':
       return {
         ...project,
+        ...defaultValues,
         reviewProcessCompleted: true,
-        approved: false,
-        stageRules: null,
-        currentStage: null,
-        reviewers: null,
-        evaluations: null
+        approved: false
       }
     case 'ProjectApproved':
       return {
         ...project,
+        ...defaultValues,
         reviewProcessCompleted: true,
-        approved: true,
-        stageRules: null,
-        currentStage: null,
-        reviewers: null,
-        evaluations: null
+        approved: true
       }
     case 'ProjectResubmitted':
+    case 'ProjectDeleted':
       return {
         ...project,
-        stageRules: e.stageRules,
-        currentStage: 0,
-        reviewProcessCompleted: false,
-        reviewers: [],
-        evaluations: []
+        ...defaultValues,
+        reviewProcessCompleted: false
       }
     case 'ProjectBanned':
       return {
         ...project,
+        ...defaultValues,
         banned: true
       }
     case 'ProjectUnbanned':
       return {
         ...project,
+        ...defaultValues,
         banned: false
       }
     default:
@@ -90,4 +95,4 @@ const projectReducer = (project: Project, e: ProjectEvent): Project => {
   }
 }
 
-export default makeProject
+export default reduceToProject

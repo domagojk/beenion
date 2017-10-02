@@ -44,13 +44,6 @@ describe('type validation', () => {
     expect(validate.isTimestamp(9183228900000)).toBe(false)
   })
 
-  it('it should validate UUID type', () => {
-    expect(validate.isUUID('str')).toBe(true)
-    expect(validate.isUUID()).toBe(false)
-    expect(validate.isUUID(12)).toBe(false)
-    expect(validate.isUUID({})).toBe(false)
-    expect(validate.isUUID([])).toBe(false)
-  })
 
   it('it should validate URL type', () => {
     expect(validate.isURL('http://test.com')).toBe(true)
@@ -64,293 +57,92 @@ describe('type validation', () => {
     expect(validate.isURL('ww.site.com')).toBe(false)
   })
 
-  it('it should validate PriviligeConditions type', () => {
+  it('it should validate PublicationPermission type', () => {
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: [],
+      validate.isPublicationPermission({
+        users: [],
         beenionRank: 0,
         publicationRank: 0
       })
     ).toBe(true)
 
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: [],
+      validate.isPublicationPermission({
+        users: [],
         beenionRank: 0
       })
     ).toBe(true)
 
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: [],
+      validate.isPublicationPermission({
+        users: [],
         publicationRank: 0
       })
     ).toBe(true)
 
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: {},
+      validate.isPublicationPermission({
+        users: {},
         beenionRank: 0,
         publicationRank: 0
       })
     ).toBe(false)
 
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: [1, 2],
+      validate.isPublicationPermission({
+        users: [1, 2],
         beenionRank: 0,
         publicationRank: 0
       })
     ).toBe(false)
 
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: [],
+      validate.isPublicationPermission({
+        users: [],
         beenionRank: 'not number',
         publicationRank: 0
       })
     ).toBe(false)
 
     expect(
-      validate.isPrivilegeConditions({
-        userAccessList: [],
+      validate.isPublicationPermission({
+        users: [],
         beenionRank: 0,
         publicationRank: 'not number'
       })
     ).toBe(false)
 
-    expect(validate.isPrivilegeConditions('str')).toBe(false)
-    expect(validate.isPrivilegeConditions()).toBe(false)
-    expect(validate.isPrivilegeConditions(12)).toBe(false)
-    expect(validate.isPrivilegeConditions({})).toBe(false)
-    expect(validate.isPrivilegeConditions([])).toBe(false)
+    expect(validate.isPublicationPermission('str')).toBe(false)
+    expect(validate.isPublicationPermission()).toBe(false)
+    expect(validate.isPublicationPermission(12)).toBe(false)
+    expect(validate.isPublicationPermission({})).toBe(false)
+    expect(validate.isPublicationPermission([])).toBe(false)
   })
 
-  it('it should validate PublicationPrivileges type', () => {
+  it('it should validate StageRule type', () => {
     expect(
-      validate.isPublicationPrivileges({
-        canUpdatePublication: { beenionRank: 10 },
-        canDeletePublication: { beenionRank: 10 },
-        canCreateProject: { beenionRank: 10 },
-        canDeleteProject: { beenionRank: 10 },
-        canBanProject: { beenionRank: 10 },
-        canUpdateProject: { beenionRank: 10 },
-        canResubmitProject: { beenionRank: 10 },
-        canVoteWithGold: { beenionRank: 10 },
-        canVoteWithSilver: { beenionRank: 10 },
-        canVoteWithBronze: { beenionRank: 10 }
-      })
-    ).toBe(true)
+      validate.isStageRule({
+        maxReviewers: 3,
+        threshold: 2
+      })).toBe(true)
 
     expect(
-      validate.isPublicationPrivileges({
-        canUpdatePublication: 'invalid',
-        canDeletePublication: { beenionRank: 10 },
-        canCreateProject: { beenionRank: 10 },
-        canDeleteProject: { beenionRank: 10 },
-        canBanProject: { beenionRank: 10 },
-        canUpdateProject: { beenionRank: 10 },
-        canResubmitProject: { beenionRank: 10 },
-        canVoteWithGold: { beenionRank: 10 },
-        canVoteWithSilver: { beenionRank: 10 },
-        canVoteWithBronze: { beenionRank: 10 }
-      })
-    ).toBe(false)
+      validate.isStageRule({
+        maxReviewers: 3,
+        //threshold: 2
+      })).toBe(false)
 
     expect(
-      validate.isPublicationPrivileges({
-        //canUpdatePublication: { beenionRank: 10 },
-        canDeletePublication: { beenionRank: 10 },
-        canCreateProject: { beenionRank: 10 },
-        canDeleteProject: { beenionRank: 10 },
-        canBanProject: { beenionRank: 10 },
-        canUpdateProject: { beenionRank: 10 },
-        canResubmitProject: { beenionRank: 10 },
-        canVoteWithGold: { beenionRank: 10 },
-        canVoteWithSilver: { beenionRank: 10 },
-        canVoteWithBronze: { beenionRank: 10 }
-      })
-    ).toBe(false)
+      validate.isStageRule({
+        //maxReviewers: 3,
+        threshold: 2
+      })).toBe(false)
 
-    expect(
-      validate.isPublicationPrivileges({
-        mistypedKey: { beenionRank: 10 },
-        canDeletePublication: { beenionRank: 10 },
-        canCreateProject: { beenionRank: 10 },
-        canDeleteProject: { beenionRank: 10 },
-        canBanProject: { beenionRank: 10 },
-        canUpdateProject: { beenionRank: 10 },
-        canResubmitProject: { beenionRank: 10 },
-        canVoteWithGold: { beenionRank: 10 },
-        canVoteWithSilver: { beenionRank: 10 },
-        canVoteWithBronze: { beenionRank: 10 }
-      })
-    ).toBe(false)
-
-    expect(validate.isPublicationPrivileges()).toBe(false)
-    expect(validate.isPublicationPrivileges(12)).toBe(false)
-    expect(validate.isPublicationPrivileges({})).toBe(false)
-    expect(validate.isPublicationPrivileges([])).toBe(false)
-    expect(validate.isPublicationPrivileges('str')).toBe(false)
-  })
-
-  it('it should validate RankConditions type', () => {
-    expect(
-      validate.isRankConditions({
-        events: {
-          UserUpvotedWithGold: { factor: 100, group: 'gold' },
-          UserDownvotedWithGold: { factor: -100, group: 'gold' },
-          UserUpvotedWithSilver: { factor: 10, group: 'silver' },
-          UserDownvotedWithSilver: { factor: -10, group: 'silver' },
-          UserUpvotedWithBronze: { factor: 1, group: 'bronze' },
-          UserDownvotedWithBronze: { factor: -1, group: 'bronze' }
-        },
-        groups: {
-          gold: { min: -1000, max: 1000 },
-          silver: { min: -100, max: 100 },
-          bronze: { min: -100, max: 100 }
-        }
-      })
-    ).toBe(true)
-
-    expect(
-      validate.isRankConditions({
-        groups: {
-          gold: { min: -1000, max: 1000 },
-          silver: { min: -100, max: 100 },
-          bronze: { min: -100, max: 100 }
-        }
-      })
-    ).toBe(false)
-
-    expect(
-      validate.isRankConditions({
-        events: {
-          UserUpvotedWithGold: 'invalid',
-          UserDownvotedWithGold: { factor: -100, group: 'gold' },
-          UserUpvotedWithSilver: { factor: 10, group: 'silver' },
-          UserDownvotedWithSilver: { factor: -10, group: 'silver' },
-          UserUpvotedWithBronze: { factor: 1, group: 'bronze' },
-          UserDownvotedWithBronze: { factor: -1, group: 'bronze' }
-        }
-      })
-    ).toBe(false)
-
-    expect(
-      validate.isRankConditions({
-        events: {
-          UserUpvotedWithGold: 'invalid',
-          UserDownvotedWithGold: { factor: -100, group: 'gold' },
-          UserUpvotedWithSilver: { factor: 10, group: 'silver' },
-          UserDownvotedWithSilver: { factor: -10, group: 'silver' },
-          UserUpvotedWithBronze: { factor: 1, group: 'bronze' },
-          UserDownvotedWithBronze: { factor: -1, group: 'bronze' }
-        },
-        groups: {
-          gold: { min: -1000, max: 1000 },
-          silver: { min: -100, max: 100 },
-          bronze: { min: -100, max: 100 }
-        }
-      })
-    ).toBe(false)
-
-    expect(
-      validate.isRankConditions({
-        events: {
-          UserUpvotedWithGold: { factor: 100, group: 'gold' },
-          UserDownvotedWithGold: { factor: -100, group: 'gold' },
-          UserUpvotedWithSilver: { factor: 10, group: 'silver' },
-          UserDownvotedWithSilver: { factor: -10, group: 'silver' },
-          UserUpvotedWithBronze: { factor: 1, group: 'bronze' },
-          UserDownvotedWithBronze: { factor: -1, group: 'bronze' }
-        },
-        groups: {
-          gold: 'invalid',
-          silver: { min: -100, max: 100 },
-          bronze: { min: -100, max: 100 }
-        }
-      })
-    ).toBe(false)
-
-    expect(validate.isRankConditions()).toBe(false)
-    expect(validate.isRankConditions(12)).toBe(false)
-    expect(validate.isRankConditions({})).toBe(false)
-    expect(validate.isRankConditions([])).toBe(false)
-    expect(validate.isRankConditions('str')).toBe(false)
-  })
-
-  it('it should validate ProjectStageRules type', () => {
-    expect(
-      validate.isProjectStageRules([
-        {
-          canReview: {
-            beenionRank: 0,
-            publicationRank: 10
-          },
-          maxReviewers: 3,
-          threshold: 2
-        },
-        {
-          canReview: {
-            beenionRank: 0,
-            publicationRank: 10
-          },
-          maxReviewers: 3,
-          threshold: 3
-        }
-      ])
-    ).toBe(true)
-
-    expect(
-      validate.isProjectStageRules([
-        {
-          canReview: {
-            beenionRank: 0,
-            publicationRank: 10
-          },
-          // maxReviewers: 3,
-          threshold: 2
-        }
-      ])
-    ).toBe(false)
-
-    expect(
-      validate.isProjectStageRules([
-        {
-          canReview: {
-            beenionRank: 0,
-            publicationRank: 10
-          },
-          maxReviewers: 3
-          // threshold: 2
-        }
-      ])
-    ).toBe(false)
-
-    expect(
-      validate.isProjectStageRules([
-        {
-          maxReviewers: 3,
-          threshold: 2
-        }
-      ])
-    ).toBe(false)
-
-    expect(
-      validate.isProjectStageRules([
-        {
-          canReview: 'invalid',
-          maxReviewers: 3,
-          threshold: 2
-        }
-      ])
-    ).toBe(false)
-
-    expect(validate.isProjectStageRules()).toBe(false)
-    expect(validate.isProjectStageRules(12)).toBe(false)
-    expect(validate.isProjectStageRules({})).toBe(false)
-    expect(validate.isProjectStageRules([])).toBe(false)
-    expect(validate.isProjectStageRules('str')).toBe(false)
+    expect(validate.isStageRule()).toBe(false)
+    expect(validate.isStageRule(12)).toBe(false)
+    expect(validate.isStageRule({})).toBe(false)
+    expect(validate.isStageRule([])).toBe(false)
+    expect(validate.isStageRule('str')).toBe(false)
   })
 
   it('it should validate Event type', () => {
@@ -385,7 +177,7 @@ describe('type validation', () => {
   it('it should validate PublicationEvent type', () => {
     expect(
       validate.isPublicationEvent({
-        type: 'PublicationTitleUpdated',
+        type: 'PublicationTitleDefined',
         publicationId: 'UUID',
         title: 'title',
         timestamp: Date.now()
@@ -394,7 +186,7 @@ describe('type validation', () => {
 
     expect(
       validate.isPublicationEvent({
-        type: 'PublicationTitleUpdated',
+        type: 'PublicationTitleDefined',
         //publicationId: 'UUID',
         title: 'title',
         timestamp: Date.now()
@@ -420,7 +212,7 @@ describe('type validation', () => {
   it('it should validate ProjectEvent type', () => {
     expect(
       validate.isProjectEvent({
-        type: 'ProjectTitleUpdated',
+        type: 'ProjectTitleDefined',
         projectId: 'UUID',
         title: 'title',
         timestamp: Date.now()
@@ -429,7 +221,7 @@ describe('type validation', () => {
 
     expect(
       validate.isProjectEvent({
-        type: 'PublicationTitleUpdated',
+        type: 'PublicationTitleDefined',
         //projectId: 'UUID',
         title: 'title',
         timestamp: Date.now()
@@ -455,7 +247,7 @@ describe('type validation', () => {
   it('it should validate UserEvent type', () => {
     expect(
       validate.isUserEvent({
-        type: 'ReviewInvitationAccepted',
+        type: 'ReviewInvitationExpired',
         userId: 'UUID',
         projectId: 'UUID',
         publicationId: 'UUID',
@@ -465,7 +257,7 @@ describe('type validation', () => {
 
     expect(
       validate.isUserEvent({
-        type: 'PublicationTitleUpdated',
+        type: 'PublicationTitleDefined',
         //userId: 'UUID',
         title: 'title',
         timestamp: Date.now()
@@ -492,9 +284,9 @@ describe('type validation', () => {
     expect(
       validate.isPublicationHistory([
         {
-          type: 'PublicationTitleUpdated',
+          type: 'PublicationTitleDefined',
           publicationId: 'UUID',
-          title: 'title',
+          title: 'Title',
           timestamp: Date.now()
         },
         {
@@ -509,7 +301,7 @@ describe('type validation', () => {
     expect(
       validate.isPublicationHistory([
         {
-          type: 'PublicationTitleUpdated',
+          type: 'PublicationTitleDefined',
           publicationId: 'UUID',
           title: 'title',
           timestamp: Date.now()
@@ -534,7 +326,7 @@ describe('type validation', () => {
     expect(
       validate.isProjectHistory([
         {
-          type: 'ProjectTitleUpdated',
+          type: 'ProjectTitleDefined',
           projectId: 'UUID',
           title: 'title',
           timestamp: Date.now()
@@ -551,7 +343,7 @@ describe('type validation', () => {
     expect(
       validate.isProjectHistory([
         {
-          type: 'ProjectTitleUpdated',
+          type: 'ProjectTitleDefined',
           ProjectId: 'UUID',
           title: 'title',
           timestamp: Date.now()
@@ -576,7 +368,7 @@ describe('type validation', () => {
     expect(
       validate.isUserHistory([
         {
-          type: 'ReviewInvitationAccepted',
+          type: 'ReviewInvitationExpired',
           userId: 'UUID',
           projectId: 'UUID',
           publicationId: 'UUID',

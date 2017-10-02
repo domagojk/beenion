@@ -1,39 +1,46 @@
 import { PublicationEvent } from 'domain/types/events'
-import { canDeletePublication } from 'domain/businessRules'
-import { PUBLICATION_DELETE_NOT_ALLOWED } from 'domain/errorCodes'
+import { canUpdatePublicationPrivilege } from 'domain/businessRules'
+import { PUBLICATION_PRIVILEGE_UPDATE_NOT_ALLOWED } from 'domain/errorCodes'
 import reduceToUser from 'domain/reduceToUser'
 import reduceToPublication from 'domain/reduceToPublication'
 import {
   createUserHistory,
+  createPublicationPrivilege,
+  createPublicationPermission,
   createPublicationHistory,
   createTimestamp
 } from 'domain/typeFactories'
 
-function deletePublication (command: {
+function definePublicationPrivilege (command: {
   userHistory: object[]
   publicationHistory: object[]
+  privilege: string,
+  permission: string,
   timestamp: number
 }): PublicationEvent[] {
 
   const userHistory = createUserHistory(command.userHistory)
+  const privilege = createPublicationPrivilege(command.privilege)
+  const permission = createPublicationPermission(command.permission)
   const publicationHistory = createPublicationHistory(command.publicationHistory)
   const timestamp = createTimestamp(command.timestamp)
 
   const user = reduceToUser(userHistory)
   const publication = reduceToPublication(publicationHistory)
 
-  if (!canDeletePublication(user, publication)) {
-    throw new Error(PUBLICATION_DELETE_NOT_ALLOWED)
+  if (!canUpdatePublicationPrivilege(user, publication)) {
+    throw new Error(PUBLICATION_PRIVILEGE_UPDATE_NOT_ALLOWED)
   }
 
   return [
     {
-      type: 'PublicationDeleted',
-      userId: user.userId,
+      type: 'PublicationPrivilegeDefined',
       publicationId: publication.publicationId,
+      privilege,
+      permission,
       timestamp
     }
   ]
 }
 
-export default deletePublication
+export default definePublicationPrivilege

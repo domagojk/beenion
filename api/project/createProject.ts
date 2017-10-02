@@ -1,54 +1,41 @@
-import { UUID, Description, Timestamp, Title, URL } from 'domain/types/model'
-import { UserEvent, PublicationEvent, ProjectEvent } from 'domain/types/events'
-import makeUser from 'domain/makeUser'
-import makePublication from 'domain/makePublication'
-import { canCreateProject } from 'domain/permissions'
-import * as validate from 'domain/typeValidation'
-import * as errorCodes from 'domain/errorCodes'
+import { ProjectEvent } from 'domain/types/events'
+import { canCreateProject } from 'domain/businessRules'
+import { PROJECT_CREATE_NOT_ALLOWED } from 'domain/errorCodes'
+import reduceToUser from 'domain/reduceToUser'
+import reduceToPublication from 'domain/reduceToPublication'
+import {
+  createUserHistory,
+  createPublicationHistory,
+  createProjectId,
+  createTitle,
+  createDescription,
+  createURL,
+  createTimestamp
+} from 'domain/typeFactories'
 
 function createProject (command: {
-  userHistory: UserEvent[]
-  publicationHistory: PublicationEvent[]
-  projectId: UUID
-  title: Title
-  description: Description
-  link: URL
-  timestamp: Timestamp
+  userHistory: object[]
+  publicationHistory: object[]
+  projectId: string
+  title: string
+  description: string
+  link: string
+  timestamp: number
 }): ProjectEvent[] {
 
-  if (!validate.isUserHistory(command.userHistory)) {
-    throw new TypeError(errorCodes.INVALID_USER_HISTORY)
-  }
+  const userHistory = createUserHistory(command.userHistory)
+  const publicationHistory = createPublicationHistory(command.publicationHistory)
+  const projectId = createProjectId(command.projectId)
+  const title = createTitle(command.title)
+  const description = createDescription(command.description)
+  const link = createURL(command.link)
+  const timestamp = createTimestamp(command.timestamp)
 
-  if (!validate.isPublicationHistory(command.publicationHistory)) {
-    throw new TypeError(errorCodes.INVALID_PUBLICATION_HISTORY)
-  }
-
-  if (!validate.isUUID(command.projectId)) {
-    throw new TypeError(errorCodes.INVALID_UUID)
-  }
-
-  if (!validate.isTitle(command.title)) {
-    throw new TypeError(errorCodes.INVALID_TITLE)
-  }
-
-  if (!validate.isDescription(command.description)) {
-    throw new TypeError(errorCodes.INVALID_DESCRIPTION)
-  }
-
-  if (!validate.isURL(command.link)) {
-    throw new TypeError(errorCodes.INVALID_URL)
-  }
-
-  if (!validate.isTimestamp(command.timestamp)) {
-    throw new TypeError(errorCodes.INVALID_TIMESTAMP)
-  }
-
-  const publication = makePublication(command.publicationHistory)
-  const user = makeUser(command.userHistory)
+  const publication = reduceToPublication(publicationHistory)
+  const user = reduceToUser(userHistory)
 
   if (!canCreateProject(user, publication)) {
-    throw new Error(errorCodes.CREATE_PROJECT_NOT_ALLOWED)
+    throw new Error(PROJECT_CREATE_NOT_ALLOWED)
   }
 
   return [
@@ -56,12 +43,32 @@ function createProject (command: {
       type: 'ProjectCreated',
       ownerId: user.userId,
       publicationId: publication.publicationId,
-      projectId: command.projectId,
-      title: command.title,
-      description: command.description,
-      link: command.link,
-      stageRules: publication.projectStageRules,
-      timestamp: command.timestamp
+      projectId,
+      timestamp
+    },
+    {
+      type: 'ProjectTitleDefined',
+      projectId,
+      title,
+      timestamp
+    },
+    {
+      type: 'ProjectDescriptionDefined',
+      projectId,
+      description,
+      timestamp
+    },
+    {
+      type: 'ProjectLinkDefined',
+      projectId,
+      link,
+      timestamp
+    },
+    {
+      type: 'ProjectStageRulesDefined',
+      projectId,
+      stageRules: publication.stageRules,
+      timestamp
     }
   ]
 }

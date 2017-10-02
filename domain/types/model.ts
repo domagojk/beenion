@@ -1,79 +1,113 @@
 import { UserEvent } from './events'
 
-export type Timestamp = number
+// basic types
+// intersection with { kind: Type } creates nominal type in Typescript
+// https://github.com/Microsoft/TypeScript/issues/202
+export type UserId = string & { kind: 'UserId' }
+export type ProjectId = string & { kind: 'ProjectId' }
+export type PublicationId = string & { kind: 'PublicationId' }
+export type Title = string & { kind: 'Title' }
+export type Description = string & { kind: 'Description' }
+export type URL = string & { kind: 'URL' }
+export type RankGroup = string & { kind: 'RankGroup' }
+export type RankFactor = number & { kind: 'RankFactor' }
+export type Timestamp = number & { kind: 'Timestamp' }
 
-export type UUID = string
-
-export type URL = string
-
-export type Title = string
-
-export type Description = string
-
-export type Username = string
-
+// union types
 export type Evaluation = 'approve' | 'reject'
+export type Medal = 'gold' | 'silver' | 'bronze'
+export type Rating = 'upvote' | 'downvote'
+export type Stage = 0 | 1 | 2 | 3 | 4
 
-export type PrivilegeConditions = {
-  beenionRank: number
-  publicationRank?: number
-  userAccessList?: UUID[]
+export type PublicationPrivilege =
+  | 'canUpdatePublication'
+  | 'canUpdatePrivilege'
+  | 'canUpdateRankCalcParams'
+  | 'canUpdateStageRules'
+  | 'canUpdateEditor'
+  | 'canDeletePublication'
+  | 'canReviewInStage0'
+  | 'canReviewInStage1'
+  | 'canReviewInStage2'
+  | 'canReviewInStage3'
+  | 'canReviewInStage4'
+  | 'canCreateProject'
+  | 'canDeleteProject'
+  | 'canRejectApprovedProject'
+  | 'canBanProject'
+  | 'canUpdateProject'
+  | 'canResubmitProject'
+  | 'canVoteWithGold'
+  | 'canVoteWithSilver'
+  | 'canVoteWithBronze'
+
+export type BeenionPrivilege =
+  | 'canCreatePublication'
+  | 'canDeletePublication'
+  | 'canVoteWithGold'
+  | 'canVoteWithSilver'
+  | 'canVoteWithBronze'
+
+// object types
+export type RankRange = {
+  min: number
+  max?: number
 }
 
-export type RankConditions = {
-  events: {
-    [event in UserEvent['type']]?: {
-      factor: number,
-      group: string
-    }
-  },
-  groups: {
-    [key: string]: {
-      min: number,
-      max: number
-    }
-  }
+export type RankEvent = {
+  category: 'ProjectVotes' | 'ReviewVotes' | 'UserVotes' | 'UserEvents'
+  eventType: UserEvent['type']
+  publicationId?: PublicationId
+  projectId?: ProjectId
+  voterId?: UserId
 }
 
-export type PublicationPrivileges = {
-  canUpdatePublication: PrivilegeConditions
-  canDeletePublication: PrivilegeConditions
-  canCreateProject: PrivilegeConditions
-  canDeleteProject: PrivilegeConditions
-  canBanProject: PrivilegeConditions
-  canUpdateProject: PrivilegeConditions
-  canResubmitProject: PrivilegeConditions
-  canVoteWithGold: PrivilegeConditions
-  canVoteWithSilver: PrivilegeConditions
-  canVoteWithBronze: PrivilegeConditions
+export type PublicationPermission = {
+  publicationRank?: RankRange
+  beenionRank?: RankRange
+  users?: UserId[]
 }
 
-export type BeenionPrivileges = {
-  canCreatePublication: PrivilegeConditions
-  canDeletePublication: PrivilegeConditions
-  canVoteWithGold: PrivilegeConditions
-  canVoteWithSilver: PrivilegeConditions
-  canVoteWithBronze: PrivilegeConditions
+export type BeenionPermission = {
+  beenionRank?: RankRange
+  users?: UserId[]
 }
 
-export type EventAnalytics = {
-  [event in UserEvent['type']]?: number
+export type PublicationPrivilegeConditions = {
+  [Privilege in PublicationPrivilege]: PublicationPermission
 }
 
-export type ProjectStageRules = {
+export type BeenionPrivilegeConditions = {
+  [Privilege in BeenionPrivilege]: BeenionPermission
+}
+
+export type StageRule = {
   maxReviewers: number
   threshold: number
-  canReview: PrivilegeConditions
 }
 
+export type RankCalcParams = {
+  events: {
+    eventType: UserEvent['type']
+    factor: RankFactor
+    group: RankGroup
+  }[]
+  groups: {
+    group: RankGroup
+    rankRange: RankRange
+  }[]
+}
+
+// projections reduced from event history
 export type Project = {
-  projectId: UUID
-  ownerId: UUID
-  stageRules: ProjectStageRules[]
+  projectId: ProjectId
+  ownerId: UserId
+  stageRules: StageRule[]
   currentStage: number
-  reviewers: UUID[]
+  lastStage: Stage
+  reviewers: UserId[]
   evaluations: {
-    reviewerId: UUID
+    reviewerId: UserId
     evaluation: Evaluation
   }[]
   reviewProcessCompleted: boolean
@@ -82,16 +116,18 @@ export type Project = {
 }
 
 export type Publication = {
-  publicationId: UUID
-  privileges: PublicationPrivileges
-  rankConditions: RankConditions
-  projectStageRules: ProjectStageRules[]
+  publicationId: PublicationId
+  privilegeConditions: PublicationPrivilegeConditions
+  rankCalcParams: RankCalcParams
+  editors: {
+    invited: UserId[]
+    confirmed: UserId[]
+  }
+  stageRules: StageRule[]
 }
 
 export type User = {
-  userId: UUID
-  beenionAnalytics: EventAnalytics
-  publicationAnalytics: {
-    [publicationId: string]: EventAnalytics
-  }
+  userId: UserId
+  mergedUserIds: UserId[]
+  rankEvents: RankEvent[]
 }
