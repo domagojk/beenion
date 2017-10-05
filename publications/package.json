@@ -23,7 +23,8 @@
       "**/?(*.)(test).(js|ts)?(x)"
     ],
     "testPathIgnorePatterns": [
-      "/dist/"
+      "/dist/",
+      "/ui"
     ]
   },
   "author": "Domagoj Kriskovic",

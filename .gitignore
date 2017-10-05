@@ -1,7 +1,8 @@
-/dist
-/coverage
-.vscode
-.idea
-node_modules
-package-lock.json
-notes
+.vscode/chrome
+/notes
+
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
