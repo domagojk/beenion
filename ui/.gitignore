@@ -1,6 +1,6 @@
-.vscode
+/src/*.js
+/src/**/*.js
 
-# dependencies
 /node_modules
 
 # testing

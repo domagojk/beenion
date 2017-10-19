@@ -5,15 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "program": "${file}",
-      "outFiles": [
-        "${workspaceRoot}/out/**/*.js"
-      ]
-    },
-    {
       "name": "Debug Tests",
       "program": "${workspaceRoot}/node_modules/jest/bin/jest",
       "stopOnEntry": false,
@@ -30,18 +21,6 @@
       ],
       "protocol": "inspector",
       "console": "integratedTerminal"
-    },
-    {
-      "name": "Chrome",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}/ui/src",
-      "userDataDir": "${workspaceRoot}/.vscode/chrome",
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*"
-      }
     }
-
   ]
 }

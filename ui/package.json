@@ -3,14 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/react": "^16.0.10",
+    "@types/react-dom": "^16.0.1",
+    "antd": "^2.13.4",
+    "apollo-client": "^1.9.3",
+    "apollo-test-utils": "^0.3.2",
+    "font-awesome": "^4.7.0",
+    "graphql-tools": "^2.4.0",
+    "prop-types": "^15.6.0",
     "react": "^16.0.0",
+    "react-apollo": "^1.4.16",
     "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14"
+    "react-fontawesome": "^1.6.1",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.14",
+    "styled-components": "^2.2.1"
   },
   "scripts": {
+    "postCompile": "rm -rf node_modules && npm i && npm start",
+    "genSchema": "apollo-codegen introspect-schema http://localhost:4000/graphql --output schema.json",
+    "genTypes": "apollo-codegen generate src/pages/**/*.tsx --schema schema.json --target typescript --output src/types/gql.ts",
+    "genUpdate": "npm run genSchema && npm run genTypes",
+    "cleanSrc": "rm -rf src/*.js && rm -rf src/**/*.js",
+    "tsc": "npm run cleanSrc && tsc",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "apollo-codegen": "^0.17.0"
   }
 }

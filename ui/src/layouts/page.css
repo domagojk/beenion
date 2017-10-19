@@ -1,0 +1,12 @@
+.pageHeader {
+  padding-bottom: 20px;
+  margin-left: 8%;
+}
+
+.pageContent {
+  margin: 0 8%;
+  padding: 24px;
+  border-radius: 4px;
+  background: #fff;
+  min-height: 800px;
+}
