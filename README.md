@@ -2,7 +2,9 @@
 Beenion is a project that I am builing "in my spare time".
 I'm using it primaraly for testing new ideas and technologies.
 
-## Technologies used
+## Langugages/Tools/Patterns used
+- CQRS
+- Event Sourcing
 - TypeScript
 - JavaScript
 - Express
