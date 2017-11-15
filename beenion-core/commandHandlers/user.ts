@@ -25,23 +25,6 @@ export default (
     })
   },
 
-  MergeAccount: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.MergeAccount
-    )
-
-    return await userRepository.save({
-      events: user.mergeAccount({
-        originalUserId: userId,
-        mergedUserId: payload.mergedUserId,
-        timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
-  },
-
   DeclineReviewInvitation: async (command: object) => {
     const { userId, payload } = validate(
       command,

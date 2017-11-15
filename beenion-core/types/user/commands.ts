@@ -13,15 +13,6 @@ export const privateCommands = type({
 })
 
 export const publicCommands = type({
-  MergeAccount: type({
-    userId: input.UserId,
-    payload: type({
-      mergedUserId: input.UserId,
-      revision: input.NonNegativeInt,
-      timestamp: input.Timestamp
-    })
-  }),
-
   DeclineReviewInvitation: type({
     userId: input.UserId,
     payload: type({

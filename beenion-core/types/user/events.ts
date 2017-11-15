@@ -8,16 +8,6 @@ export const UserEvent = union([
     timestamp: input.Timestamp
   }),
 
-  // due to twitter (and other kinds) invitations
-  // there is posibility for a user to have multiple accounts.
-  // UserAccountMerged event merges them together.
-  type({
-    type: literal('UserAccountMerged'),
-    originalUserId: input.UserId,
-    mergedUserId: input.UserId,
-    timestamp: input.Timestamp
-  }),
-
   type({
     type: literal('ReviewInvitationDeclined'),
     reviewOwnerId: input.UserId,
