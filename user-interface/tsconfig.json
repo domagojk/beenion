@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@beenionCore/*": [
-        "../ctx-beenion-core/*"
+        "../beenion-core/*"
       ]
     },
     "typeRoots": [

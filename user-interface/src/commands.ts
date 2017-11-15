@@ -38,7 +38,6 @@ export const createCommand: CommandFactory = {
   RemoveStageRule: payload => ({ name: 'RemoveStageRule', payload }),
 
   // user commands
-  MergeAccount: payload => ({ name: 'MergeAccount', payload }),
   DeclineReviewInvitation: payload => ({ name: 'DeclineReviewInvitation', payload }),
   ExpireReviewInvitation: payload => ({ name: 'ExpireReviewInvitation', payload }),
   RateArticle: payload => ({ name: 'RateArticle', payload }),
