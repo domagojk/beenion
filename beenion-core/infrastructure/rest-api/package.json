@@ -1,0 +1,27 @@
+{
+  "name": "auth0-nodejs-regular-webapp-sample",
+  "version": "1.0.0",
+  "description": "Auth0 + NodeJS Regular WebApp seed",
+  "repository": "git://github.com/auth0/node-auth0",
+  "author": "Auth0",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf build && tsc",
+    "start": "node ./build/infrastructure/rest-api/bin/www"
+  },
+  "dependencies": {
+    "auth0": "^2.8.0",
+    "body-parser": "^1.16.1",
+    "connect-ensure-login": "^0.1.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.6.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.1",
+    "express-session": "^1.11.3",
+    "passport": "^0.3.0",
+    "passport-auth0": "^0.6.0",
+    "typescript": "^2.6.1",
+    "uuid": "^3.1.0"
+  }
+}

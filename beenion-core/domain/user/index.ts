@@ -1,7 +1,6 @@
 export * from './methods/create'
 export * from './methods/declineReviewInvitation'
 export * from './methods/expireReviewInvitation'
-export * from './methods/mergeAccount'
 export * from './methods/rateArticle'
 export * from './methods/rateReview'
 export * from './methods/rateUser'
