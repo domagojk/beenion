@@ -1,7 +1,7 @@
-import { UserRepository, JournalRepository, UserCommands } from '../types'
-import { publicCommands, privateCommands } from '../types/user/commands'
+import { UserRepository, JournalRepository, UserCommands } from '../domain/types'
+import { publicCommands, privateCommands } from '../domain/types/user/commands'
 import validate from '../domain/validateCommand'
-import * as user from '../domain/user'
+import * as user from '../domain/entities/user'
 
 type CommandHandler = {
   [Command in keyof UserCommands]: (command: object) => Promise<any>

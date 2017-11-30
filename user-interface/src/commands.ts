@@ -1,4 +1,4 @@
-import { PublicCommands, PickCommand } from '@beenionCore/types'
+import { PublicCommands, PickCommand } from '@beenionCore/domain/types'
 
 type CommandFactory = {
   [Name in keyof PublicCommands]: (payload: PickCommand<Name>) => {

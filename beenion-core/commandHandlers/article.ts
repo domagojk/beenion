@@ -1,7 +1,7 @@
-import * as t from '../types'
-import { publicCommands, privateCommands } from '../types/article/commands'
+import * as t from '../domain/types'
+import { publicCommands, privateCommands } from '../domain/types/article/commands'
 import validate from '../domain/validateCommand'
-import * as article from '../domain/article'
+import * as article from '../domain/entities/article'
 
 type CommandHandler = {
   [Command in keyof t.ArticleCommands]: (command: object) => Promise<any>

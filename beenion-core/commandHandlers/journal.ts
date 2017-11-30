@@ -1,7 +1,7 @@
-import { UserRepository, JournalRepository, JournalCommands } from '../types'
-import { publicCommands } from '../types/journal/commands'
+import { UserRepository, JournalRepository, JournalCommands } from '../domain/types'
+import { publicCommands } from '../domain/types/journal/commands'
 import validate from '../domain/validateCommand'
-import * as journal from '../domain/journal'
+import * as journal from '../domain/entities/journal'
 
 type CommandHandler = {
   [Command in keyof JournalCommands]: (command: object) => Promise<any>
