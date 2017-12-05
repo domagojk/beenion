@@ -1,5 +1,5 @@
 import { hasBeenionPermissions, hasJournalPermissions } from './permissions'
-import * as t from '../types'
+import * as t from './types'
 
 type HasJournalPermissions = (user: t.User, journal: t.Journal) => boolean
 type JournalPrivileges = Record<t.JournalPrivilege, HasJournalPermissions>

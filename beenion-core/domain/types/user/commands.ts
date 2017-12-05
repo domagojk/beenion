@@ -6,7 +6,6 @@ export const privateCommands = type({
     private: literal(true),
     payload: type({
       userId: input.UserId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   })
@@ -18,7 +17,6 @@ export const publicCommands = type({
     payload: type({
       articleId: input.ArticleId,
       journalId: input.JournalId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -28,7 +26,6 @@ export const publicCommands = type({
     payload: type({
       articleId: input.ArticleId,
       journalId: input.JournalId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -41,7 +38,6 @@ export const publicCommands = type({
       articleId: input.ArticleId,
       medal: input.Medal,
       rating: input.Rating,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -54,7 +50,6 @@ export const publicCommands = type({
       articleId: input.ArticleId,
       medal: input.Medal,
       rating: input.Rating,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -65,7 +60,6 @@ export const publicCommands = type({
       userId: input.UserId,
       medal: input.Medal,
       rating: input.Rating,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -76,7 +70,6 @@ export const publicCommands = type({
       articleOwnerId: input.UserId,
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -87,7 +80,6 @@ export const publicCommands = type({
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
       journalId: input.JournalId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -96,7 +88,6 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       userId: input.UserId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   })

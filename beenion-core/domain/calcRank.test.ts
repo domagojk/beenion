@@ -1,4 +1,4 @@
-import { RankCalcParams } from '../types'
+import { RankCalcParams } from './types'
 import calcRank from './calcRank'
 
 describe('calc Rank', () => {

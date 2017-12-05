@@ -11,7 +11,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       title: input.Title,
       description: input.Description,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -21,7 +20,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       editorInfo: input.UserInfo,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -31,7 +29,6 @@ export const publicCommands = type({
       editorId: input.UserId,
       editorInfo: input.UserInfo,
       journalId: input.JournalId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -41,7 +38,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       description: input.Description,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -52,7 +48,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       privilege: input.JournalPrivilege,
       permission: input.JournalPermission,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -62,7 +57,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       title: input.Title,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -74,7 +68,6 @@ export const publicCommands = type({
       userEventType: map(t => t.type, UserEvent),
       factor: input.RankFactor,
       group: input.RankGroup,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -85,7 +78,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       rankRange: input.RankRange,
       group: input.RankGroup,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -96,7 +88,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       stage: input.Stage,
       stageRule: input.StageRule,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -105,7 +96,6 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       journalId: input.JournalId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -115,7 +105,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       editorId: input.UserId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -125,7 +114,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       privilege: input.JournalPrivilege,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -135,7 +123,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       userEventType: map(t => t.type, UserEvent),
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -145,7 +132,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       group: input.RankGroup,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -155,7 +141,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       stage: input.Stage,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   })

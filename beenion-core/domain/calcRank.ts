@@ -1,4 +1,4 @@
-import { RankCalcParams, RankEvent } from '../types'
+import { RankCalcParams, RankEvent } from './types'
 import clamp from 'clamp'
 
 const calcRank = (rankEvents: RankEvent[], rankCalcParams: RankCalcParams): number => {

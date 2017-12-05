@@ -8,7 +8,6 @@ export const privateCommands = type({
       reviewerId: input.UserId,
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -18,7 +17,6 @@ export const privateCommands = type({
     payload: type({
       reviewerId: input.UserId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   })
@@ -33,7 +31,6 @@ export const publicCommands = type({
       description: input.Description,
       link: input.URL,
       title: input.Title,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -43,7 +40,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -53,7 +49,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -63,7 +58,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -74,7 +68,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
       description: input.Description,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -85,7 +78,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
       link: input.URL,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -96,7 +88,6 @@ export const publicCommands = type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
       title: input.Title,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -106,7 +97,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -116,7 +106,6 @@ export const publicCommands = type({
     payload: type({
       journalId: input.JournalId,
       articleId: input.ArticleId,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   }),
@@ -127,7 +116,6 @@ export const publicCommands = type({
       reviewerId: input.UserId,
       articleId: input.ArticleId,
       evaluation: input.Evaluation,
-      revision: input.NonNegativeInt,
       timestamp: input.Timestamp
     })
   })

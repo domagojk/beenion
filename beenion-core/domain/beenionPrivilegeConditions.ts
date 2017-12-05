@@ -1,4 +1,4 @@
-import { BeenionPrivilege, BeenionPermission } from '../types'
+import { BeenionPrivilege, BeenionPermission } from './types'
 
 export type BeenionPrivilegeConditions = {
   [Privilege in BeenionPrivilege]: BeenionPermission

@@ -1,7 +1,7 @@
 import * as t from '../domain/types'
 import { publicCommands, privateCommands } from '../domain/types/article/commands'
 import validate from '../domain/validateCommand'
-import * as article from '../domain/entities/article'
+import * as article from '../domain/aggregates/article'
 
 type CommandHandler = {
   [Command in keyof t.ArticleCommands]: (command: object) => Promise<any>
@@ -19,19 +19,21 @@ export default (
       publicCommands.props.CreateArticle
     )
 
-    return await articleRepository.save({
-      events: article.create({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.create({
+        user: userState,
+        journal: journalState,
         articleId: payload.articleId,
         description: payload.description,
         link: payload.link,
         title: payload.title,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: 0
-    })
+      })
+    )
   },
 
   BanArticle: async (command: object) => {
@@ -40,16 +42,18 @@ export default (
       publicCommands.props.BanArticle
     )
 
-    return await articleRepository.save({
-      events: article.ban({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.ban({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DeleteArticle: async (command: object) => {
@@ -58,16 +62,18 @@ export default (
       publicCommands.props.DeleteArticle
     )
 
-    return await articleRepository.save({
-      events: article.del({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.del({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   UnbanArticle: async (command: object) => {
@@ -76,16 +82,18 @@ export default (
       publicCommands.props.UnbanArticle
     )
 
-    return await articleRepository.save({
-      events: article.unban({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.unban({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   UpdateArticleDescription: async (command: object) => {
@@ -94,17 +102,19 @@ export default (
       publicCommands.props.UpdateArticleDescription
     )
 
-    return await articleRepository.save({
-      events: article.updateDescription({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.updateDescription({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         description: payload.description,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   UpdateArticleLink: async (command: object) => {
@@ -113,17 +123,19 @@ export default (
       publicCommands.props.UpdateArticleLink
     )
 
-    return await articleRepository.save({
-      events: article.updateLink({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.updateLink({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         link: payload.link,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   UpdateArticleTitle: async (command: object) => {
@@ -132,17 +144,19 @@ export default (
       publicCommands.props.UpdateArticleTitle
     )
 
-    return await articleRepository.save({
-      events: article.updateTitle({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.updateTitle({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         title: payload.title,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RejectApprovedArticle: async (command: object) => {
@@ -151,16 +165,18 @@ export default (
       publicCommands.props.RejectApprovedArticle
     )
 
-    return await articleRepository.save({
-      events: article.rejectApproved({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.rejectApproved({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   ResubmitArticle: async (command: object) => {
@@ -169,16 +185,18 @@ export default (
       publicCommands.props.ResubmitArticle
     )
 
-    return await articleRepository.save({
-      events: article.resubmit({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.resubmit({
+        user: userState,
+        journal: journalState,
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   ReviewArticle: async (command: object) => {
@@ -187,16 +205,17 @@ export default (
       publicCommands.props.ReviewArticle
     )
 
-    return await articleRepository.save({
-      events: article.review({
-        reviewer: await userRepository.getById(userId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(userId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.review({
+        reviewer: userState,
+        article: articleState,
         evaluation: payload.evaluation,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   InviteArticleReviewer: async (command: object) => {
@@ -205,16 +224,18 @@ export default (
       privateCommands.props.InviteArticleReviewer
     )
 
-    return await articleRepository.save({
-      events: article.inviteReviewer({
-        reviewer: await userRepository.getById(payload.reviewerId),
-        journal: await journalRepository.getById(payload.journalId),
-        article: await articleRepository.getById(payload.articleId),
+    const { userState } = await userRepository.getById(payload.reviewerId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.inviteReviewer({
+        reviewer: userState,
+        journal: journalState,
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RemoveArticleReviewer: async (command: object) => {
@@ -223,14 +244,14 @@ export default (
       privateCommands.props.RemoveArticleReviewer
     )
 
-    return await articleRepository.save({
-      events: article.removeReviewer({
+    const { articleState, save } = await articleRepository.getById(payload.articleId)
+
+    return await save(
+      article.removeReviewer({
         reviewerId: payload.reviewerId,
-        article: await articleRepository.getById(payload.articleId),
+        article: articleState,
         timestamp: payload.timestamp
-      }),
-      id: payload.articleId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   }
 })

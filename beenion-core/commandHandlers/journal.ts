@@ -1,7 +1,7 @@
 import { UserRepository, JournalRepository, JournalCommands } from '../domain/types'
 import { publicCommands } from '../domain/types/journal/commands'
 import validate from '../domain/validateCommand'
-import * as journal from '../domain/entities/journal'
+import * as journal from '../domain/aggregates/journal'
 
 type CommandHandler = {
   [Command in keyof JournalCommands]: (command: object) => Promise<any>
@@ -18,17 +18,18 @@ const journalCommandHandlers = (
       publicCommands.props.CreateJournal
     )
 
-    return await journalRepository.save({
-      events: journal.create({
-        user: await userRepository.getById(userId),
+    const { userState } = await userRepository.getById(userId)
+    const { save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.create({
+        user: userState,
         description: payload.description,
         journalId: payload.journalId,
         title: payload.title,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: 0
-    })
+      })
+    )
   },
 
   AddJournalEditor: async (command: object) => {
@@ -37,16 +38,17 @@ const journalCommandHandlers = (
       publicCommands.props.AddJournalEditor
     )
 
-    return await journalRepository.save({
-      events: journal.addEditor({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.addEditor({
+        user: userState,
+        journal: journalState,
         editorInfo: payload.editorInfo,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   ConfirmJournalEditor: async (command: object) => {
@@ -55,16 +57,17 @@ const journalCommandHandlers = (
       publicCommands.props.ConfirmJournalEditor
     )
 
-    return await journalRepository.save({
-      events: journal.confirmEditor({
-        editor: await userRepository.getById(payload.editorId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(payload.editorId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.confirmEditor({
+        editor: userState,
+        journal: journalState,
         editorInfo: payload.editorInfo,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DefineJournalDescription: async (command: object) => {
@@ -73,16 +76,17 @@ const journalCommandHandlers = (
       publicCommands.props.DefineJournalDescription
     )
 
-    return await journalRepository.save({
-      events: journal.defineDescription({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.defineDescription({
+        user: userState,
+        journal: journalState,
         description: payload.description,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DefineJournalPrivilege: async (command: object) => {
@@ -91,17 +95,18 @@ const journalCommandHandlers = (
       publicCommands.props.DefineJournalPrivilege
     )
 
-    return await journalRepository.save({
-      events: journal.definePrivilege({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.definePrivilege({
+        user: userState,
+        journal: journalState,
         privilege: payload.privilege,
         permission: payload.permission,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DefineJournalTitle: async (command: object) => {
@@ -110,16 +115,17 @@ const journalCommandHandlers = (
       publicCommands.props.DefineJournalTitle
     )
 
-    return await journalRepository.save({
-      events: journal.defineTitle({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.defineTitle({
+        user: userState,
+        journal: journalState,
         title: payload.title,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DefineRankCalcEvent: async (command: object) => {
@@ -128,18 +134,19 @@ const journalCommandHandlers = (
       publicCommands.props.DefineRankCalcEvent
     )
 
-    return await journalRepository.save({
-      events: journal.defineRankCalcEvent({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.defineRankCalcEvent({
+        user: userState,
+        journal: journalState,
         factor: payload.factor,
         group: payload.group,
         userEventType: payload.userEventType,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DefineRankCalcGroup: async (command: object) => {
@@ -148,17 +155,18 @@ const journalCommandHandlers = (
       publicCommands.props.DefineRankCalcGroup
     )
 
-    return await journalRepository.save({
-      events: journal.defineRankCalcGroup({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.defineRankCalcGroup({
+        user: userState,
+        journal: journalState,
         group: payload.group,
         rankRange: payload.rankRange,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DefineStageRule: async (command: object) => {
@@ -167,17 +175,18 @@ const journalCommandHandlers = (
       publicCommands.props.DefineStageRule
     )
 
-    return await journalRepository.save({
-      events: journal.defineStageRule({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.defineStageRule({
+        user: userState,
+        journal: journalState,
         stage: payload.stage,
         stageRule: payload.stageRule,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   DeleteJournal: async (command: object) => {
@@ -186,15 +195,16 @@ const journalCommandHandlers = (
       publicCommands.props.DeleteJournal
     )
 
-    return await journalRepository.save({
-      events: journal.del({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.del({
+        user: userState,
+        journal: journalState,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RemoveJournalEditor: async (command: object) => {
@@ -203,16 +213,17 @@ const journalCommandHandlers = (
       publicCommands.props.RemoveJournalEditor
     )
 
-    return await journalRepository.save({
-      events: journal.removeEditor({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.removeEditor({
+        user: userState,
+        journal: journalState,
         editorId: payload.editorId,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RemoveJournalPermission: async (command: object) => {
@@ -221,16 +232,17 @@ const journalCommandHandlers = (
       publicCommands.props.RemoveJournalPermission
     )
 
-    return await journalRepository.save({
-      events: journal.removePermission({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.removePermission({
+        user: userState,
+        journal: journalState,
         privilege: payload.privilege,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RemoveRankCalcEvent: async (command: object) => {
@@ -239,16 +251,17 @@ const journalCommandHandlers = (
       publicCommands.props.RemoveRankCalcEvent
     )
 
-    return await journalRepository.save({
-      events: journal.removeRankCalcEvent({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.removeRankCalcEvent({
+        user: userState,
+        journal: journalState,
         userEventType: payload.userEventType,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RemoveRankCalcGroup: async (command: object) => {
@@ -257,16 +270,17 @@ const journalCommandHandlers = (
       publicCommands.props.RemoveRankCalcGroup
     )
 
-    return await journalRepository.save({
-      events: journal.removeRankCalcGroup({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.removeRankCalcGroup({
+        user: userState,
+        journal: journalState,
         group: payload.group,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RemoveStageRule: async (command: object) => {
@@ -275,16 +289,17 @@ const journalCommandHandlers = (
       publicCommands.props.RemoveStageRule
     )
 
-    return await journalRepository.save({
-      events: journal.removeStageRule({
-        user: await userRepository.getById(userId),
-        journal: await journalRepository.getById(payload.journalId),
+    const { userState } = await userRepository.getById(userId)
+    const { journalState, save } = await journalRepository.getById(payload.journalId)
+
+    return await save(
+      journal.removeStageRule({
+        user: userState,
+        journal: journalState,
         stage: payload.stage,
         timestamp: payload.timestamp
-      }),
-      id: payload.journalId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   }
 })
 

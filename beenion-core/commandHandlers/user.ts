@@ -1,7 +1,7 @@
 import { UserRepository, JournalRepository, UserCommands } from '../domain/types'
 import { publicCommands, privateCommands } from '../domain/types/user/commands'
 import validate from '../domain/validateCommand'
-import * as user from '../domain/entities/user'
+import * as user from '../domain/aggregates/user'
 
 type CommandHandler = {
   [Command in keyof UserCommands]: (command: object) => Promise<any>
@@ -15,14 +15,14 @@ export default (
   CreateUser: async (command: object) => {
     const { payload } = validate(command, privateCommands.props.CreateUser)
 
-    return await userRepository.save({
-      events: user.create({
+    const { save } = await userRepository.getById(payload.userId)
+
+    return await save(
+      user.create({
         userId: payload.userId,
         timestamp: payload.timestamp
-      }),
-      id: payload.userId,
-      expectedVersion: 0
-    })
+      })
+    )
   },
 
   DeclineReviewInvitation: async (command: object) => {
@@ -31,16 +31,16 @@ export default (
       publicCommands.props.DeclineReviewInvitation
     )
 
-    return await userRepository.save({
-      events: user.declineReviewInvitation({
+    const { save } = await userRepository.getById(userId)
+
+    return await save(
+      user.declineReviewInvitation({
         reviewOwnerId: userId,
         articleId: payload.articleId,
         journalId: payload.journalId,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   ExpireReviewInvitation: async (command: object) => {
@@ -49,16 +49,16 @@ export default (
       publicCommands.props.ExpireReviewInvitation
     )
 
-    return await userRepository.save({
-      events: user.expireReviewInvitation({
+    const { save } = await userRepository.getById(userId)
+
+    return await save(
+      user.expireReviewInvitation({
         reviewOwnerId: userId,
         articleId: payload.articleId,
         journalId: payload.journalId,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RateArticle: async (command: object) => {
@@ -67,19 +67,21 @@ export default (
       publicCommands.props.RateArticle
     )
 
-    return await userRepository.save({
-      events: user.rateArticle({
-        voter: await userRepository.getById(userId),
-        articleOwner: await userRepository.getById(payload.articleOwnerId),
-        journal: await journalRepository.getById(payload.journalId),
+    const voter = await userRepository.getById(userId)
+    const articleOwner = await userRepository.getById(payload.articleOwnerId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+
+    return await voter.save(
+      user.rateArticle({
+        voter: voter.userState,
+        articleOwner: articleOwner.userState,
+        journal: journalState,
         articleId: payload.articleId,
         medal: payload.medal,
         rating: payload.rating,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RateReview: async (command: object) => {
@@ -88,35 +90,38 @@ export default (
       publicCommands.props.RateReview
     )
 
-    return await userRepository.save({
-      events: user.rateReview({
-        voter: await userRepository.getById(userId),
-        reviewOwner: await userRepository.getById(payload.reviewOwnerId),
-        journal: await journalRepository.getById(payload.journalId),
+    const voter = await userRepository.getById(userId)
+    const reviewOwner = await userRepository.getById(payload.reviewOwnerId)
+    const { journalState } = await journalRepository.getById(payload.journalId)
+
+    return await voter.save(
+      user.rateReview({
+        voter: voter.userState,
+        reviewOwner: reviewOwner.userState,
+        journal: journalState,
         articleId: payload.articleId,
         medal: payload.medal,
         rating: payload.rating,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   RateUser: async (command: object) => {
     const { userId, payload } = validate(command, publicCommands.props.RateUser)
 
-    return await userRepository.save({
-      events: user.rateUser({
-        voter: await userRepository.getById(userId),
-        user: await userRepository.getById(payload.userId),
+    const voter = await userRepository.getById(userId)
+    const votedUser = await userRepository.getById(payload.userId)
+
+    return await voter.save(
+      user.rateUser({
+        voter: voter.userState,
+        user: votedUser.userState,
         medal: payload.medal,
         rating: payload.rating,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   WithdrawArticleVote: async (command: object) => {
@@ -125,17 +130,18 @@ export default (
       publicCommands.props.WithdrawArticleVote
     )
 
-    return await userRepository.save({
-      events: user.withdrawArticleVote({
-        voter: await userRepository.getById(userId),
-        articleOwner: await userRepository.getById(payload.articleOwnerId),
+    const voter = await userRepository.getById(userId)
+    const articleOwner = await userRepository.getById(payload.articleOwnerId)
+
+    return await voter.save(
+      user.withdrawArticleVote({
+        voter: voter.userState,
+        articleOwner: articleOwner.userState,
         articleId: payload.articleId,
         journalId: payload.journalId,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   WithdrawReviewVote: async (command: object) => {
@@ -144,17 +150,18 @@ export default (
       publicCommands.props.WithdrawReviewVote
     )
 
-    return await userRepository.save({
-      events: user.withdrawReviewVote({
-        voter: await userRepository.getById(userId),
-        reviewOwner: await userRepository.getById(payload.reviewOwnerId),
+    const voter = await userRepository.getById(userId)
+    const reviewOwner = await userRepository.getById(payload.reviewOwnerId)
+
+    return await voter.save(
+      user.withdrawReviewVote({
+        voter: voter.userState,
+        reviewOwner: reviewOwner.userState,
         articleId: payload.articleId,
         journalId: payload.journalId,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   },
 
   WithdrawUserVote: async (command: object) => {
@@ -163,14 +170,15 @@ export default (
       publicCommands.props.WithdrawUserVote
     )
 
-    return await userRepository.save({
-      events: user.withdrawUserVote({
-        voter: await userRepository.getById(userId),
-        user: await userRepository.getById(payload.userId),
+    const voter = await userRepository.getById(userId)
+    const votedUser = await userRepository.getById(payload.userId)
+
+    return await voter.save(
+      user.withdrawUserVote({
+        voter: voter.userState,
+        user: votedUser.userState,
         timestamp: payload.timestamp
-      }),
-      id: userId,
-      expectedVersion: payload.revision
-    })
+      })
+    )
   }
 })

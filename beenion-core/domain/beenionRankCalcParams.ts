@@ -1,4 +1,4 @@
-import { RankCalcParams } from '../types'
+import { RankCalcParams } from './types'
 
 const beenionRankCalcParams: RankCalcParams = {
   events: [

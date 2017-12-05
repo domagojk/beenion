@@ -1,7 +1,7 @@
 import calcRank from './calcRank'
 import beenionRankCalcParams from './beenionRankCalcParams'
 import beenionPrivilegeConditions from './beenionPrivilegeConditions'
-import * as t from '../types'
+import * as t from './types'
 
 // permission checks
 export const hasBeenionPermissions = (
