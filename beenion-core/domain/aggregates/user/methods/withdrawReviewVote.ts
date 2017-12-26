@@ -24,11 +24,13 @@ export function withdrawReviewVote (params: {
   return [
     {
       type: 'ReviewVoteWithdrawn',
-      voterId: voter.userId,
-      reviewOwnerId: reviewOwner.userId,
-      articleId,
-      journalId,
-      timestamp
+      payload: {
+        voterId: voter.userId,
+        reviewOwnerId: reviewOwner.userId,
+        articleId,
+        journalId,
+        timestamp
+      }
     }
   ]
 }

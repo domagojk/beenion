@@ -22,10 +22,12 @@ export function defineStageRule (params: {
   return [
     {
       type: 'JournalStageRuleDefined',
-      journalId: journal.journalId,
-      stage,
-      stageRule,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        stage,
+        stageRule,
+        timestamp
+      }
     }
   ]
 }

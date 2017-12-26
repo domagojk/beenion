@@ -17,9 +17,11 @@ export function removeRankCalcEvent (params: {
   return [
     {
       type: 'JournalRankCalcEventRemoved',
-      journalId: journal.journalId,
-      userEventType,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        userEventType,
+        timestamp
+      }
     }
   ]
 }

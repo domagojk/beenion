@@ -37,10 +37,12 @@ export function addEditor (params: {
   return [
     {
       type: 'JournalEditorAdded',
-      journalId: journal.journalId,
-      userId: user.userId,
-      editorInfo,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        userId: user.userId,
+        editorInfo,
+        timestamp
+      }
     }
   ]
 }

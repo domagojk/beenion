@@ -9,7 +9,7 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
   switch (e.type) {
     case 'JournalCreated':
       return {
-        journalId: e.journalId,
+        journalId: e.payload.journalId,
         privileges: null,
         rankCalcParams: {
           events: [],
@@ -28,12 +28,12 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
           ...journal.rankCalcParams,
           events: [
             ...journal.rankCalcParams.events.filter(
-              params => params.eventType !== e.userEventType
+              params => params.eventType !== e.payload.userEventType
             ),
             {
-              eventType: e.userEventType,
-              group: e.group,
-              factor: e.factor
+              eventType: e.payload.userEventType,
+              group: e.payload.group,
+              factor: e.payload.factor
             }
           ]
         }
@@ -44,7 +44,7 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         rankCalcParams: {
           ...journal.rankCalcParams,
           events: journal.rankCalcParams.events.filter(
-            params => params.eventType !== e.userEventType
+            params => params.eventType !== e.payload.userEventType
           )
         }
       }
@@ -55,11 +55,11 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
           ...journal.rankCalcParams,
           groups: [
             ...journal.rankCalcParams.groups.filter(
-              params => params.group !== e.group
+              params => params.group !== e.payload.group
             ),
             {
-              group: e.group,
-              rankRange: e.rankRange
+              group: e.payload.group,
+              rankRange: e.payload.rankRange
             }
           ]
         }
@@ -70,7 +70,7 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         rankCalcParams: {
           ...journal.rankCalcParams,
           groups: journal.rankCalcParams.groups.filter(
-            params => params.group !== e.group
+            params => params.group !== e.payload.group
           )
         }
       }
@@ -79,7 +79,7 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         ...journal,
         editors: {
           ...journal.editors,
-          invited: [...journal.editors.invited, e.editorInfo]
+          invited: [...journal.editors.invited, e.payload.editorInfo]
         }
       }
     case 'JournalEditorConfirmed':
@@ -87,9 +87,9 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         ...journal,
         editors: {
           invited: journal.editors.invited.filter(
-            editor => editor !== e.editorId
+            editor => editor !== e.payload.editorId
           ),
-          confirmed: [...journal.editors.confirmed, e.editorInfo]
+          confirmed: [...journal.editors.confirmed, e.payload.editorInfo]
         }
       }
     case 'JournalEditorRemoved':
@@ -97,10 +97,10 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         ...journal,
         editors: {
           invited: journal.editors.invited.filter(
-            editor => editor !== e.editorId
+            editor => editor !== e.payload.editorId
           ),
           confirmed: journal.editors.confirmed.filter(
-            editor => editor !== e.editorId
+            editor => editor !== e.payload.editorId
           )
         }
       }
@@ -109,7 +109,7 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         ...journal,
         privileges: {
           ...journal.privileges,
-          [e.privilege]: e.permission
+          [e.payload.privilege]: e.payload.permission
         }
       }
     case 'JournalPrivilegeRemoved':
@@ -117,16 +117,16 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         ...journal,
         privileges: {
           ...journal.privileges,
-          [e.privilege]: null
+          [e.payload.privilege]: null
         }
       }
     case 'JournalStageRuleDefined':
-      if (journal.stageRules[e.stage]) {
+      if (journal.stageRules[e.payload.stage]) {
         return {
           ...journal,
           stageRules: journal.stageRules.map((stageRule, stage) => {
-            if (stage === e.stage) {
-              return e.stageRule
+            if (stage === e.payload.stage) {
+              return e.payload.stageRule
             }
             return stageRule
           })
@@ -136,14 +136,14 @@ const journalReducer = (journal: Journal, e: JournalEvent): Journal => {
         ...journal,
         stageRules: [
           ...journal.stageRules,
-          e.stageRule
+          e.payload.stageRule
         ]
       }
     case 'JournalStageRuleRemoved':
       return {
         ...journal,
         stageRules: journal.stageRules.filter(
-          (_stageRule, stage) => stage !== e.stage
+          (_stageRule, stage) => stage !== e.payload.stage
         )
       }
     default:

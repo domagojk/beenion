@@ -23,9 +23,11 @@ export function inviteReviewer (params: {
   return [
     {
       type: 'ArticleReviewerInvited',
-      articleId: article.articleId,
-      reviewerId: reviewer.userId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        reviewerId: reviewer.userId,
+        timestamp
+      }
     }
   ]
 }

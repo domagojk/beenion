@@ -20,9 +20,11 @@ export function del (params: {
   return [
     {
       type: 'ArticleDeleted',
-      articleId: article.articleId,
-      userId: user.userId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        userId: user.userId,
+        timestamp
+      }
     }
   ]
 }

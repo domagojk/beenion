@@ -18,30 +18,38 @@ export function create (params: {
   return [
     {
       type: 'JournalCreated',
-      journalId,
-      ownerId: user.userId,
-      timestamp
+      payload: {
+        journalId,
+        ownerId: user.userId,
+        timestamp
+      }
     },
     {
       type: 'JournalTitleDefined',
-      journalId,
-      title,
-      timestamp
+      payload: {
+        journalId,
+        title,
+        timestamp
+      }
     },
     {
       type: 'JournalDescriptionDefined',
-      journalId,
-      description,
-      timestamp
+      payload: {
+        journalId,
+        description,
+        timestamp
+      }
     },
     {
       type: 'JournalPrivilegeDefined',
-      journalId,
-      privilege: 'canUpdateJournal',
-      permission: {
-        users: [user.userId]
-      },
-      timestamp
+      payload: {
+        journalId,
+        privilege: 'canUpdateJournal',
+        permission: {
+          users: [user.userId]
+        },
+        timestamp
+      }
     }
   ]
 }

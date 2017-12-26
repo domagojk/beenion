@@ -24,10 +24,12 @@ export function removeEditor (params: {
   return [
     {
       type: 'JournalEditorRemoved',
-      journalId: journal.journalId,
-      userId: user.userId,
-      editorId,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        userId: user.userId,
+        editorId,
+        timestamp
+      }
     }
   ]
 }

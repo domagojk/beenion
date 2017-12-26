@@ -17,9 +17,11 @@ export function removePermission (params: {
   return [
     {
       type: 'JournalPrivilegeRemoved',
-      journalId: journal.journalId,
-      privilege,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        privilege,
+        timestamp
+      }
     }
   ]
 }

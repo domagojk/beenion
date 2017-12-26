@@ -11,10 +11,12 @@ export function declineReviewInvitation (params: {
   return [
     {
       type: 'ReviewInvitationDeclined',
-      reviewOwnerId,
-      articleId,
-      journalId,
-      timestamp
+      payload: {
+        reviewOwnerId,
+        articleId,
+        journalId,
+        timestamp
+      }
     }
   ]
 }

@@ -22,9 +22,11 @@ export function updateDescription (params: {
   return [
     {
       type: 'ArticleDescriptionDefined',
-      articleId: article.articleId,
-      description,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        description,
+        timestamp
+      }
     }
   ]
 }

@@ -22,9 +22,11 @@ export function updateTitle (params: {
   return [
     {
       type: 'ArticleTitleDefined',
-      articleId: article.articleId,
-      title,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        title,
+        timestamp
+      }
     }
   ]
 }

@@ -20,34 +20,44 @@ export function create (params: {
   return [
     {
       type: 'ArticleCreated',
-      ownerId: user.userId,
-      journalId: journal.journalId,
-      articleId,
-      timestamp
+      payload: {
+        ownerId: user.userId,
+        journalId: journal.journalId,
+        articleId,
+        timestamp
+      }
     },
     {
       type: 'ArticleTitleDefined',
-      articleId,
-      title,
-      timestamp
+      payload: {
+        articleId,
+        title,
+        timestamp
+      }
     },
     {
       type: 'ArticleDescriptionDefined',
-      articleId,
-      description,
-      timestamp
+      payload: {
+        articleId,
+        description,
+        timestamp
+      }
     },
     {
       type: 'ArticleLinkDefined',
-      articleId,
-      link,
-      timestamp
+      payload: {
+        articleId,
+        link,
+        timestamp
+      }
     },
     {
       type: 'ArticleStageRulesDefined',
-      articleId,
-      stageRules: journal.stageRules,
-      timestamp
+      payload: {
+        articleId,
+        stageRules: journal.stageRules,
+        timestamp
+      }
     }
   ]
 }

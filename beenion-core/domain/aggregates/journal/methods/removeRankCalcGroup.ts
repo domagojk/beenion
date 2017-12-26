@@ -17,9 +17,11 @@ export function removeRankCalcGroup (params: {
   return [
     {
       type: 'JournalRankCalcGroupRemoved',
-      journalId: journal.journalId,
-      group,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        group,
+        timestamp
+      }
     }
   ]
 }

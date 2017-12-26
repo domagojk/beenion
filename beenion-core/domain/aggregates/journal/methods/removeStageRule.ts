@@ -25,9 +25,11 @@ export function removeStageRule (params: {
   return [
     {
       type: 'JournalStageRuleRemoved',
-      journalId: journal.journalId,
-      stage,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        stage,
+        timestamp
+      }
     }
   ]
 }

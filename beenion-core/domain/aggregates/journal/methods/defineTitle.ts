@@ -17,9 +17,11 @@ export function defineTitle (params: {
   return [
     {
       type: 'JournalTitleDefined',
-      journalId: journal.journalId,
-      title,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        title,
+        timestamp
+      }
     }
   ]
 }

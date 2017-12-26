@@ -23,7 +23,7 @@ export function rateUser (params: {
     throw errors.userAlreadyRated()
   }
 
-  const eventBody = {
+  const payload = {
     voterId: voter.userId,
     userId: user.userId,
     timestamp
@@ -32,21 +32,21 @@ export function rateUser (params: {
   if (rating === 'upvote') {
     switch (medal) {
       case 'gold':
-        return [{ type: 'UserUpvotedWithGold', ...eventBody }]
+        return [{ type: 'UserUpvotedWithGold', payload }]
       case 'silver':
-        return [{ type: 'UserUpvotedWithSilver', ...eventBody }]
+        return [{ type: 'UserUpvotedWithSilver', payload }]
       case 'bronze':
-        return [{ type: 'UserUpvotedWithBronze', ...eventBody }]
+        return [{ type: 'UserUpvotedWithBronze', payload }]
     }
   }
   if (rating === 'downvote') {
     switch (medal) {
       case 'gold':
-        return [{ type: 'UserDownvotedWithGold', ...eventBody }]
+        return [{ type: 'UserDownvotedWithGold', payload }]
       case 'silver':
-        return [{ type: 'UserDownvotedWithSilver', ...eventBody }]
+        return [{ type: 'UserDownvotedWithSilver', payload }]
       case 'bronze':
-        return [{ type: 'UserDownvotedWithBronze', ...eventBody }]
+        return [{ type: 'UserDownvotedWithBronze', payload }]
     }
   }
 }

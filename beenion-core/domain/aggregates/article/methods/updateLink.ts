@@ -22,9 +22,11 @@ export function updateLink (params: {
   return [
     {
       type: 'ArticleLinkDefined',
-      articleId: article.articleId,
-      link,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        link,
+        timestamp
+      }
     }
   ]
 }

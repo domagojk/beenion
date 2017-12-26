@@ -33,8 +33,10 @@ export function resubmit (params: {
   return [
     {
       type: 'ArticleResubmitted',
-      articleId: article.articleId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        timestamp
+      }
     }
   ]
 }

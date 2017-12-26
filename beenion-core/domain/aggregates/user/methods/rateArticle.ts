@@ -26,7 +26,7 @@ export function rateArticle (params: {
     throw errors.articleAlreadyRated()
   }
 
-  const eventBody = {
+  const payload = {
     voterId: voter.userId,
     articleOwnerId: articleOwner.userId,
     journalId: journal.journalId,
@@ -37,21 +37,21 @@ export function rateArticle (params: {
   if (rating === 'upvote') {
     switch (medal) {
       case 'gold':
-        return [{ type: 'ArticleUpvotedWithGold', ...eventBody }]
+        return [{ type: 'ArticleUpvotedWithGold', payload }]
       case 'silver':
-        return [{ type: 'ArticleUpvotedWithSilver', ...eventBody }]
+        return [{ type: 'ArticleUpvotedWithSilver', payload }]
       case 'bronze':
-        return [{ type: 'ArticleUpvotedWithBronze', ...eventBody }]
+        return [{ type: 'ArticleUpvotedWithBronze', payload }]
     }
   }
   if (rating === 'downvote') {
     switch (medal) {
       case 'gold':
-        return [{ type: 'ArticleDownvotedWithGold', ...eventBody }]
+        return [{ type: 'ArticleDownvotedWithGold', payload }]
       case 'silver':
-        return [{ type: 'ArticleDownvotedWithSilver', ...eventBody }]
+        return [{ type: 'ArticleDownvotedWithSilver', payload }]
       case 'bronze':
-        return [{ type: 'ArticleDownvotedWithBronze', ...eventBody }]
+        return [{ type: 'ArticleDownvotedWithBronze', payload }]
     }
   }
 }

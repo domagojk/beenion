@@ -24,11 +24,13 @@ export function withdrawArticleVote (params: {
   return [
     {
       type: 'ArticleVoteWithdrawn',
-      voterId: voter.userId,
-      articleOwnerId: articleOwner.userId,
-      articleId,
-      journalId,
-      timestamp
+      payload: {
+        voterId: voter.userId,
+        articleOwnerId: articleOwner.userId,
+        articleId,
+        journalId,
+        timestamp
+      }
     }
   ]
 }

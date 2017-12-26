@@ -11,10 +11,12 @@ export function expireReviewInvitation (params: {
   return [
     {
       type: 'ReviewInvitationExpired',
-      reviewOwnerId,
-      articleId,
-      journalId,
-      timestamp
+      payload: {
+        reviewOwnerId,
+        articleId,
+        journalId,
+        timestamp
+      }
     }
   ]
 }

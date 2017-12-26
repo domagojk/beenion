@@ -20,25 +20,33 @@ export function review (params: {
 
   const articleReviewed: t.ArticleEvent = {
     type: 'ArticleReviewed',
-    articleId: article.articleId,
-    reviewerId: reviewer.userId,
-    evaluation,
-    timestamp
+    payload: {
+      articleId: article.articleId,
+      reviewerId: reviewer.userId,
+      evaluation,
+      timestamp
+    }
   }
   const articlePromoted: t.ArticleEvent = {
     type: 'ArticlePromoted',
-    articleId: article.articleId,
-    timestamp
+    payload: {
+      articleId: article.articleId,
+      timestamp
+    }
   }
   const articleApproved: t.ArticleEvent = {
     type: 'ArticleApproved',
-    articleId: article.articleId,
-    timestamp
+    payload: {
+      articleId: article.articleId,
+      timestamp
+    }
   }
   const articleRejected: t.ArticleEvent = {
     type: 'ArticleRejected',
-    articleId: article.articleId,
-    timestamp
+    payload: {
+      articleId: article.articleId,
+      timestamp
+    }
   }
 
   const reviewedArticle = reduceToArticle([articleReviewed], article)

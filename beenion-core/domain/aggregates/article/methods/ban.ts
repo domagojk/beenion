@@ -21,9 +21,11 @@ export function ban (params: {
   return [
     {
       type: 'ArticleBanned',
-      articleId: article.articleId,
-      userId: user.userId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        userId: user.userId,
+        timestamp
+      }
     }
   ]
 }

@@ -26,7 +26,7 @@ export function rateReview (params: {
     throw errors.reviewAlreadyRated()
   }
 
-  const eventBody = {
+  const payload = {
     voterId: voter.userId,
     reviewOwnerId: reviewOwner.userId,
     articleId,
@@ -37,21 +37,21 @@ export function rateReview (params: {
   if (rating === 'upvote') {
     switch (medal) {
       case 'gold':
-        return [{ type: 'ReviewUpvotedWithGold', ...eventBody }]
+        return [{ type: 'ReviewUpvotedWithGold', payload }]
       case 'silver':
-        return [{ type: 'ReviewUpvotedWithSilver', ...eventBody }]
+        return [{ type: 'ReviewUpvotedWithSilver', payload }]
       case 'bronze':
-        return [{ type: 'ReviewUpvotedWithBronze', ...eventBody }]
+        return [{ type: 'ReviewUpvotedWithBronze', payload }]
     }
   }
   if (rating === 'downvote') {
     switch (medal) {
       case 'gold':
-        return [{ type: 'ReviewDownvotedWithGold', ...eventBody }]
+        return [{ type: 'ReviewDownvotedWithGold', payload }]
       case 'silver':
-        return [{ type: 'ReviewDownvotedWithSilver', ...eventBody }]
+        return [{ type: 'ReviewDownvotedWithSilver', payload }]
       case 'bronze':
-        return [{ type: 'ReviewDownvotedWithBronze', ...eventBody }]
+        return [{ type: 'ReviewDownvotedWithBronze', payload }]
     }
   }
 }

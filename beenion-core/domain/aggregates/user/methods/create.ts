@@ -9,8 +9,10 @@ export function create (params: {
   return [
     {
       type: 'UserCreated',
-      userId,
-      timestamp
+      payload: {
+        userId,
+        timestamp
+      }
     }
   ]
 }

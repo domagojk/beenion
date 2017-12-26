@@ -32,10 +32,12 @@ export function confirmEditor (params: {
   return [
     {
       type: 'JournalEditorConfirmed',
-      journalId: journal.journalId,
-      editorId: editor.userId,
-      editorInfo,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        editorId: editor.userId,
+        editorInfo,
+        timestamp
+      }
     }
   ]
 }

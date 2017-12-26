@@ -18,10 +18,12 @@ export function defineRankCalcGroup (params: {
   return [
     {
       type: 'JournalRankCalcGroupDefined',
-      journalId: journal.journalId,
-      group,
-      rankRange,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        group,
+        rankRange,
+        timestamp
+      }
     }
   ]
 }

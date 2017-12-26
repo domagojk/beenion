@@ -15,9 +15,11 @@ export function removeReviewer (params: {
   return [
     {
       type: 'ArticleReviewerRemoved',
-      articleId: article.articleId,
-      reviewerId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        reviewerId,
+        timestamp
+      }
     }
   ]
 }

@@ -16,9 +16,11 @@ export function del (params: {
   return [
     {
       type: 'JournalDeleted',
-      userId: user.userId,
-      journalId: journal.journalId,
-      timestamp
+      payload: {
+        userId: user.userId,
+        journalId: journal.journalId,
+        timestamp
+      }
     }
   ]
 }

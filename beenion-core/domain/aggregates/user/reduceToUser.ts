@@ -7,7 +7,7 @@ const userReducer = (user: User, e: UserEvent): User => {
   switch (e.type) {
     case 'UserCreated':
       return {
-        userId: e.userId,
+        userId: e.payload.userId,
         mergedUserIds: [],
         rankEvents: []
       }
@@ -24,7 +24,7 @@ const userReducer = (user: User, e: UserEvent): User => {
           {
             category: 'UserVotes',
             eventType: e.type,
-            voterId: e.voterId
+            voterId: e.payload.voterId
           }
         ]
       }
@@ -53,8 +53,8 @@ const userReducer = (user: User, e: UserEvent): User => {
           {
             category: 'ReviewVotes',
             eventType: e.type,
-            journalId: e.journalId,
-            articleId: e.articleId
+            journalId: e.payload.journalId,
+            articleId: e.payload.articleId
           }
         ]
       }
@@ -71,8 +71,8 @@ const userReducer = (user: User, e: UserEvent): User => {
           {
             category: 'ArticleVotes',
             eventType: e.type,
-            journalId: e.journalId,
-            articleId: e.articleId
+            journalId: e.payload.journalId,
+            articleId: e.payload.articleId
           }
         ]
       }
@@ -83,7 +83,7 @@ const userReducer = (user: User, e: UserEvent): User => {
           rankEvent =>
             !(
               rankEvent.category === 'UserVotes' &&
-              rankEvent.voterId === e.voterId
+              rankEvent.voterId === e.payload.voterId
             )
         )
       }
@@ -94,8 +94,8 @@ const userReducer = (user: User, e: UserEvent): User => {
           rankEvent =>
             !(
               rankEvent.category === 'ArticleVotes' &&
-              rankEvent.voterId === e.voterId &&
-              rankEvent.articleId === e.articleId
+              rankEvent.voterId === e.payload.voterId &&
+              rankEvent.articleId === e.payload.articleId
             )
         )
       }
@@ -106,8 +106,8 @@ const userReducer = (user: User, e: UserEvent): User => {
           rankEvent =>
             !(
               rankEvent.category === 'ReviewVotes' &&
-              rankEvent.voterId === e.voterId &&
-              rankEvent.articleId === e.articleId
+              rankEvent.voterId === e.payload.voterId &&
+              rankEvent.articleId === e.payload.articleId
             )
         )
       }

@@ -18,10 +18,12 @@ export function definePrivilege (params: {
   return [
     {
       type: 'JournalPrivilegeDefined',
-      journalId: journal.journalId,
-      privilege,
-      permission,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        privilege,
+        permission,
+        timestamp
+      }
     }
   ]
 }

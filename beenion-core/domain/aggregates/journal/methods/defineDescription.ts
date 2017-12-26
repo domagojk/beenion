@@ -17,9 +17,11 @@ export function defineDescription (params: {
   return [
     {
       type: 'JournalDescriptionDefined',
-      journalId: journal.journalId,
-      description,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        description,
+        timestamp
+      }
     }
   ]
 }

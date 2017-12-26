@@ -20,25 +20,25 @@ const articleReducer = (article: Article, e: ArticleEvent): Article => {
     case 'ArticleCreated':
       return {
         ...defaultValues,
-        articleId: e.articleId,
-        ownerId: e.ownerId
+        articleId: e.payload.articleId,
+        ownerId: e.payload.ownerId
       }
     case 'ArticleStageRulesDefined':
       return {
         ...article,
-        stageRules: e.stageRules,
-        lastStage: e.stageRules.length - 1
+        stageRules: e.payload.stageRules,
+        lastStage: e.payload.stageRules.length - 1
       }
     case 'ArticleReviewerInvited':
       return {
         ...article,
-        reviewers: [...article.reviewers, e.reviewerId]
+        reviewers: [...article.reviewers, e.payload.reviewerId]
       }
     case 'ArticleReviewerRemoved':
       return {
         ...article,
-        evaluations: article.evaluations.filter(ev => ev.reviewerId !== e.reviewerId),
-        reviewers: article.reviewers.filter(id => id !== e.reviewerId)
+        evaluations: article.evaluations.filter(ev => ev.reviewerId !== e.payload.reviewerId),
+        reviewers: article.reviewers.filter(id => id !== e.payload.reviewerId)
       }
     case 'ArticleReviewed':
       return {
@@ -46,8 +46,8 @@ const articleReducer = (article: Article, e: ArticleEvent): Article => {
         evaluations: [
           ...article.evaluations,
           {
-            evaluation: e.evaluation,
-            reviewerId: e.reviewerId
+            evaluation: e.payload.evaluation,
+            reviewerId: e.payload.reviewerId
           }
         ]
       }

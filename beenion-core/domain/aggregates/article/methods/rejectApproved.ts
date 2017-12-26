@@ -21,8 +21,10 @@ export function rejectApproved (params: {
   return [
     {
       type: 'ArticleRejected',
-      articleId: article.articleId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        timestamp
+      }
     }
   ]
 }

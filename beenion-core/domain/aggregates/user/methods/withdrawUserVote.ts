@@ -21,9 +21,11 @@ export function withdrawUserVote (params: {
   return [
     {
       type: 'UserVoteWithdrawn',
-      voterId: voter.userId,
-      userId: user.userId,
-      timestamp
+      payload: {
+        voterId: voter.userId,
+        userId: user.userId,
+        timestamp
+      }
     }
   ]
 }

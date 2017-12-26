@@ -21,9 +21,11 @@ export function unban (params: {
   return [
     {
       type: 'ArticleUnbanned',
-      articleId: article.articleId,
-      userId: user.userId,
-      timestamp
+      payload: {
+        articleId: article.articleId,
+        userId: user.userId,
+        timestamp
+      }
     }
   ]
 }

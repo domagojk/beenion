@@ -19,11 +19,13 @@ export function defineRankCalcEvent (params: {
   return [
     {
       type: 'JournalRankCalcEventDefined',
-      journalId: journal.journalId,
-      userEventType,
-      factor,
-      group,
-      timestamp
+      payload: {
+        journalId: journal.journalId,
+        userEventType,
+        factor,
+        group,
+        timestamp
+      }
     }
   ]
 }
