@@ -2,7 +2,9 @@
 Beenion is a project that I am builing "in my spare time".
 I'm using it primaraly for testing new ideas and technologies.
 
-## Langugages/Tools/Patterns used
+[Detail overview of a project architecture](https://medium.com/@domagojk/patterns-for-designing-flexible-architecture-in-node-js-cqrs-es-onion-7eb10bbefe17)
+
+## Languages/Tools/Patterns used
 - CQRS
 - Event Sourcing
 - TypeScript
