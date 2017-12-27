@@ -40,7 +40,7 @@ describe('calc Rank', () => {
     ]
   } as RankCalcParams
 
-  it('should calculate journal rank', () => {
+  it('should calculate newsletter rank', () => {
     expect(calcRank([], genericRankConditions)).toBe(0)
 
     expect(

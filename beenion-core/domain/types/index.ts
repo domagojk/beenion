@@ -1,17 +1,17 @@
 import { TypeOf } from 'io-ts'
 import * as input from './input'
 import { ArticleEvent as ArticleEventIo } from './article/events'
-import { JournalEvent as JournalEventIo } from './journal/events'
+import { NewsletterEvent as NewsletterEventIo } from './newsletter/events'
 import { UserEvent as UserEventIo } from './user/events'
 import * as articleCommands from './article/commands'
-import * as journalCommands from './journal/commands'
+import * as newsletterCommands from './newsletter/commands'
 import * as userCommands from './user/commands'
 
 // basic input types
 export type UserId = TypeOf<typeof input.UserId>
 export type UserInfo = TypeOf<typeof input.UserInfo>
 export type ArticleId = TypeOf<typeof input.ArticleId>
-export type JournalId = TypeOf<typeof input.JournalId>
+export type newsletterId = TypeOf<typeof input.NewsletterId>
 export type Title = TypeOf<typeof input.Title>
 export type Description = TypeOf<typeof input.Description>
 export type URL = TypeOf<typeof input.URL>
@@ -23,10 +23,10 @@ export type Medal = TypeOf<typeof input.Medal>
 export type Rating = TypeOf<typeof input.Rating>
 export type Stage = TypeOf<typeof input.Stage>
 export type StageRules = TypeOf<typeof input.StageRules>
-export type JournalPrivilege = TypeOf<typeof input.JournalPrivilege>
+export type NewsletterPrivilege = TypeOf<typeof input.NewsletterPrivilege>
 export type BeenionPrivilege = TypeOf<typeof input.BeenionPrivilege>
 export type RankRange = TypeOf<typeof input.RankRange>
-export type JournalPermission = TypeOf<typeof input.JournalPermission>
+export type NewsletterPermission = TypeOf<typeof input.NewsletterPermission>
 export type BeenionPermission = TypeOf<typeof input.BeenionPermission>
 
 // command types
@@ -38,12 +38,12 @@ export type PrivateArticleCommands = TypeOf<typeof articleCommands.privateComman
 export type PublicArticleCommands = TypeOf<typeof articleCommands.publicCommands>
 export type ArticleCommands = PrivateArticleCommands & PublicArticleCommands
 
-export type PrivateJournalCommands = TypeOf<typeof journalCommands.privateCommands>
-export type PublicJournalCommands = TypeOf<typeof journalCommands.publicCommands>
-export type JournalCommands = PrivateJournalCommands & PublicJournalCommands
+export type PrivateNewsletterCommands = TypeOf<typeof newsletterCommands.privateCommands>
+export type PublicNewsletterCommands = TypeOf<typeof newsletterCommands.publicCommands>
+export type NewsletterCommands = PrivateNewsletterCommands & PublicNewsletterCommands
 
 export type PublicCommands =
-  & PublicJournalCommands
+  & PublicNewsletterCommands
   & PublicArticleCommands
   & PublicUserCommands
 
@@ -53,15 +53,15 @@ export type PickCommand<Command extends keyof PublicCommands> = {
 
 // event types
 export type ArticleEvent = TypeOf<typeof ArticleEventIo>
-export type JournalEvent = TypeOf<typeof JournalEventIo>
+export type NewsletterEvent = TypeOf<typeof NewsletterEventIo>
 export type UserEvent = TypeOf<typeof UserEventIo>
 
 // model types
 export * from './article/model'
-export * from './journal/model'
+export * from './newsletter/model'
 export * from './user/model'
 
 // repository types
 export * from './article/repository'
-export * from './journal/repository'
+export * from './newsletter/repository'
 export * from './user/repository'

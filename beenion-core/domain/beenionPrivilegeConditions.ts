@@ -5,10 +5,10 @@ export type BeenionPrivilegeConditions = {
 }
 
 const beenionPrivilegeConditions: BeenionPrivilegeConditions = {
-  canCreateJournal: {
+  canCreateNewsletter: {
     beenionRank: { min: 10 }
   },
-  canDeleteJournal: {
+  canDeleteNewsletter: {
     beenionRank: { min: 5000 }
   },
   canRateUserWithGold: {

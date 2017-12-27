@@ -12,18 +12,18 @@ export const hasBeenionPermissions = (
   hasBeenionRank(beenionPrivilegeConditions[privilege], user) ||
   false
 
-export const hasJournalPermissions = (
+export const hasNewsletterPermissions = (
   user: t.User,
-  journal: t.Journal,
-  privilege: t.JournalPrivilege
+  newsletter: t.Newsletter,
+  privilege: t.NewsletterPrivilege
 ) =>
-  isListedUser(journal.privileges[privilege], user) ||
-  hasBeenionRank(journal.privileges[privilege], user) ||
-  hasJournalRank(journal.privileges[privilege], user, journal) ||
+  isListedUser(newsletter.privileges[privilege], user) ||
+  hasBeenionRank(newsletter.privileges[privilege], user) ||
+  hasNewsletterRank(newsletter.privileges[privilege], user, newsletter) ||
   false
 
 // helper function
-const isListedUser = (perm: t.JournalPermission, user: t.User) =>
+const isListedUser = (perm: t.NewsletterPermission, user: t.User) =>
   !!perm && Array.isArray(perm.users) && perm.users.includes(user.userId)
 
 const hasBeenionRank = (perm: t.BeenionPermission, user: t.User) =>
@@ -31,19 +31,19 @@ const hasBeenionRank = (perm: t.BeenionPermission, user: t.User) =>
   !!perm.beenionRank &&
   calcRank(user.rankEvents, beenionRankCalcParams) >= perm.beenionRank.min
 
-function hasJournalRank (
-  perm: t.JournalPermission,
+function hasNewsletterRank (
+  perm: t.NewsletterPermission,
   user: t.User,
-  journal: t.Journal
+  newsletter: t.Newsletter
 ) {
-  const journalEvents = user.rankEvents.filter(
+  const newsletterEvents = user.rankEvents.filter(
     event =>
-      event.journalId === undefined || event.journalId === journal.journalId
+      event.newsletterId === undefined || event.newsletterId === newsletter.newsletterId
   )
 
   return (
     !!perm &&
-    !!perm.journalRank &&
-    calcRank(journalEvents, journal.rankCalcParams) >= perm.journalRank.min
+    !!perm.newsletterRank &&
+    calcRank(newsletterEvents, newsletter.rankCalcParams) >= perm.newsletterRank.min
   )
 }

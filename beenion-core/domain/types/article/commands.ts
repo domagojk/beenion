@@ -6,7 +6,7 @@ export const privateCommands = type({
     private: literal(true),
     payload: type({
       reviewerId: input.UserId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })
@@ -26,7 +26,7 @@ export const publicCommands = type({
   CreateArticle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       description: input.Description,
       link: input.URL,
@@ -38,7 +38,7 @@ export const publicCommands = type({
   BanArticle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })
@@ -47,7 +47,7 @@ export const publicCommands = type({
   DeleteArticle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })
@@ -56,7 +56,7 @@ export const publicCommands = type({
   UnbanArticle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })
@@ -65,7 +65,7 @@ export const publicCommands = type({
   UpdateArticleDescription: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       description: input.Description,
       timestamp: input.Timestamp
@@ -75,7 +75,7 @@ export const publicCommands = type({
   UpdateArticleLink: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       link: input.URL,
       timestamp: input.Timestamp
@@ -85,7 +85,7 @@ export const publicCommands = type({
   UpdateArticleTitle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       title: input.Title,
       timestamp: input.Timestamp
@@ -95,7 +95,7 @@ export const publicCommands = type({
   RejectApprovedArticle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })
@@ -104,7 +104,7 @@ export const publicCommands = type({
   ResubmitArticle: type({
     userId: input.UserId,
     payload: type({
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })

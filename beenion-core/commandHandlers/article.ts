@@ -1,7 +1,7 @@
 import * as t from '../domain/types'
 import { publicCommands, privateCommands } from '../domain/types/article/commands'
 import validate from '../domain/validateCommand'
-import * as article from '../domain/aggregates/article'
+import * as article from '../domain/entities/article'
 
 type CommandHandler = {
   [Command in keyof t.ArticleCommands]: (command: object) => Promise<any>
@@ -9,7 +9,7 @@ type CommandHandler = {
 
 export default (
   userRepository: t.UserRepository,
-  journalRepository: t.JournalRepository,
+  newsletterRepository: t.NewsletterRepository,
   articleRepository: t.ArticleRepository
 ): CommandHandler => ({
 
@@ -20,13 +20,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.create({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         articleId: payload.articleId,
         description: payload.description,
         link: payload.link,
@@ -43,13 +43,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.ban({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         timestamp: payload.timestamp
       })
@@ -63,13 +63,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.del({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         timestamp: payload.timestamp
       })
@@ -83,13 +83,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.unban({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         timestamp: payload.timestamp
       })
@@ -103,13 +103,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.updateDescription({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         description: payload.description,
         timestamp: payload.timestamp
@@ -124,13 +124,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.updateLink({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         link: payload.link,
         timestamp: payload.timestamp
@@ -145,13 +145,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.updateTitle({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         title: payload.title,
         timestamp: payload.timestamp
@@ -166,13 +166,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.rejectApproved({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         timestamp: payload.timestamp
       })
@@ -186,13 +186,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.resubmit({
         user: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         timestamp: payload.timestamp
       })
@@ -225,13 +225,13 @@ export default (
     )
 
     const { userState } = await userRepository.getById(payload.reviewerId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
       article.inviteReviewer({
         reviewer: userState,
-        journal: journalState,
+        newsletter: newsletterState,
         article: articleState,
         timestamp: payload.timestamp
       })

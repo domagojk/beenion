@@ -8,7 +8,7 @@ export const After2017 = t.refinement(t.Integer, val => val > 1483228800000)
 
 export const UserId = brand(t.string, 'UserId')
 export const ArticleId = brand(t.string, 'ArticleId')
-export const JournalId = brand(t.string, 'JournalId')
+export const NewsletterId = brand(t.string, 'NewsletterId')
 export const Description = brand(t.string, 'Description')
 export const RankGroup = brand(t.string, 'RankGroup')
 export const RankFactor = brand(t.Integer, 'RankFactor')
@@ -36,13 +36,13 @@ export const Stage = t.union([
   t.literal(3),
   t.literal(4)
 ])
-export const JournalPrivilege = t.union([
-  t.literal('canUpdateJournal'),
+export const NewsletterPrivilege = t.union([
+  t.literal('canUpdateNewsletter'),
   t.literal('canUpdatePrivilege'),
   t.literal('canUpdateRankCalcParams'),
   t.literal('canUpdateStageRules'),
   t.literal('canUpdateEditor'),
-  t.literal('canDeleteJournal'),
+  t.literal('canDeleteNewsletter'),
   t.literal('canReviewInStage0'),
   t.literal('canReviewInStage1'),
   t.literal('canReviewInStage2'),
@@ -62,8 +62,8 @@ export const JournalPrivilege = t.union([
   t.literal('canRateArticleWithBronze')
 ])
 export const BeenionPrivilege = t.union([
-  t.literal('canCreateJournal'),
-  t.literal('canDeleteJournal'),
+  t.literal('canCreateNewsletter'),
+  t.literal('canDeleteNewsletter'),
   t.literal('canRateUserWithGold'),
   t.literal('canRateUserWithSilver'),
   t.literal('canRateUserWithBronze')
@@ -79,7 +79,7 @@ const Min = t.type({ min: t.Integer })
 const Max = t.partial({ max: NonNegativeInt })
 export const RankRange = t.intersection([ Min, Max ])
 
-const JournalRank = t.partial({ journalRank: RankRange })
+const NewsletterRank = t.partial({ newsletterRank: RankRange })
 const BeenionRank = t.partial({ beenionRank: RankRange })
 const Users = t.partial({ users: t.array(UserId) })
 
@@ -89,8 +89,8 @@ export const StageRule = t.type({
 })
 export const StageRules = t.array(StageRule)
 
-export const JournalPermission = t.intersection([
-  JournalRank,
+export const NewsletterPermission = t.intersection([
+  NewsletterRank,
   BeenionRank,
   Users
 ])

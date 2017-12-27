@@ -16,7 +16,7 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -25,7 +25,7 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -34,7 +34,7 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       articleOwnerId: input.UserId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       medal: input.Medal,
       rating: input.Rating,
@@ -46,7 +46,7 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       reviewOwnerId: input.UserId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       medal: input.Medal,
       rating: input.Rating,
@@ -68,7 +68,7 @@ export const publicCommands = type({
     userId: input.UserId,
     payload: type({
       articleOwnerId: input.UserId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       articleId: input.ArticleId,
       timestamp: input.Timestamp
     })
@@ -79,7 +79,7 @@ export const publicCommands = type({
     payload: type({
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),

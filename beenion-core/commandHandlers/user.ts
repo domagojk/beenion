@@ -1,7 +1,7 @@
-import { UserRepository, JournalRepository, UserCommands } from '../domain/types'
+import { UserRepository, NewsletterRepository, UserCommands } from '../domain/types'
 import { publicCommands, privateCommands } from '../domain/types/user/commands'
 import validate from '../domain/validateCommand'
-import * as user from '../domain/aggregates/user'
+import * as user from '../domain/entities/user'
 
 type CommandHandler = {
   [Command in keyof UserCommands]: (command: object) => Promise<any>
@@ -9,7 +9,7 @@ type CommandHandler = {
 
 export default (
   userRepository: UserRepository,
-  journalRepository: JournalRepository
+  newsletterRepository: NewsletterRepository
 ): CommandHandler => ({
 
   CreateUser: async (command: object) => {
@@ -37,7 +37,7 @@ export default (
       user.declineReviewInvitation({
         reviewOwnerId: userId,
         articleId: payload.articleId,
-        journalId: payload.journalId,
+        newsletterId: payload.newsletterId,
         timestamp: payload.timestamp
       })
     )
@@ -55,7 +55,7 @@ export default (
       user.expireReviewInvitation({
         reviewOwnerId: userId,
         articleId: payload.articleId,
-        journalId: payload.journalId,
+        newsletterId: payload.newsletterId,
         timestamp: payload.timestamp
       })
     )
@@ -69,13 +69,13 @@ export default (
 
     const voter = await userRepository.getById(userId)
     const articleOwner = await userRepository.getById(payload.articleOwnerId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
 
     return await voter.save(
       user.rateArticle({
         voter: voter.userState,
         articleOwner: articleOwner.userState,
-        journal: journalState,
+        newsletter: newsletterState,
         articleId: payload.articleId,
         medal: payload.medal,
         rating: payload.rating,
@@ -92,13 +92,13 @@ export default (
 
     const voter = await userRepository.getById(userId)
     const reviewOwner = await userRepository.getById(payload.reviewOwnerId)
-    const { journalState } = await journalRepository.getById(payload.journalId)
+    const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
 
     return await voter.save(
       user.rateReview({
         voter: voter.userState,
         reviewOwner: reviewOwner.userState,
-        journal: journalState,
+        newsletter: newsletterState,
         articleId: payload.articleId,
         medal: payload.medal,
         rating: payload.rating,
@@ -138,7 +138,7 @@ export default (
         voter: voter.userState,
         articleOwner: articleOwner.userState,
         articleId: payload.articleId,
-        journalId: payload.journalId,
+        newsletterId: payload.newsletterId,
         timestamp: payload.timestamp
       })
     )
@@ -158,7 +158,7 @@ export default (
         voter: voter.userState,
         reviewOwner: reviewOwner.userState,
         articleId: payload.articleId,
-        journalId: payload.journalId,
+        newsletterId: payload.newsletterId,
         timestamp: payload.timestamp
       })
     )

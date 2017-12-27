@@ -1,9 +1,9 @@
-import { UserId, JournalId, ArticleId, UserEvent } from '../index'
+import { UserId, newsletterId, ArticleId, UserEvent } from '../index'
 
 export type RankEvent = {
   category: 'ArticleVotes' | 'ReviewVotes' | 'UserVotes' | 'UserEvents'
   eventType: UserEvent['type']
-  journalId?: JournalId
+  newsletterId?: newsletterId
   articleId?: ArticleId
   voterId?: UserId
 }

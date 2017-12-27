@@ -6,7 +6,7 @@ export const ArticleEvent = union([
     type: literal('ArticleCreated'),
     payload: type({
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       ownerId: input.UserId,
       timestamp: input.Timestamp
     })

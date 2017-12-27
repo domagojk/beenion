@@ -15,7 +15,7 @@ export const UserEvent = union([
     payload: type({
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -25,7 +25,7 @@ export const UserEvent = union([
     payload: type({
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -36,7 +36,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -47,7 +47,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -58,7 +58,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -69,7 +69,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -80,7 +80,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -91,7 +91,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -102,7 +102,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       reviewOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -113,7 +113,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -124,7 +124,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -135,7 +135,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -146,7 +146,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -157,7 +157,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -168,7 +168,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),
@@ -179,7 +179,7 @@ export const UserEvent = union([
       voterId: input.UserId,
       articleOwnerId: input.UserId,
       articleId: input.ArticleId,
-      journalId: input.JournalId,
+      newsletterId: input.NewsletterId,
       timestamp: input.Timestamp
     })
   }),

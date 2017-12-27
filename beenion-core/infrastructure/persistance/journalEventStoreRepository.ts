@@ -1,3 +1,3 @@
-import { JournalRepository } from '../../domain/types'
+import { NewsletterRepository } from '../../domain/types'
 // todo:
-// object that implements JournalRepository
+// object that implements NewsletterRepository
