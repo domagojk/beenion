@@ -1,11 +1,11 @@
-import { UserEvent, User, ArticleId, newsletterId, Timestamp } from '../../../types'
+import { UserEvent, User, ArticleId, NewsletterId, Timestamp } from '../../../types'
 import errors from '../../../errors'
 
 export function withdrawArticleVote (params: {
   voter: User
   articleOwner: User
   articleId: ArticleId
-  newsletterId: newsletterId
+  newsletterId: NewsletterId
   timestamp: Timestamp
 }): UserEvent[] {
   const { voter, articleOwner, articleId, newsletterId, timestamp } = params

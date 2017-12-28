@@ -4,7 +4,7 @@ import errors from '../../../errors'
 
 export function create (params: {
   user: t.User
-  newsletterId: t.newsletterId
+  newsletterId: t.NewsletterId
   title: t.Title
   description: t.Description
   timestamp: t.Timestamp

@@ -11,7 +11,7 @@ import * as userCommands from './user/commands'
 export type UserId = TypeOf<typeof input.UserId>
 export type UserInfo = TypeOf<typeof input.UserInfo>
 export type ArticleId = TypeOf<typeof input.ArticleId>
-export type newsletterId = TypeOf<typeof input.NewsletterId>
+export type NewsletterId = TypeOf<typeof input.NewsletterId>
 export type Title = TypeOf<typeof input.Title>
 export type Description = TypeOf<typeof input.Description>
 export type URL = TypeOf<typeof input.URL>

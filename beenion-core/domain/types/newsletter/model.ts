@@ -1,5 +1,5 @@
 import {
-  newsletterId,
+  NewsletterId,
   UserInfo,
   StageRule,
   NewsletterPrivilege,
@@ -9,7 +9,7 @@ import {
 } from '../index'
 
 export type Newsletter = {
-  newsletterId: newsletterId
+  newsletterId: NewsletterId
   privileges: NewsletterPrivilegeConditions
   rankCalcParams: RankCalcParams
   editors: {
