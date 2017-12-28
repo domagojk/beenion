@@ -15,7 +15,7 @@ export default (
   CreateUser: async (command: object) => {
     const { payload } = validate(command, privateCommands.props.CreateUser)
 
-    const { save } = await userRepository.getById(payload.userId)
+    const { save } = await userRepository.create(payload.userId)
 
     return await save(
       user.create({

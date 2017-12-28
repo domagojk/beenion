@@ -21,7 +21,7 @@ export default (
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
-    const { save } = await articleRepository.getById(payload.articleId)
+    const { save } = await articleRepository.create(payload.articleId)
 
     return await save(
       article.create({

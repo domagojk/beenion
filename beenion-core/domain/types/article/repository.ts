@@ -5,4 +5,7 @@ export type ArticleRepository = {
     articleState: Article,
     save: (events: ArticleEvent[], version?: number) => Promise<any>
   }>
+  create: (id: ArticleId) => Promise<{
+    save: (events: ArticleEvent[]) => Promise<any>
+  }>
 }

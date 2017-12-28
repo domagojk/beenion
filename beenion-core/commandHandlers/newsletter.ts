@@ -19,7 +19,7 @@ const newsletterCommandHandlers = (
     )
 
     const { userState } = await userRepository.getById(userId)
-    const { save } = await newsletterRepository.getById(payload.newsletterId)
+    const { save } = await newsletterRepository.create(payload.newsletterId)
 
     return await save(
       newsletter.create({

@@ -1,8 +1,11 @@
-import { Newsletter, NewsletterEvent, newsletterId } from '../index'
+import { Newsletter, NewsletterEvent, NewsletterId } from '../index'
 
 export type NewsletterRepository = {
-  getById: (id: newsletterId) => Promise<{
+  getById: (id: NewsletterId) => Promise<{
     newsletterState: Newsletter,
     save: (events: NewsletterEvent[], version?: number) => Promise<any>
+  }>
+  create: (id: NewsletterId) => Promise<{
+    save: (events: NewsletterEvent[]) => Promise<any>
   }>
 }
