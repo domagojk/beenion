@@ -31,7 +31,7 @@
   "author": "Domagoj Kriskovic",
   "peerDependencies": {
     "clamp": "1.x",
-    "io-ts": "0.x",
+    "io-ts": "0.8.2",
     "is-url": "1.x",
     "uuid": "3.x"
   },
@@ -39,8 +39,9 @@
     "@types/jest": "^20.0.2",
     "@types/node": "^7.0.29",
     "clamp": "^1.0.1",
-    "io-ts": "^0.8.1",
+    "io-ts": "0.8.2",
     "is-url": "^1.2.2",
+    "uuid": "^3.1.0",
     "jest": "^20.0.4",
     "jest-environment-node-debug": "^2.0.0",
     "ntsc": "^0.2.0",
