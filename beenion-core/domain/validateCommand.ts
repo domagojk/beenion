@@ -1,5 +1,4 @@
 import * as t from 'io-ts'
-import { Type } from 'io-ts/lib'
 
 function stringify (v: any): string {
   return typeof v === 'function' ? t.getFunctionName(v) : JSON.stringify(v)
@@ -13,7 +12,7 @@ function getMessage (v: any, context: t.Context): string {
   return `Invalid value ${stringify(v)} supplied to command${getContextPath(context)}`
 }
 
-const validateCommand = <T>(command: object, type: Type<T>): T => {
+const validateCommand = <T>(command: object, type: t.Type<T>): T => {
   return t.validate(command, type).fold(err => {
     throw err.map(e => getMessage(e.value, e.context))
   }, data => data)
