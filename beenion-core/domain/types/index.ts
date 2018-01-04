@@ -30,9 +30,8 @@ export type NewsletterPermission = TypeOf<typeof input.NewsletterPermission>
 export type BeenionPermission = TypeOf<typeof input.BeenionPermission>
 
 // command types
-export type PrivateUserCommands = TypeOf<typeof userCommands.privateCommands>
 export type PublicUserCommands = TypeOf<typeof userCommands.publicCommands>
-export type UserCommands = PrivateUserCommands & PublicUserCommands
+export type UserCommands = PublicUserCommands
 
 export type PrivateArticleCommands = TypeOf<typeof articleCommands.privateCommands>
 export type PublicArticleCommands = TypeOf<typeof articleCommands.publicCommands>

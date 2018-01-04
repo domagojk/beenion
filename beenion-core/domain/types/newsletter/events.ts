@@ -40,7 +40,7 @@ export const NewsletterEvent = union([
   }),
 
   type({
-    type: literal('NewsletterRankCalcEventDefined'),
+    type: literal('NewsletterRankEventDefined'),
     payload: type({
       newsletterId: input.NewsletterId,
       userEventType: map(t => t.type, UserEvent),
@@ -51,7 +51,7 @@ export const NewsletterEvent = union([
   }),
 
   type({
-    type: literal('NewsletterRankCalcEventRemoved'),
+    type: literal('NewsletterRankEventRemoved'),
     payload: type({
       newsletterId: input.NewsletterId,
       userEventType: map(t => t.type, UserEvent),
@@ -60,7 +60,7 @@ export const NewsletterEvent = union([
   }),
 
   type({
-    type: literal('NewsletterRankCalcGroupDefined'),
+    type: literal('NewsletterRankGroupDefined'),
     payload: type({
       newsletterId: input.NewsletterId,
       group: input.RankGroup,
@@ -70,7 +70,7 @@ export const NewsletterEvent = union([
   }),
 
   type({
-    type: literal('NewsletterRankCalcGroupRemoved'),
+    type: literal('NewsletterRankGroupRemoved'),
     payload: type({
       newsletterId: input.NewsletterId,
       group: input.RankGroup,

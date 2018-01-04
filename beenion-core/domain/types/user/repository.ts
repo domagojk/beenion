@@ -5,7 +5,7 @@ export type UserRepository = {
     userState: User,
     save: (events: UserEvent[], version?: number) => Promise<any>
   }>
-  create: (id: UserId) => Promise<{
+  create: (id: UserId) => {
     save: (events: UserEvent[]) => Promise<any>
-  }>
+  }
 }

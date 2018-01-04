@@ -1,306 +1,258 @@
-import { UserRepository, NewsletterRepository, NewsletterCommands } from '../domain/types'
-import { publicCommands } from '../domain/types/newsletter/commands'
-import validate from '../domain/validateCommand'
-import * as newsletter from '../domain/entities/newsletter'
+import * as t from '../domain/types'
+import { createNewsletter } from '../domain/entities/newsletter/create'
+import { addNewsletterEditor } from '../domain/entities/newsletter/addEditor'
+import { confirmNewsletterEditor } from '../domain/entities/newsletter/confirmEditor'
+import { defineNewsletterDescription } from '../domain/entities/newsletter/defineDescription'
+import { defineNewsletterPrivilege } from '../domain/entities/newsletter/definePrivilege'
+import { defineNewsletterRankEvent } from '../domain/entities/newsletter/defineRankEvent'
+import { defineNewsletterRankGroup } from '../domain/entities/newsletter/defineRankGroup'
+import { defineNewsletterStageRule } from '../domain/entities/newsletter/defineStageRule'
+import { defineNewsletterTitle } from '../domain/entities/newsletter/defineTitle'
+import { deleteNewsletter } from '../domain/entities/newsletter/delete'
+import { removeNewsletterEditor } from '../domain/entities/newsletter/removeEditor'
+import { removeNewsletterPermission } from '../domain/entities/newsletter/removePermission'
+import { removeNewsletterRankEvent } from '../domain/entities/newsletter/removeRankEvent'
+import { removeNewsletterRankGroup } from '../domain/entities/newsletter/removeRankGroup'
+import { removeNewsletterStageRule } from '../domain/entities/newsletter/removeStageRule'
 
-type CommandHandler = {
-  [Command in keyof NewsletterCommands]: (command: object) => Promise<any>
+type CommandHandlers = {
+  [C in keyof t.NewsletterCommands]: (
+    command: t.NewsletterCommands[C]
+  ) => Promise<any>
 }
 
-const newsletterCommandHandlers = (
-  userRepository: UserRepository,
-  newsletterRepository: NewsletterRepository
-): CommandHandler => ({
+export const newsletterCommandHandlers = (
+  userRepository: t.UserRepository,
+  newsletterRepository: t.NewsletterRepository
+): CommandHandlers => ({
 
-  CreateNewsletter: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.CreateNewsletter
-    )
+  CreateNewsletter: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { save } = await newsletterRepository.create(payload.newsletterId)
 
     return await save(
-      newsletter.create({
-        user: userState,
-        description: payload.description,
-        newsletterId: payload.newsletterId,
-        title: payload.title,
-        timestamp: payload.timestamp
-      })
+      createNewsletter(
+        userState,
+        payload.description,
+        payload.newsletterId,
+        payload.title,
+        payload.timestamp
+      )
     )
   },
 
-  AddNewsletterEditor: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.AddNewsletterEditor
-    )
+  AddNewsletterEditor: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.addEditor({
-        user: userState,
-        newsletter: newsletterState,
-        editorInfo: payload.editorInfo,
-        timestamp: payload.timestamp
-      })
+      addNewsletterEditor(
+        userState,
+        newsletterState,
+        payload.editorInfo,
+        payload.timestamp
+      )
     )
   },
 
-  ConfirmNewsletterEditor: async (command: object) => {
-    const { payload } = validate(
-      command,
-      publicCommands.props.ConfirmNewsletterEditor
-    )
+  ConfirmNewsletterEditor: async ({ payload }) => {
 
     const { userState } = await userRepository.getById(payload.editorId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.confirmEditor({
-        editor: userState,
-        newsletter: newsletterState,
-        editorInfo: payload.editorInfo,
-        timestamp: payload.timestamp
-      })
+      confirmNewsletterEditor(
+        userState,
+        newsletterState,
+        payload.editorInfo,
+        payload.timestamp
+      )
     )
   },
 
-  DefineNewsletterDescription: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DefineNewsletterDescription
-    )
+  DefineNewsletterDescription: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.defineDescription({
-        user: userState,
-        newsletter: newsletterState,
-        description: payload.description,
-        timestamp: payload.timestamp
-      })
+      defineNewsletterDescription(
+        userState,
+        newsletterState,
+        payload.description,
+        payload.timestamp
+      )
     )
   },
 
-  DefineNewsletterPrivilege: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DefineNewsletterPrivilege
-    )
+  DefineNewsletterPrivilege: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.definePrivilege({
-        user: userState,
-        newsletter: newsletterState,
-        privilege: payload.privilege,
-        permission: payload.permission,
-        timestamp: payload.timestamp
-      })
+      defineNewsletterPrivilege(
+        userState,
+        newsletterState,
+        payload.privilege,
+        payload.permission,
+        payload.timestamp
+      )
     )
   },
 
-  DefineNewsletterTitle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DefineNewsletterTitle
-    )
+  DefineNewsletterTitle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.defineTitle({
-        user: userState,
-        newsletter: newsletterState,
-        title: payload.title,
-        timestamp: payload.timestamp
-      })
+      defineNewsletterTitle(
+        userState,
+        newsletterState,
+        payload.title,
+        payload.timestamp
+      )
     )
   },
 
-  DefineRankCalcEvent: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DefineRankCalcEvent
-    )
+  DefineRankEvent: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.defineRankCalcEvent({
-        user: userState,
-        newsletter: newsletterState,
-        factor: payload.factor,
-        group: payload.group,
-        userEventType: payload.userEventType,
-        timestamp: payload.timestamp
-      })
+      defineNewsletterRankEvent(
+        userState,
+        newsletterState,
+        payload.factor,
+        payload.group,
+        payload.userEventType,
+        payload.timestamp
+      )
     )
   },
 
-  DefineRankCalcGroup: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DefineRankCalcGroup
-    )
+  DefineRankGroup: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.defineRankCalcGroup({
-        user: userState,
-        newsletter: newsletterState,
-        group: payload.group,
-        rankRange: payload.rankRange,
-        timestamp: payload.timestamp
-      })
+      defineNewsletterRankGroup(
+        userState,
+        newsletterState,
+        payload.group,
+        payload.rankRange,
+        payload.timestamp
+      )
     )
   },
 
-  DefineStageRule: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DefineStageRule
-    )
+  DefineStageRule: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.defineStageRule({
-        user: userState,
-        newsletter: newsletterState,
-        stage: payload.stage,
-        stageRule: payload.stageRule,
-        timestamp: payload.timestamp
-      })
+      defineNewsletterStageRule(
+        userState,
+        newsletterState,
+        payload.stage,
+        payload.stageRule,
+        payload.timestamp
+      )
     )
   },
 
-  DeleteNewsletter: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DeleteNewsletter
-    )
+  DeleteNewsletter: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.del({
-        user: userState,
-        newsletter: newsletterState,
-        timestamp: payload.timestamp
-      })
+      deleteNewsletter(
+        userState,
+        newsletterState,
+        payload.timestamp
+      )
     )
   },
 
-  RemoveNewsletterEditor: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RemoveNewsletterEditor
-    )
+  RemoveNewsletterEditor: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.removeEditor({
-        user: userState,
-        newsletter: newsletterState,
-        editorId: payload.editorId,
-        timestamp: payload.timestamp
-      })
+      removeNewsletterEditor(
+        userState,
+        newsletterState,
+        payload.editorId,
+        payload.timestamp
+      )
     )
   },
 
-  RemoveNewsletterPermission: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RemoveNewsletterPermission
-    )
+  RemoveNewsletterPermission: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.removePermission({
-        user: userState,
-        newsletter: newsletterState,
-        privilege: payload.privilege,
-        timestamp: payload.timestamp
-      })
+      removeNewsletterPermission(
+        userState,
+        newsletterState,
+        payload.privilege,
+        payload.timestamp
+      )
     )
   },
 
-  RemoveRankCalcEvent: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RemoveRankCalcEvent
-    )
+  RemoveRankEvent: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.removeRankCalcEvent({
-        user: userState,
-        newsletter: newsletterState,
-        userEventType: payload.userEventType,
-        timestamp: payload.timestamp
-      })
+      removeNewsletterRankEvent(
+        userState,
+        newsletterState,
+        payload.userEventType,
+        payload.timestamp
+      )
     )
   },
 
-  RemoveRankCalcGroup: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RemoveRankCalcGroup
-    )
+  RemoveRankGroup: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.removeRankCalcGroup({
-        user: userState,
-        newsletter: newsletterState,
-        group: payload.group,
-        timestamp: payload.timestamp
-      })
+      removeNewsletterRankGroup(
+        userState,
+        newsletterState,
+        payload.group,
+        payload.timestamp
+      )
     )
   },
 
-  RemoveStageRule: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RemoveStageRule
-    )
+  RemoveStageRule: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState, save } = await newsletterRepository.getById(payload.newsletterId)
 
     return await save(
-      newsletter.removeStageRule({
-        user: userState,
-        newsletter: newsletterState,
-        stage: payload.stage,
-        timestamp: payload.timestamp
-      })
+      removeNewsletterStageRule(
+        userState,
+        newsletterState,
+        payload.stage,
+        payload.timestamp
+      )
     )
   }
 })
-
-export default newsletterCommandHandlers

@@ -1,17 +1,14 @@
-import { type, literal } from 'io-ts'
+import { type } from 'io-ts'
 import * as input from '../input'
 
-export const privateCommands = type({
+export const publicCommands = type({
   CreateUser: type({
-    private: literal(true),
+    userId: input.UserId,
     payload: type({
-      userId: input.UserId,
       timestamp: input.Timestamp
     })
-  })
-})
+  }),
 
-export const publicCommands = type({
   DeclineReviewInvitation: type({
     userId: input.UserId,
     payload: type({

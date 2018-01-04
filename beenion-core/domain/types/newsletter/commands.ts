@@ -61,7 +61,7 @@ export const publicCommands = type({
     })
   }),
 
-  DefineRankCalcEvent: type({
+  DefineRankEvent: type({
     userId: input.UserId,
     payload: type({
       newsletterId: input.NewsletterId,
@@ -72,7 +72,7 @@ export const publicCommands = type({
     })
   }),
 
-  DefineRankCalcGroup: type({
+  DefineRankGroup: type({
     userId: input.UserId,
     payload: type({
       newsletterId: input.NewsletterId,
@@ -118,7 +118,7 @@ export const publicCommands = type({
     })
   }),
 
-  RemoveRankCalcEvent: type({
+  RemoveRankEvent: type({
     userId: input.UserId,
     payload: type({
       newsletterId: input.NewsletterId,
@@ -127,7 +127,7 @@ export const publicCommands = type({
     })
   }),
 
-  RemoveRankCalcGroup: type({
+  RemoveRankGroup: type({
     userId: input.UserId,
     payload: type({
       newsletterId: input.NewsletterId,

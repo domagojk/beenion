@@ -1,184 +1,162 @@
-import { UserRepository, NewsletterRepository, UserCommands } from '../domain/types'
-import { publicCommands, privateCommands } from '../domain/types/user/commands'
-import validate from '../domain/validateCommand'
-import * as user from '../domain/entities/user'
+import * as t from '../domain/types'
+import { createUser } from '../domain/entities/user/create'
+import { declineReviewInvitation } from '../domain/entities/user/declineReviewInvitation'
+import { expireReviewInvitation } from '../domain/entities/user/expireReviewInvitation'
+import { rateArticle } from '../domain/entities/user/rateArticle'
+import { rateReview } from '../domain/entities/user/rateReview'
+import { rateUser } from '../domain/entities/user/rateUser'
+import { withdrawArticleVote } from '../domain/entities/user/withdrawArticleVote'
+import { withdrawReviewVote } from '../domain/entities/user/withdrawReviewVote'
+import { withdrawUserVote } from '../domain/entities/user/withdrawUserVote'
 
-type CommandHandler = {
-  [Command in keyof UserCommands]: (command: object) => Promise<any>
+type CommandHandlers = {
+  [C in keyof t.UserCommands]: (
+    command: t.UserCommands[C]
+  ) => Promise<any>
 }
 
-export default (
-  userRepository: UserRepository,
-  newsletterRepository: NewsletterRepository
-): CommandHandler => ({
+export const userCommandHandlers = (
+  userRepository: t.UserRepository,
+  newsletterRepository: t.NewsletterRepository
+): CommandHandlers => ({
 
-  CreateUser: async (command: object) => {
-    const { payload } = validate(command, privateCommands.props.CreateUser)
+  CreateUser: async ({ userId, payload }) => {
 
-    const { save } = await userRepository.create(payload.userId)
+    const { save } = userRepository.create(userId)
 
     return await save(
-      user.create({
-        userId: payload.userId,
-        timestamp: payload.timestamp
-      })
+      createUser(
+        userId,
+        payload.timestamp
+      )
     )
   },
 
-  DeclineReviewInvitation: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DeclineReviewInvitation
-    )
+  DeclineReviewInvitation: async ({ userId, payload }) => {
 
     const { save } = await userRepository.getById(userId)
 
     return await save(
-      user.declineReviewInvitation({
-        reviewOwnerId: userId,
-        articleId: payload.articleId,
-        newsletterId: payload.newsletterId,
-        timestamp: payload.timestamp
-      })
+      declineReviewInvitation(
+        userId,
+        payload.articleId,
+        payload.newsletterId,
+        payload.timestamp
+      )
     )
   },
 
-  ExpireReviewInvitation: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.ExpireReviewInvitation
-    )
+  ExpireReviewInvitation: async ({ userId, payload }) => {
 
     const { save } = await userRepository.getById(userId)
 
     return await save(
-      user.expireReviewInvitation({
-        reviewOwnerId: userId,
-        articleId: payload.articleId,
-        newsletterId: payload.newsletterId,
-        timestamp: payload.timestamp
-      })
+      expireReviewInvitation(
+        userId,
+        payload.articleId,
+        payload.newsletterId,
+        payload.timestamp
+      )
     )
   },
 
-  RateArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RateArticle
-    )
+  RateArticle: async ({ userId, payload }) => {
 
     const voter = await userRepository.getById(userId)
     const articleOwner = await userRepository.getById(payload.articleOwnerId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
 
     return await voter.save(
-      user.rateArticle({
-        voter: voter.userState,
-        articleOwner: articleOwner.userState,
-        newsletter: newsletterState,
-        articleId: payload.articleId,
-        medal: payload.medal,
-        rating: payload.rating,
-        timestamp: payload.timestamp
-      })
+      rateArticle(
+        voter.userState,
+        payload.articleId,
+        articleOwner.userState,
+        newsletterState,
+        payload.medal,
+        payload.rating,
+        payload.timestamp
+      )
     )
   },
 
-  RateReview: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RateReview
-    )
+  RateReview: async ({ userId, payload }) => {
 
     const voter = await userRepository.getById(userId)
     const reviewOwner = await userRepository.getById(payload.reviewOwnerId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
 
     return await voter.save(
-      user.rateReview({
-        voter: voter.userState,
-        reviewOwner: reviewOwner.userState,
-        newsletter: newsletterState,
-        articleId: payload.articleId,
-        medal: payload.medal,
-        rating: payload.rating,
-        timestamp: payload.timestamp
-      })
+      rateReview(
+        voter.userState,
+        reviewOwner.userState,
+        newsletterState,
+        payload.articleId,
+        payload.medal,
+        payload.rating,
+        payload.timestamp
+      )
     )
   },
 
-  RateUser: async (command: object) => {
-    const { userId, payload } = validate(command, publicCommands.props.RateUser)
+  RateUser: async ({ userId, payload }) => {
 
     const voter = await userRepository.getById(userId)
     const votedUser = await userRepository.getById(payload.userId)
 
     return await voter.save(
-      user.rateUser({
-        voter: voter.userState,
-        user: votedUser.userState,
-        medal: payload.medal,
-        rating: payload.rating,
-        timestamp: payload.timestamp
-      })
+      rateUser(
+        voter.userState,
+        votedUser.userState,
+        payload.medal,
+        payload.rating,
+        payload.timestamp
+      )
     )
   },
 
-  WithdrawArticleVote: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.WithdrawArticleVote
-    )
+  WithdrawArticleVote: async ({ userId, payload }) => {
 
     const voter = await userRepository.getById(userId)
     const articleOwner = await userRepository.getById(payload.articleOwnerId)
 
     return await voter.save(
-      user.withdrawArticleVote({
-        voter: voter.userState,
-        articleOwner: articleOwner.userState,
-        articleId: payload.articleId,
-        newsletterId: payload.newsletterId,
-        timestamp: payload.timestamp
-      })
+      withdrawArticleVote(
+        voter.userState,
+        articleOwner.userState,
+        payload.articleId,
+        payload.newsletterId,
+        payload.timestamp
+      )
     )
   },
 
-  WithdrawReviewVote: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.WithdrawReviewVote
-    )
+  WithdrawReviewVote: async ({ userId, payload }) => {
 
     const voter = await userRepository.getById(userId)
     const reviewOwner = await userRepository.getById(payload.reviewOwnerId)
 
     return await voter.save(
-      user.withdrawReviewVote({
-        voter: voter.userState,
-        reviewOwner: reviewOwner.userState,
-        articleId: payload.articleId,
-        newsletterId: payload.newsletterId,
-        timestamp: payload.timestamp
-      })
+      withdrawReviewVote(
+        voter.userState,
+        reviewOwner.userState,
+        payload.articleId,
+        payload.newsletterId,
+        payload.timestamp
+      )
     )
   },
 
-  WithdrawUserVote: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.WithdrawUserVote
-    )
+  WithdrawUserVote: async ({ userId, payload }) => {
 
     const voter = await userRepository.getById(userId)
     const votedUser = await userRepository.getById(payload.userId)
 
     return await voter.save(
-      user.withdrawUserVote({
-        voter: voter.userState,
-        user: votedUser.userState,
-        timestamp: payload.timestamp
-      })
+      withdrawUserVote(
+        voter.userState,
+        votedUser.userState,
+        payload.timestamp
+      )
     )
   }
 })

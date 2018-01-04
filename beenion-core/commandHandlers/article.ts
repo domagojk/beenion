@@ -1,257 +1,220 @@
 import * as t from '../domain/types'
-import { publicCommands, privateCommands } from '../domain/types/article/commands'
-import validate from '../domain/validateCommand'
-import * as article from '../domain/entities/article'
+import { createArticle } from '../domain/entities/article/create'
+import { banArticle } from '../domain/entities/article/ban'
+import { deleteArticle } from '../domain/entities/article/delete'
+import { unbanArticle } from '../domain/entities/article/unban'
+import { updateArticleDescription } from '../domain/entities/article/updateDescription'
+import { updateArticleLink } from '../domain/entities/article/updateLink'
+import { updateArticleTitle } from '../domain/entities/article/updateTitle'
+import { rejectApprovedArticle } from '../domain/entities/article/rejectApproved'
+import { resubmitArticle } from '../domain/entities/article/resubmit'
+import { reviewArticle } from '../domain/entities/article/review'
+import { inviteArticleReviewer } from '../domain/entities/article/inviteReviewer'
+import { removeArticleReviewer } from '../domain/entities/article/removeReviewer'
 
-type CommandHandler = {
-  [Command in keyof t.ArticleCommands]: (command: object) => Promise<any>
+type CommandHandlers = {
+  [C in keyof t.ArticleCommands]: (
+    command: t.ArticleCommands[C]
+  ) => Promise<any>
 }
 
-export default (
+export const articleCommandHandlers = (
   userRepository: t.UserRepository,
   newsletterRepository: t.NewsletterRepository,
   articleRepository: t.ArticleRepository
-): CommandHandler => ({
+): CommandHandlers => ({
 
-  CreateArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.CreateArticle
-    )
+  CreateArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { save } = await articleRepository.create(payload.articleId)
 
     return await save(
-      article.create({
-        user: userState,
-        newsletter: newsletterState,
-        articleId: payload.articleId,
-        description: payload.description,
-        link: payload.link,
-        title: payload.title,
-        timestamp: payload.timestamp
-      })
+      createArticle(
+        userState,
+        newsletterState,
+        payload.articleId,
+        payload.title,
+        payload.description,
+        payload.link,
+        payload.timestamp
+      )
     )
   },
 
-  BanArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.BanArticle
-    )
+  BanArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.ban({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      banArticle(
+        userState,
+        newsletterState,
+        articleState,
+        payload.timestamp
+      )
     )
   },
 
-  DeleteArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.DeleteArticle
-    )
+  DeleteArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.del({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      deleteArticle(
+        userState,
+        newsletterState,
+        articleState,
+        payload.timestamp
+      )
     )
   },
 
-  UnbanArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.UnbanArticle
-    )
+  UnbanArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.unban({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      unbanArticle(
+        userState,
+        newsletterState,
+        articleState,
+        payload.timestamp
+      )
     )
   },
 
-  UpdateArticleDescription: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.UpdateArticleDescription
-    )
+  UpdateArticleDescription: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.updateDescription({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        description: payload.description,
-        timestamp: payload.timestamp
-      })
+      updateArticleDescription(
+        userState,
+        newsletterState,
+        articleState,
+        payload.description,
+        payload.timestamp
+      )
     )
   },
 
-  UpdateArticleLink: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.UpdateArticleLink
-    )
+  UpdateArticleLink: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.updateLink({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        link: payload.link,
-        timestamp: payload.timestamp
-      })
+      updateArticleLink(
+        userState,
+        newsletterState,
+        articleState,
+        payload.link,
+        payload.timestamp
+      )
     )
   },
 
-  UpdateArticleTitle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.UpdateArticleTitle
-    )
+  UpdateArticleTitle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.updateTitle({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        title: payload.title,
-        timestamp: payload.timestamp
-      })
+      updateArticleTitle(
+        userState,
+        newsletterState,
+        articleState,
+        payload.title,
+        payload.timestamp
+      )
     )
   },
 
-  RejectApprovedArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.RejectApprovedArticle
-    )
+  RejectApprovedArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.rejectApproved({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      rejectApprovedArticle(
+        userState,
+        newsletterState,
+        articleState,
+        payload.timestamp
+      )
     )
   },
 
-  ResubmitArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.ResubmitArticle
-    )
+  ResubmitArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.resubmit({
-        user: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      resubmitArticle(
+        userState,
+        newsletterState,
+        articleState,
+        payload.timestamp
+      )
     )
   },
 
-  ReviewArticle: async (command: object) => {
-    const { userId, payload } = validate(
-      command,
-      publicCommands.props.ReviewArticle
-    )
+  ReviewArticle: async ({ userId, payload }) => {
 
     const { userState } = await userRepository.getById(userId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.review({
-        reviewer: userState,
-        article: articleState,
-        evaluation: payload.evaluation,
-        timestamp: payload.timestamp
-      })
+      reviewArticle(
+        userState,
+        articleState,
+        payload.evaluation,
+        payload.timestamp
+      )
     )
   },
 
-  InviteArticleReviewer: async (command: object) => {
-    const { payload } = validate(
-      command,
-      privateCommands.props.InviteArticleReviewer
-    )
+  InviteArticleReviewer: async ({ payload }) => {
 
     const { userState } = await userRepository.getById(payload.reviewerId)
     const { newsletterState } = await newsletterRepository.getById(payload.newsletterId)
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.inviteReviewer({
-        reviewer: userState,
-        newsletter: newsletterState,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      inviteArticleReviewer(
+        userState,
+        newsletterState,
+        articleState,
+        payload.timestamp
+      )
     )
   },
 
-  RemoveArticleReviewer: async (command: object) => {
-    const { payload } = validate(
-      command,
-      privateCommands.props.RemoveArticleReviewer
-    )
+  RemoveArticleReviewer: async ({ payload }) => {
 
     const { articleState, save } = await articleRepository.getById(payload.articleId)
 
     return await save(
-      article.removeReviewer({
-        reviewerId: payload.reviewerId,
-        article: articleState,
-        timestamp: payload.timestamp
-      })
+      removeArticleReviewer(
+        payload.reviewerId,
+        articleState,
+        payload.timestamp
+      )
     )
   }
 })

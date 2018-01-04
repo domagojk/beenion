@@ -26,10 +26,14 @@ export const hasNewsletterPermissions = (
 const isListedUser = (perm: t.NewsletterPermission, user: t.User) =>
   !!perm && Array.isArray(perm.users) && perm.users.includes(user.userId)
 
-const hasBeenionRank = (perm: t.BeenionPermission, user: t.User) =>
-  !!perm &&
-  !!perm.beenionRank &&
-  calcRank(user.rankEvents, beenionRankCalcParams) >= perm.beenionRank.min
+const hasBeenionRank = (perm: t.BeenionPermission, user: t.User) => {
+  console.log('aaa', user)
+  return (
+    !!perm &&
+    !!perm.beenionRank &&
+    calcRank(user.rankEvents, beenionRankCalcParams) >= perm.beenionRank.min
+  )
+}
 
 function hasNewsletterRank (
   perm: t.NewsletterPermission,
