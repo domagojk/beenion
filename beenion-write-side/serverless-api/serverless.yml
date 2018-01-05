@@ -1,0 +1,35 @@
+service: beenion-write-side
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack: ./webpack.config.${opt:debug, 'prod'}.js
+  webpackIncludeModules:
+    forceInclude:
+      - "@eventuateinc/eventuate-nodejs-client"
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: nodejs6.10
+  region: us-east-1
+  environment:
+    TOKEN_ISSUER: https://beenion.auth0.com/
+    JWKS_URI: https://beenion.auth0.com/.well-known/jwks.json
+    AUDIENCE: http://rsapi
+    EVENTUATE_API_KEY_ID: ${file(./secrets.${self:provider.stage}.json):EVENTUATE_API_KEY_ID}
+    EVENTUATE_API_KEY_SECRET: ${file(./secrets.${self:provider.stage}.json):EVENTUATE_API_KEY_SECRET}
+
+functions:
+  auth:
+    handler: src/auth0-authorizer.auth
+    cors: true
+  command:
+    handler: src/command.handler
+    events:
+      - http:
+          cors: true
+          path: api/command
+          method: post
+          authorizer: auth
