@@ -3,9 +3,6 @@ service: beenion-write-side
 plugins:
   - serverless-webpack
 
-custom:
-  webpack: ./webpack.config.${opt:debug, 'prod'}.js
-
 provider:
   name: aws
   stage: ${opt:stage, 'dev'}
@@ -48,3 +45,5 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
