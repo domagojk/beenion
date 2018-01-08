@@ -37,8 +37,6 @@
   "devDependencies": {
     "@types/jest": "^20.0.2",
     "@types/node": "^7.0.29",
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "jest": "^20.0.4",
     "jest-environment-node-debug": "^2.0.0",
     "ts-jest": "^20.0.6",
