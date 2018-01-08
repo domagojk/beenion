@@ -5,8 +5,36 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/eventuate/index.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "serverless invoke local",
+      "cwd": "${workspaceFolder}/beenion-write-side/serverless-api",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///../*": "${workspaceFolder}/beenion-write-side/*",
+        "webpack:///./*": "${workspaceFolder}/beenion-write-side/serverless/*"
+      },
+      "program": "${workspaceFolder}/beenion-write-side/serverless-api/node_modules/serverless/bin/serverless",
+      "args": [
+        "invoke",
+        "local",
+        "--debug",
+        "dev",
+        "-f",
+        "command",
+        "--path",
+        "__integration_tests__/inputs/0-CreateUser.json"
+      ]
+    },
+    {
       "name": "Debug Tests",
-      "program": "${workspaceRoot}/node_modules/jest/bin/jest",
+      "program": "${workspaceRoot}/beenion-core/node_modules/jest/bin/jest",
       "stopOnEntry": false,
       "args": ["-i", "--runInBand", "--env", "jest-environment-node-debug"],
       "cwd": "${workspaceRoot}",
