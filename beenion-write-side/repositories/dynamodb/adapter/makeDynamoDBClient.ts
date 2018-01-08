@@ -38,7 +38,7 @@ export const makeDynamoDBClient = entityName => ({
     const commitId = date + ':' + entityId
 
     const params = {
-      TableName: process.env.DYNAMODB_TABLE,
+      TableName: process.env.EVENTSTORE_TABLE,
       Item: {
         commitId: { S: commitId },
         committedAt: { N: now.toString() },
