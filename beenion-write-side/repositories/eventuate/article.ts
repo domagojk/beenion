@@ -2,7 +2,7 @@ import { makeEventuateClient } from './adapter/makeEventuateClient'
 import { ArticleRepository } from '../../domain/types'
 import reduceToArticle from '../../domain/entities/reduceToArticle'
 
-const eventuate = makeEventuateClient('newsletter')
+const eventuate = makeEventuateClient('article')
 
 export const articleRepository: ArticleRepository = {
   getById: userId =>
