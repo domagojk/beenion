@@ -9,8 +9,6 @@
     "jwks-rsa": "^1.2.1"
   },
   "devDependencies": {
-    "babel-loader": "^7.1.2",
-    "babel-polyfill": "^6.26.0",
     "fs-extra": "^5.0.0",
     "mocha": "^4.1.0",
     "serverless": "^1.25.0",
