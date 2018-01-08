@@ -1,4 +1,3 @@
-import 'babel-polyfill' // required since async/await is not supported in node6
 import * as articleCommands from '../../domain/types/article/commands'
 import * as newsletterCommands from '../../domain/types/newsletter/commands'
 import * as userCommands from '../../domain/types/user/commands'
