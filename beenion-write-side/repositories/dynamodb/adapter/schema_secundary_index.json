@@ -1,0 +1,49 @@
+{
+  "TableName": "",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "entityId",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "version",
+      "AttributeType": "N"
+    },
+    {
+      "AttributeName": "commitId",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "entityId",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "version",
+      "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 0,
+    "WriteCapacityUnits": 0
+  },
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "commitsByCommitId",
+      "KeySchema": [
+        {
+          "AttributeName": "commitId",
+          "KeyType": "HASH"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": {
+        "ReadCapacityUnits": 0,
+        "WriteCapacityUnits": 0
+      }
+    }
+  ]
+}
