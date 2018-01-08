@@ -28,7 +28,7 @@
   },
   "author": "Domagoj Kriskovic",
   "dependencies": {
-    "@eventuateinc/eventuate-nodejs-client": "1.x",
+    "aws-sdk": "^2.177.0",
     "clamp": "^1.0.1",
     "io-ts": "^0.9.4",
     "is-url": "^1.2.2",
