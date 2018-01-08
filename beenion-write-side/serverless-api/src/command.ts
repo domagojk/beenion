@@ -5,9 +5,9 @@ import * as userCommands from '../../domain/types/user/commands'
 import { articleCommandHandlers } from '../../commandHandlers/article'
 import { newsletterCommandHandlers } from '../../commandHandlers/newsletter'
 import { userCommandHandlers } from '../../commandHandlers/user'
-import { newsletterRepository } from '../../repositories/eventuate/newsletter'
-import { userRepository } from '../../repositories/eventuate/user'
-import { articleRepository } from '../../repositories/eventuate/article'
+import { newsletterRepository } from '../../repositories/dynamodb/newsletter'
+import { userRepository } from '../../repositories/dynamodb/user'
+import { articleRepository } from '../../repositories/dynamodb/article'
 import { validateCommand } from './validateCommand'
 
 const commandHandlers = {
