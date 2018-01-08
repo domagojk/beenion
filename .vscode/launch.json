@@ -7,25 +7,20 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/eventuate/index.js"
-    },
-    {
-      "type": "node",
-      "request": "launch",
       "name": "serverless invoke local",
-      "cwd": "${workspaceFolder}/beenion-write-side/serverless-api",
+      "cwd": "${workspaceFolder}/beenion-write-side/serverless-entrypoint",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "webpack:///../*": "${workspaceFolder}/beenion-write-side/*",
-        "webpack:///./*": "${workspaceFolder}/beenion-write-side/serverless/*"
+        "webpack:///./*": "${workspaceFolder}/beenion-write-side/serverless-entrypoint/*"
       },
-      "program": "${workspaceFolder}/beenion-write-side/serverless-api/node_modules/serverless/bin/serverless",
+      "outFiles": [
+        "${workspaceFolder}/beenion-write-side/serverless-entrypoint/.webpack/service/**/*.js"
+      ],
+      "program": "${workspaceFolder}/beenion-write-side/serverless-entrypoint/node_modules/serverless/bin/serverless",
       "args": [
         "invoke",
         "local",
-        "--debug",
-        "dev",
         "-f",
         "command",
         "--path",
