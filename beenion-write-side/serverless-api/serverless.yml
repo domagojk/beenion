@@ -5,9 +5,6 @@ plugins:
 
 custom:
   webpack: ./webpack.config.${opt:debug, 'prod'}.js
-  webpackIncludeModules:
-    forceInclude:
-      - "@eventuateinc/eventuate-nodejs-client"
 
 provider:
   name: aws
@@ -18,8 +15,14 @@ provider:
     TOKEN_ISSUER: https://beenion.auth0.com/
     JWKS_URI: https://beenion.auth0.com/.well-known/jwks.json
     AUDIENCE: http://rsapi
-    EVENTUATE_API_KEY_ID: ${file(./secrets.${self:provider.stage}.json):EVENTUATE_API_KEY_ID}
-    EVENTUATE_API_KEY_SECRET: ${file(./secrets.${self:provider.stage}.json):EVENTUATE_API_KEY_SECRET}
+    EVENTSTORE_TABLE: EventStoreDB-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTSTORE_TABLE}"
 
 functions:
   auth:
@@ -33,3 +36,15 @@ functions:
           path: api/command
           method: post
           authorizer: auth
+
+resources:
+  Resources:
+    EventStoreTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:provider.environment.EVENTSTORE_TABLE}
+        AttributeDefinitions: ${file(../repositories/dynamodb/adapter/schema.json):AttributeDefinitions}
+        KeySchema: ${file(../repositories/dynamodb/adapter/schema.json):KeySchema}
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
