@@ -9,7 +9,8 @@ const newsletterId2 = "newsletter2-test-id-" + Date.now()
 const timestamp = Date.now()
 
 module.exports = {
-  cmd: 'sls invoke local --debug dev',
+  //cmd: 'sls invoke local --debug dev',
+  cmd: 'sls invoke',
   commands: [
     {
       userId: userId1,
