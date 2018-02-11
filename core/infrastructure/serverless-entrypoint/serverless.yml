@@ -1,0 +1,60 @@
+service: beenion-write-side
+
+# plugins:
+#   - serverless-webpack
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  runtime: nodejs6.10
+  region: us-east-1
+  environment:
+    EVENTSTORE_TABLE: EventStoreDB-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTSTORE_TABLE}"
+
+functions:
+  # command:
+  #   handler: src/command.handler
+  #   events:
+  #     - http:
+  #         cors: true
+  #         path: api/command
+  #         method: post
+  #         integration: lambda
+  #         authorizer:
+  #           name: authorizer
+  #           arn: arn:aws:cognito-idp:us-east-1:862859958676:userpool/us-east-1_uSqXNHQwb
+  #           claims:
+  #             - email
+  privateEndpoint:
+    handler: src/handler.privateEndpoint
+    events:
+      - http:
+          path: api/private
+          method: get
+          integration: lambda
+          authorizer:
+            name: authorizer
+            arn: arn:aws:cognito-idp:us-east-1:862859958676:userpool/us-east-1_uSqXNHQwb
+            claims:
+              - attribute_key2
+
+resources:
+  Resources:
+    EventStoreTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        TableName: ${self:provider.environment.EVENTSTORE_TABLE}
+        AttributeDefinitions: ${file(../repositories/dynamodb/adapter/schema.json):AttributeDefinitions}
+        KeySchema: ${file(../repositories/dynamodb/adapter/schema.json):KeySchema}
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE

@@ -1,0 +1,47 @@
+{
+  "name": "beenion-core",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "tsc:watch": "tsc -w"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "collectCoverage": false,
+    "modulePaths": [
+      "."
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/?(*.)(test).(js|ts)?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "/build/"
+    ]
+  },
+  "author": "Domagoj Kriskovic",
+  "dependencies": {
+    "aws-sdk": "^2.177.0",
+    "clamp": "^1.0.1",
+    "io-ts": "^0.9.4",
+    "is-url": "^1.2.2",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^20.0.2",
+    "@types/node": "^7.0.29",
+    "jest": "^20.0.4",
+    "jest-environment-node-debug": "^2.0.0",
+    "ts-jest": "^20.0.6",
+    "tslint": "^5.7.0",
+    "tslint-config-standard": "^6.0.1",
+    "typescript": "^2.6.2"
+  }
+}

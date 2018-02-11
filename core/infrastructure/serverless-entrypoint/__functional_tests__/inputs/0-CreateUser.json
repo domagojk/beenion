@@ -1,0 +1,11 @@
+{
+  "resource": "/",
+  "path": "/",
+  "httpMethod": "POST",
+  "requestContext": {
+    "authorizer": {
+      "principalId": "user1-test-id-1515447397893"
+    }
+  },
+  "body": "{\"command\":{\"name\":\"CreateUser\",\"payload\":{\"timestamp\":1515447397893}}}"
+}

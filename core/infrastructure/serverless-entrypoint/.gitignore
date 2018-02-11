@@ -1,0 +1,7 @@
+node_modules
+.serverless
+.webpack
+webpackdebug
+secrets.dev.json
+secrets.prod.json
+__integration_tests__/inputs

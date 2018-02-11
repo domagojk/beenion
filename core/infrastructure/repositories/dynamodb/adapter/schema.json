@@ -1,0 +1,27 @@
+{
+  "TableName": "",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "entityId",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "version",
+      "AttributeType": "N"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "entityId",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "version",
+      "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 0,
+    "WriteCapacityUnits": 0
+  }
+}

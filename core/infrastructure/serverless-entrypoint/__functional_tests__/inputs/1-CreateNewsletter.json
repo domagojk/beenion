@@ -1,0 +1,11 @@
+{
+  "resource": "/",
+  "path": "/",
+  "httpMethod": "POST",
+  "requestContext": {
+    "authorizer": {
+      "principalId": "user1-test-id-1515447397893"
+    }
+  },
+  "body": "{\"command\":{\"name\":\"CreateNewsletter\",\"payload\":{\"newsletterId\":\"newsletter1-test-id-1515447397893\",\"title\":\"first newsletter\",\"description\":\"first newsletter desc\",\"timestamp\":1515447397893}}}"
+}

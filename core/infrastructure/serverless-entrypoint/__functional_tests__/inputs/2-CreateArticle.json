@@ -1,0 +1,11 @@
+{
+  "resource": "/",
+  "path": "/",
+  "httpMethod": "POST",
+  "requestContext": {
+    "authorizer": {
+      "principalId": "user1-test-id-1515447397893"
+    }
+  },
+  "body": "{\"command\":{\"name\":\"CreateArticle\",\"payload\":{\"newsletterId\":\"newsletter1-test-id-1515447397893\",\"articleId\":\"article1-test-id-1515447397893\",\"title\":\"first article\",\"description\":\"first article desc\",\"link\":\"https://github.com\",\"timestamp\":1515447397893}}}"
+}

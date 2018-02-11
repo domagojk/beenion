@@ -1,0 +1,18 @@
+{
+  "name": "serverless-post-signup",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "postConfirmation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless": "^1.25.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.181.0"
+  }
+}
