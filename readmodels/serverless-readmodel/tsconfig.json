@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "lib": [
+      "es5",
+      "es2015.promise"
+    ],
+    "types": ["node"],
+  }
+}

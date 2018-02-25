@@ -16,11 +16,6 @@
     ]
   },
   "include": [
-    "./commandHandlers/**/*.ts",
-    "./domain/**/*.ts",
-    "./repositories/**/*.ts"
-  ],
-  "exclude": [
-    "./repositories/eventuate/*"
+    "./model/**/*.ts"
   ]
 }

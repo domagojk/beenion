@@ -1,0 +1,16 @@
+service:
+  name: core-read-model
+
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - stream: arn:aws:dynamodb:us-east-1:862859958676:table/EventStoreDB-${self:provider.stage}/stream/2018-01-08T19:32:38.155

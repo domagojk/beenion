@@ -6,24 +6,27 @@ import { LinkRejected } from './events/LinkRejected'
 
 export const linkCommandHandlers = (repository) => ({
   ReviewLink: async command => {
-    const { save, commit, commitIfValid, validate } = await repository({
+    const { save, commit, commitIf, validate } = await repository({
       id: command.payload.linkId,
       projections: {
         link: LinkRejected
       }
     })
 
-    const reviewers = await getProjection({
-      id: command.payload.newsletterId,
-      reducer: reduceToReviewers(command.payload.linkId)
-    })
+    // const reviewers = await getProjection({
+    //   id: command.payload.newsletterId,
+    //   reducer: reduceToReviewers(command.payload.linkId)
+    // })
+    // šta ako nema reviewera?
+    // ne u istoj transakciji nego pm/cron job?
+    // dynamodb subsriber lista sa newsletterid hash i similarity sort
 
     return validate(isUserReviewer(command.userId))
       .then(commit(LinkReviewed(command)))
-      .then(commitIfValid(shouldPromoteLink, LinkPromoted))
-      .then(commitIfValid(shouldAssignReviewers, LinkReviewersAssigned(reviewers)))
-      .then(commitIfValid(shouldAcceptLink, LinkAccepted))
-      .then(commitIfValid(shouldRejectLink, LinkRejected))
+      .then(commitIf(shouldPromoteLink, LinkPromoted))
+   // .then(commitIf(shouldAssignReviewers, LinkReviewersAssigned(reviewers)))
+      .then(commitIf(shouldAcceptLink, LinkAccepted))
+      .then(commitIf(shouldRejectLink, LinkRejected))
       .then(save)
   }
 })

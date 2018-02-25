@@ -7,11 +7,12 @@ export const IssueId = t.string
 export const NewsletterStages = t.string
 export const NewsletterPermissions = t.string
 export const Duration = t.string
-export const Categories = t.string
+export const NewsletterCategory = t.string
 export const IssueLinks = t.string
 export const Avaiability = t.string
 export const ReviewersRating = t.string
 export const ProposalAction = t.string
+export const UserGroup = t.string
 
 export const NonNegativeInt = t.refinement(t.Integer, num => num >= 0)
 export const Email = t.refinement(t.string, () => /* todo: validation! */ true)
