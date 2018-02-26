@@ -1,0 +1,56 @@
+v1
+  - single owner
+v2
+  - payments
+v3
+  - multiple owners
+  - newsletter user roles (moderators helping)
+
+queries
+ - links: (by status) approved | rejected | inReview
+ - links: (by stage) 0 1 2 3
+ - subscriber by newsletterId and similarityRank
+ - comments by topic
+ - issues by status
+
+newsletter {
+  id
+  owners: userId[]
+  stages: []
+  maxReviewers: 500
+}
+
+link {
+  newsletterId
+  status: banned | inReview | rejected | approved
+  userId
+  stage: 0 | 1 | 2
+  reviews: [
+    {
+      evaluation: null | accept | reject
+      reviewerId: userId
+    }
+  ]
+}
+
+subscriber {
+  userId
+  newsletterId
+  similarityRank
+}
+
+comment {
+  id
+  topic
+}
+
+issueId {
+  id
+  newsletterId: id
+  templateId: id
+  status: sent | sending | draft | cancelled
+}
+
+templateId {
+  id
+}
