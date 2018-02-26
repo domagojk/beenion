@@ -1,8 +1,8 @@
-import { Db } from './type'
-
 const documents = {}
 
-export const db: Db = {
+// _version in every doc
+
+export const simpleCrud = {
   get (id) {
     if (!documents[id]) {
       throw new Error('document not found')
