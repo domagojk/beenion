@@ -1,5 +1,7 @@
+export type UserId = string
+
 export type User = {
-  userId: string
+  userId: UserId
   email: string
   twitter?: string
 }
