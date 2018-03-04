@@ -1,3 +1,9 @@
+on
+  link created
+  link promoted
+trigger
+  assign reviewer
+
 v1
   - single owner
 v2
