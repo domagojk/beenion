@@ -1,6 +1,6 @@
-import { Link } from './types'
+import { Link } from './index'
 import { User } from '../user/types'
-import { Newsletter } from '../newsletter/types'
+import { Newsletter } from '../newsletter'
 
 export function isLinkOwner(link: Link, user: User) {
   return link.userId === user.userId
