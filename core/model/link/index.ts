@@ -1,16 +1,18 @@
 import { User, UserId } from '../user/types'
 import { SingleDocRepo } from '../../repositories/singleDoc/types'
+import { SubscriberRepo } from 'repositories/subscriber/types'
 import { Newsletter } from '../newsletter'
-import { SubscriberRepository } from '../subscriber/types'
-import { findReviewersQuery } from '../subscriber/findReviewersQuery'
+import { Subscriber } from '../subscriber'
 import { accessDenied, notLinkReviewer, stageCompleted } from '../errors'
 import * as events from './events'
 import {
   isStageCompleted,
   isLinkOwner,
   isEditor,
-  getApprovedReviews
+  getApprovedReviews,
+  findReviewersQuery
 } from './utils'
+
 
 type Evaluation = null | 'approved' | 'rejected'
 
@@ -38,15 +40,13 @@ type LinkMetadata = {
   url?: string
 }
 
-export const linkApi = ({
-  linkRepo,
-  newsletterRepo,
-  subscriberRepo
-}: {
+type Repositories = {
   linkRepo: SingleDocRepo<Link>
   newsletterRepo: SingleDocRepo<Newsletter>
-  subscriberRepo: SubscriberRepository
-}) => ({
+  subscriberRepo: SubscriberRepo<Subscriber>
+}
+
+export const linkApi = ({ linkRepo, newsletterRepo, subscriberRepo}: Repositories) => ({
   async get(linkId: string) {
     const link = await linkRepo.get(linkId)
     return link
@@ -59,7 +59,7 @@ export const linkApi = ({
     metadata: LinkMetadata
   ) {
     const newsletter = await newsletterRepo.get(newsletterId)
-    const subscriber = await subscriberRepo.getById({
+    const subscriber = await subscriberRepo.getByIds({
       subscriberId: user.userId,
       newsletterId: newsletterId
     })
@@ -103,7 +103,7 @@ export const linkApi = ({
   async assignReviewers(linkId: string) {
     const link = await linkRepo.get(linkId)
     const newsletter = await newsletterRepo.get(link.newsletterId)
-    const reviewers = await subscriberRepo.query(
+    const reviewers = await subscriberRepo.find(
       findReviewersQuery(link, newsletter)
     )
 
