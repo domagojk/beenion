@@ -1,5 +1,5 @@
-import { Newsletter } from '../newsletter/types'
-import { Link } from '../link/types'
+import { Newsletter } from '../newsletter'
+import { Link } from '../link'
 import { getStageReviewers } from '../link/utils'
 
 export function findReviewersQuery(link: Link, newsletter: Newsletter) {
