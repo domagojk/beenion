@@ -1,3 +1,13 @@
+- save change
+- first in event store
+- check version (retrieved when repo initialized)
+- after event is stored - save in crud db
+
+- if first save fails - error
+- if second save fails - no other saves to event store or crud could be performed
+  a resolver function could be made (reducer)
+  first save would fail because version from crud would not be as expected
+  
 on
   link created
   link promoted
@@ -15,7 +25,7 @@ v3
 queries
  - links: (by status) approved | rejected | inReview
  - links: (by stage) 0 1 2 3
- - subscriber by newsletterId and similarityRank
+ - * subscriber by newsletterId and similarityRank
  - comments by topic
  - issues by status
 
