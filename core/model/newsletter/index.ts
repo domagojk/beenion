@@ -19,15 +19,15 @@ export type Newsletter = {
   version: number
 }
 
-export const newsletterApi = (newsletterDoc: SingleDocRepo<Newsletter>) => ({
+export const newsletterApi = (newsletterRepo: SingleDocRepo<Newsletter>) => ({
   async get(id: string) {
-    const newsletter = await newsletterDoc.get(id)
+    const newsletter = await newsletterRepo.get(id)
     return newsletter
   },
 
   async create(user: User, params: DocParams<Newsletter>) {
 
-    return newsletterDoc.create({
+    return newsletterRepo.create({
       from: user,
       payload: {
         ...params,
@@ -38,13 +38,13 @@ export const newsletterApi = (newsletterDoc: SingleDocRepo<Newsletter>) => ({
   },
 
   async update(user: User, params: DocParams<Newsletter>) {
-    const newsletter = await newsletterDoc.get(params.id)
+    const newsletter = await newsletterRepo.get(params.id)
 
     if (!newsletter.editors.includes(user.userId)) {
       throw accessDenied()
     }
 
-    return newsletterDoc.save({
+    return newsletterRepo.save({
       from: user,
       payload: params,
       type: events.NEWSLETTER_METADATA_UPDATED
@@ -52,13 +52,13 @@ export const newsletterApi = (newsletterDoc: SingleDocRepo<Newsletter>) => ({
   },
 
   async del(user: User, newsletterId: string) {
-    const newsletter = await newsletterDoc.get(newsletterId)
+    const newsletter = await newsletterRepo.get(newsletterId)
 
     if (!newsletter.editors.includes(user.userId)) {
       throw accessDenied()
     }
 
-    return newsletterDoc.delete({
+    return newsletterRepo.delete({
       from: user,
       payload: {
         id: newsletterId

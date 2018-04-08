@@ -39,16 +39,16 @@ type LinkMetadata = {
 }
 
 export const linkApi = ({
-  linkDoc,
-  newsletterDoc,
+  linkRepo,
+  newsletterRepo,
   subscriberRepo
 }: {
-  linkDoc: SingleDocRepo<Link>
-  newsletterDoc: SingleDocRepo<Newsletter>
+  linkRepo: SingleDocRepo<Link>
+  newsletterRepo: SingleDocRepo<Newsletter>
   subscriberRepo: SubscriberRepository
 }) => ({
   async get(linkId: string) {
-    const link = await linkDoc.get(linkId)
+    const link = await linkRepo.get(linkId)
     return link
   },
 
@@ -58,7 +58,7 @@ export const linkApi = ({
     newsletterId: string,
     metadata: LinkMetadata
   ) {
-    const newsletter = await newsletterDoc.get(newsletterId)
+    const newsletter = await newsletterRepo.get(newsletterId)
     const subscriber = await subscriberRepo.getById({
       subscriberId: user.userId,
       newsletterId: newsletterId
@@ -68,7 +68,7 @@ export const linkApi = ({
       throw accessDenied()
     }
 
-    return linkDoc.create({
+    return linkRepo.create({
       from: user,
       payload: {
         ...metadata,
@@ -83,14 +83,14 @@ export const linkApi = ({
   },
 
   async updateMetadata(user: User, linkId: string, metadata: LinkMetadata) {
-    const link = await linkDoc.get(linkId)
-    const newsletter = await newsletterDoc.get(link.newsletterId)
+    const link = await linkRepo.get(linkId)
+    const newsletter = await newsletterRepo.get(link.newsletterId)
 
     if (!isLinkOwner(link, user) || !isEditor(newsletter, user)) {
       throw accessDenied()
     }
 
-    return linkDoc.save({
+    return linkRepo.save({
       from: user,
       payload: {
         id: linkId,
@@ -101,13 +101,13 @@ export const linkApi = ({
   },
 
   async assignReviewers(linkId: string) {
-    const link = await linkDoc.get(linkId)
-    const newsletter = await newsletterDoc.get(link.newsletterId)
+    const link = await linkRepo.get(linkId)
+    const newsletter = await newsletterRepo.get(link.newsletterId)
     const reviewers = await subscriberRepo.query(
       findReviewersQuery(link, newsletter)
     )
 
-    return linkDoc.save({
+    return linkRepo.save({
       from: 'internal',
       payload: {
         id: link.id,
@@ -128,8 +128,8 @@ export const linkApi = ({
   },
 
   async removeReviewer(user: User, linkId: string, reviewerId: string) {
-    const link = await linkDoc.get(linkId)
-    const newsletter = await newsletterDoc.get(link.newsletterId)
+    const link = await linkRepo.get(linkId)
+    const newsletter = await newsletterRepo.get(link.newsletterId)
 
     if (!isEditor(newsletter, user) && reviewerId !== user.userId) {
       throw accessDenied()
@@ -141,7 +141,7 @@ export const linkApi = ({
 
     delete link.reviews[reviewerId]
 
-    return linkDoc.save({
+    return linkRepo.save({
       payload: {
         id: link.id,
         reviews: link.reviews,
@@ -153,8 +153,8 @@ export const linkApi = ({
   },
 
   async review(user: User, linkId: string, evaluation: Evaluation) {
-    const link = await linkDoc.get(linkId)
-    const newsletter = await newsletterDoc.get(link.newsletterId)
+    const link = await linkRepo.get(linkId)
+    const newsletter = await newsletterRepo.get(link.newsletterId)
 
     const linkReview = link.reviews[user.userId]
 
@@ -166,7 +166,7 @@ export const linkApi = ({
       throw stageCompleted()
     }
 
-    return linkDoc
+    return linkRepo
       .commit({
         from: user,
         payload: {
@@ -207,18 +207,18 @@ export const linkApi = ({
               type: events.LINK_PROMOTED
             })
       })
-      .then(linkDoc.saveCommited)
+      .then(linkRepo.saveCommited)
   },
 
   async rejectApproved(user: User, linkId: string) {
-    const link = await linkDoc.get(linkId)
-    const newsletter = await newsletterDoc.get(link.newsletterId)
+    const link = await linkRepo.get(linkId)
+    const newsletter = await newsletterRepo.get(link.newsletterId)
 
     if (!isEditor(newsletter, user)) {
       throw accessDenied()
     }
 
-    return linkDoc.save({
+    return linkRepo.save({
       from: user,
       payload: {
         id: link.id,
@@ -229,13 +229,13 @@ export const linkApi = ({
   },
 
   async del(user: User, linkId: string) {
-    const link = await linkDoc.get(linkId)
+    const link = await linkRepo.get(linkId)
 
     if (!isLinkOwner(link, user)) {
       throw accessDenied()
     }
 
-    return linkDoc.delete({
+    return linkRepo.delete({
       from: user,
       payload: {
         id: linkId
