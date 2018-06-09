@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "outDir": ".build",
+    "rootDir": "./",
+    "lib": [
+      "esnext.asynciterable",
+      "dom",
+      "es2017"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts"
+  ]
+}
