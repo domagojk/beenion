@@ -1,5 +1,5 @@
 {
-  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
@@ -7,43 +7,21 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "serverless invoke local",
-      "cwd": "${workspaceFolder}/beenion-write-side/serverless-entrypoint",
-      "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack:///../*": "${workspaceFolder}/beenion-write-side/*",
-        "webpack:///./*": "${workspaceFolder}/beenion-write-side/serverless-entrypoint/*"
-      },
-      "outFiles": [
-        "${workspaceFolder}/beenion-write-side/serverless-entrypoint/.webpack/service/**/*.js"
-      ],
-      "program": "${workspaceFolder}/beenion-write-side/serverless-entrypoint/node_modules/serverless/bin/serverless",
-      "args": [
-        "invoke",
-        "local",
-        "-f",
-        "command",
-        "--path",
-        "__integration_tests__/inputs/0-CreateUser.json"
-      ]
+      "name": "Jest Current File",
+      "program": "${workspaceFolder}/backend/node_modules/jest/bin/jest",
+      "args": ["${relativeFile}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     },
     {
-      "name": "Debug Tests",
-      "program": "${workspaceRoot}/beenion-core/node_modules/jest/bin/jest",
-      "stopOnEntry": false,
-      "args": ["-i", "--runInBand", "--env", "jest-environment-node-debug"],
-      "cwd": "${workspaceRoot}",
-      "preLaunchTask": "tsc",
-      "env": {
-          "NODE_ENV": "development"
-      },
+      "name": "Current TS File",
       "type": "node",
       "request": "launch",
-      "runtimeArgs": [
-          "--inspect-brk"
-      ],
+      "program": "${workspaceRoot}/backend/node_modules/ts-node/dist/bin.js",
+      "args": ["${relativeFile}"],
+      "cwd": "${workspaceRoot}",
       "protocol": "inspector",
-      "console": "integratedTerminal"
+      "internalConsoleOptions": "openOnSessionStart"
     }
   ]
 }
