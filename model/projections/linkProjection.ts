@@ -1,5 +1,14 @@
 import { Event } from '../eventTypes'
-import { Link } from '../link/link'
+
+type Link = {
+  linkId?: string
+  userId?: string
+  url?: string
+  title?: string
+  image?: string
+  rating?: number
+  tags: string[]
+}
 
 export function linkProjection(events: Event[]): Link {
   return events.reduce(
@@ -31,16 +40,10 @@ export function linkProjection(events: Event[]): Link {
             rating: e.payload.rating
           }
         }
-        case 'LINK_TAG_ADDED': {
+        case 'LINK_TAGGED': {
           return {
             ...link,
-            tags: [...link.tags, e.payload.tag]
-          }
-        }
-        case 'LINK_TAG_REMOVED': {
-          return {
-            ...link,
-            tags: link.tags.filter(tag => tag !== e.payload.tag)
+            tags: e.payload.tags
           }
         }
         default:

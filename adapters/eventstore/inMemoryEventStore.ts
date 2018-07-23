@@ -1,17 +1,29 @@
-import { EventStore } from './types'
-import { Event } from '../../model/types'
+import { EventStore, GetByIdOptions } from './eventStore'
 import { validateEvents } from '../../model/eventSchema'
+import { Event } from '../../model/eventTypes'
 
 let streams = {}
+let allEvents = []
 
 export const inMemoryEventStore: EventStore = {
-  getById: (id: string) =>
+  getById: (id: string, options: GetByIdOptions = {}) =>
     new Promise((resolve, reject) => {
       if (streams[id]) {
         resolve(streams[id])
       } else {
-        reject(`stream with id ${id} not found`)
+        if (options.emptyArrOn404) {
+          return resolve([])
+        }
+        reject({
+          statusCode: 404,
+          message: `stream with id ${id} not found`
+        })
       }
+    }),
+
+  getByTimestamp: (timestamp: number) =>
+    new Promise((resolve, reject) => {
+      resolve(allEvents.filter(e => e.timestamp > timestamp))
     }),
 
   save: (params: {
@@ -25,10 +37,12 @@ export const inMemoryEventStore: EventStore = {
           ? global['testTimestamp']
           : Date.now()
 
-      const eventsWithTimestamp = params.events.map(e => ({
-        ...e,
-        timestamp: e.timestamp || timestamp
-      }))
+      const eventsWithTimestamp = params.events
+        .filter(e => e !== undefined)
+        .map(e => ({
+          ...e,
+          timestamp: e.timestamp || timestamp
+        }))
 
       const error = validateEvents(eventsWithTimestamp)
       if (error) {
@@ -47,6 +61,8 @@ export const inMemoryEventStore: EventStore = {
         ...streams[params.streamId],
         ...eventsWithTimestamp
       ]
+
+      allEvents = [...allEvents, ...eventsWithTimestamp]
 
       resolve({
         id: params.streamId

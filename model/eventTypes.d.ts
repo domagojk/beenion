@@ -23,15 +23,10 @@ export type Events = {
     linkId: string
     rating: number
   }
-  LINK_TAG_ADDED: {
+  LINK_TAGGED: {
     userId: string
     linkId: string
-    tag: string
-  }
-  LINK_TAG_REMOVED: {
-    userId: string
-    linkId: string
-    tag: string
+    tags: string[]
   }
   LINK_TITLE_UPDATED: {
     userId: string
