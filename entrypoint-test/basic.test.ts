@@ -1,4 +1,4 @@
-import { inMemoryEventStore as eventStore } from '../adapters/eventstore/inMemoryEventStore'
+import { inMemoryEventStore as eventStore } from '../adapters/eventstore/inMemory/inMemoryEventStore'
 import { linkCommandHandlers } from '../commandHandlers/link'
 import { getLinkId } from '../model/getLinkId'
 
