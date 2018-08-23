@@ -1,18 +1,14 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
     "target": "es6",
+    "sourceMap": true,
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "outDir": ".build",
     "rootDir": "./",
-    "lib": [
-      "esnext.asynciterable",
-      "dom",
-      "es2017"
-    ]
+    "lib": ["esnext.asynciterable", "dom", "es2017"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

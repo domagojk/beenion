@@ -30,7 +30,8 @@
     "aws-sdk": "^2.275.1",
     "getstream": "^3.19.0",
     "joi": "^13.4.0",
-    "md5": "^2.2.1"
+    "md5": "^2.2.1",
+    "serverless-plugin-typescript": "^1.1.5"
   },
   "devDependencies": {
     "@types/jest": "^23.1.6",
@@ -38,8 +39,10 @@
     "@types/md5": "^2.1.32",
     "@types/node": "^10.5.2",
     "jest": "^23.4.1",
+    "serverless": "^1.29.1",
+    "serverless-plugin-optimize": "^3.1.1-rc.1",
     "ts-jest": "^23.0.0",
     "ts-node": "^7.0.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.0.1"
   }
 }

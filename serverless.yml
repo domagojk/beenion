@@ -1,0 +1,57 @@
+service:
+  name: main-api
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-optimize
+
+provider:
+  stage: ${opt:stage, "dev"}
+  name: aws
+  region: us-east-1
+  runtime: nodejs8.10
+  environment:
+    STAGE: ${opt:stage, self:provider.stage}
+    REGION: ${opt:region, self:provider.region}
+    EVENT_NOTIFICATION_TOPIC_ARN: arn:aws:sns:us-east-1:798099338267:event_created
+    EVENTSTORE_TABLE: eventstore
+    EVENTSTORE_TABLE_REGION: us-east-1
+    GETSTREAM_KEY: yure5t5apfsn
+    GETSTREAM_APPID: '38917'
+    GETSTREAM_SECRET: 4cdccdjdptcm4js2u8h5geeqe4yhf6y27xqwrq5gjt2khg8pd3sz5q3guncah2fx
+    EVENT_HANDLER_STATUS_TABLE: projection_status
+    EVENT_HANDLER_STATUS_REGION: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.environment.EVENTSTORE_TABLE_REGION}:*:table/${self:provider.environment.EVENTSTORE_TABLE}"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.environment.EVENTSTORE_TABLE_REGION}:*:table/${self:provider.environment.EVENTSTORE_TABLE}/*"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.environment.EVENT_HANDLER_STATUS_REGION}:*:table/${self:provider.environment.EVENT_HANDLER_STATUS_TABLE}"
+    - Effect: Allow
+      Action:
+        - SNS:Publish
+      Resource: ${self:provider.environment.EVENT_NOTIFICATION_TOPIC_ARN}
+
+functions:
+  dynamoStreamToSNS:
+    handler: adapters/eventstore/aws/lambda-dynamoStreamToSNS.dynamoStreamToSNS
+    events:
+      - stream: arn:aws:dynamodb:us-east-1:798099338267:table/eventstore/stream/2018-08-13T12:58:48.686
+
+  SNStoEventHandlers:
+    handler: eventHandlers/lambda-SNStoEventHandlers.handler
+    events:
+      - sns: event_created
