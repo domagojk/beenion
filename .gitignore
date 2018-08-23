@@ -3,6 +3,8 @@ beenion-access-rank
 .vscode/chrome
 /private-notes
 
+.serverless
+.build
 .DS_Store
 .env.local
 .env.development.local

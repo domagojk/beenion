@@ -8,20 +8,32 @@
       "type": "node",
       "request": "launch",
       "name": "Jest Current File",
-      "program": "${workspaceFolder}/backend/node_modules/jest/bin/jest",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       "args": ["${relativeFile}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
+    // {
+    //   "name": "Current TS File",
+    //   "type": "node",
+    //   "request": "launch",
+    //   "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+    //   "args": ["${relativeFile}"],
+    //   "cwd": "${workspaceRoot}",
+    //   "protocol": "inspector",
+    //   "internalConsoleOptions": "openOnSessionStart"
+    // },
     {
-      "name": "Current TS File",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceRoot}/backend/node_modules/ts-node/dist/bin.js",
-      "args": ["${relativeFile}"],
-      "cwd": "${workspaceRoot}",
+      "name": "Current TS File",
+      "preLaunchTask": "typescript",
+      "program": "${workspaceFolder}/${relativeFile}",
+      "cwd": "${workspaceFolder}",
       "protocol": "inspector",
-      "internalConsoleOptions": "openOnSessionStart"
+      "outFiles": [
+        "${workspaceFolder}/.build/**/*.js"
+      ]
     }
   ]
 }
