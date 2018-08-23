@@ -1,6 +1,6 @@
-import { EventStore, GetByIdOptions } from './eventStore'
-import { validateEvents } from '../../model/eventSchema'
-import { Event } from '../../model/eventTypes'
+import { EventStore, GetByIdOptions } from '../eventStore'
+import { validateEvents } from '../../../model/eventSchema'
+import { Event } from '../../../model/eventTypes'
 
 let streams = {}
 let allEvents = []

@@ -1,11 +1,11 @@
 import { DynamoDB } from 'aws-sdk'
-import { EventStore, GetByIdOptions } from './eventStore'
-import { conflictError, notFoundError } from '../../model/errors'
-import { validateEvents } from '../../model/eventSchema'
-import { Event } from '../../model/eventTypes'
+import { EventStore, GetByIdOptions } from '../eventStore'
+import { conflictError, notFoundError } from '../../../model/errors'
+import { validateEvents } from '../../../model/eventSchema'
+import { Event } from '../../../model/eventTypes'
 
-const region = process.env.EVENTSTORE_TABLE_REGION || 'eu-west-1'
-const esTable = process.env.EVENTSTORE_TABLE
+const region = process.env.EVENTSTORE_TABLE_REGION || 'us-east-1'
+const esTable = process.env.EVENTSTORE_TABLE || 'eventstore'
 
 const dynamoClient = new DynamoDB.DocumentClient({ region })
 
@@ -66,7 +66,7 @@ export const dynamoDbEventStore: EventStore = {
         : timestamp
 
     const eventsWithTimestamp = params.events
-      .filter(e => e !== undefined)
+      .filter(e => !!e)
       .map(e => ({
         ...e,
         timestamp: e.timestamp || eventTimestamp
