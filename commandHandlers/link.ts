@@ -4,6 +4,7 @@ import { EventStore } from '../adapters/eventstore/eventStore'
 import { inputValidationError } from '../model/errors'
 import { getLinkId } from '../model/getLinkId'
 import { isValidRating } from '../model/invariants/isValidRating'
+import { dynamoDbEventStore as eventStore } from '../adapters/eventstore/aws/dynamoDbEventStore'
 
 type RateLink = {
   linkUrl?: string
@@ -84,4 +85,16 @@ export const linkCommandHandlers = (
       expectedVersion: linkEvents.length
     })
   }
+})
+
+
+const link = linkCommandHandlers(eventStore, {
+  userId: 'userTest1'
+})
+link.rate({
+  image: 'testimg',
+  linkUrl: 'http://www.google9.com',
+  rating: 91,
+  tags: ['aa', 'nn'],
+  title: 'test link 2'
 })
