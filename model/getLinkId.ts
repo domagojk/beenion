@@ -1,4 +1,4 @@
-import * as md5 from 'md5'
+import md5 from 'md5'
 import { UserData } from './userdata'
 
 export function getLinkId(user: UserData, linkUrl: string) {

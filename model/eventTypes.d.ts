@@ -55,6 +55,10 @@ export type Events = {
     followedUserId: string
     followedUserRating: number
   }
+  USER_RATING_ORDER_DEFINED: {
+    userId: string
+    followedUserIds: string[]
+  }
 }
 
 type ConvertObjectToUnion<Obj extends object> = Obj[keyof Obj]
