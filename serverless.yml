@@ -16,9 +16,6 @@ provider:
     EVENT_NOTIFICATION_TOPIC_ARN: arn:aws:sns:us-east-1:798099338267:event_created
     EVENTSTORE_TABLE: eventstore
     EVENTSTORE_TABLE_REGION: us-east-1
-    GETSTREAM_KEY: yure5t5apfsn
-    GETSTREAM_APPID: '38917'
-    GETSTREAM_SECRET: 4cdccdjdptcm4js2u8h5geeqe4yhf6y27xqwrq5gjt2khg8pd3sz5q3guncah2fx
     EVENT_HANDLER_STATUS_TABLE: projection_status
     EVENT_HANDLER_STATUS_REGION: us-east-1
   iamRoleStatements:

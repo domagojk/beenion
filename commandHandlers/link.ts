@@ -1,10 +1,7 @@
-import * as Joi from 'joi'
 import { UserData } from '../model/userdata'
-import { EventStore } from '../adapters/eventstore/eventStore'
-import { inputValidationError } from '../model/errors'
 import { getLinkId } from '../model/getLinkId'
 import { isValidRating } from '../model/invariants/isValidRating'
-import { dynamoDbEventStore as eventStore } from '../adapters/eventstore/aws/dynamoDbEventStore'
+import { EventStore } from '../databases/eventstore/eventStore'
 
 type RateLink = {
   linkUrl?: string
@@ -19,23 +16,10 @@ export const linkCommandHandlers = (
   user: UserData
 ) => ({
   rate: async (params: RateLink) => {
-    const { error } = Joi.validate(
-      params,
-      Joi.object({
-        linkUrl: Joi.string(),
-        title: Joi.string(),
-        rating: Joi.number(),
-        image: Joi.string(),
-        tags: Joi.array().items(Joi.string())
-      })
-    )
-
-    if (error) {
-      throw inputValidationError(error)
-    }
-
     const linkId = getLinkId(user, params.linkUrl)
-    const linkEvents = await eventStore.getById(linkId, { emptyArrOn404: true })
+    const linkEvents = await eventStore.getById(linkId, {
+      returnEmptyArrOn404: true
+    })
 
     return eventStore.save({
       events: [
@@ -85,16 +69,4 @@ export const linkCommandHandlers = (
       expectedVersion: linkEvents.length
     })
   }
-})
-
-
-const link = linkCommandHandlers(eventStore, {
-  userId: 'userTest1'
-})
-link.rate({
-  image: 'testimg',
-  linkUrl: 'http://www.google9.com',
-  rating: 91,
-  tags: ['aa', 'nn'],
-  title: 'test link 2'
 })

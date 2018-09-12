@@ -49,6 +49,12 @@ const eventSchema: EventSchema<Events> = {
     userId: Joi.string().required(),
     followedUserId: Joi.string().required(),
     followedUserRating: Joi.number().required()
+  },
+  USER_RATING_ORDER_DEFINED: {
+    followedUserIds: Joi.array()
+      .items(Joi.string())
+      .required(),
+    userId: Joi.string().required()
   }
 }
 

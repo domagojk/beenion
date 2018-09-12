@@ -1,4 +1,4 @@
-import { dynamoDbEventStore as eventStore } from '../adapters/eventstore/aws/dynamoDbEventStore'
+/*import { dynamoDbEventStore as eventStore } from '../adapters/eventstore/aws/dynamoDbEventStore'
 
 eventStore.save({
   events: [
@@ -13,3 +13,4 @@ eventStore.save({
   streamId: '5testUser1',
   expectedVersion: 0
 })
+*/
