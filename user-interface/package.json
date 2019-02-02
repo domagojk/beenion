@@ -28,7 +28,7 @@
     "@types/react-hot-loader": "^3.0.5",
     "@types/react-router": "^4.0.16",
     "convert-tsconfig-paths-to-webpack-aliases": "^0.9.2",
-    "serve": "^6.1.0",
+    "serve": ">=7.0.0",
     "ts-loader": "^3.1.0",
     "tslint": "^5.8.0",
     "tslint-config-standard": "^7.0.0",
