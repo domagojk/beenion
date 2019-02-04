@@ -1,0 +1,131 @@
+service:
+  name: api
+
+plugins:
+  - serverless-plugin-typescript
+
+provider:
+  stage: ${opt:stage, "dev"}
+  name: aws
+  region: us-east-1
+  runtime: nodejs8.10
+  versionFunctions: false
+  environment:
+    STAGE: ${opt:stage, self:provider.stage}
+    REGION: ${opt:region, self:provider.region}
+    POOL_ID: us-east-1_rMmQ4QHt7
+    EVENTSTORE_TABLE: eventstore
+    LINKS_TABLE: links
+    GETSTREAM_KEY: yure5t5apfsn
+    GETSTREAM_APPID: '38917'
+    GETSTREAM_SECRET: ${ssm:getstreamSecret}
+    SQS_URL_PREFIX: https://sqs.us-east-1.amazonaws.com/798099338267/
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource:
+        - 'arn:aws:dynamodb:us-east-1:*:table/${self:provider.environment.EVENTSTORE_TABLE}'
+        - 'arn:aws:dynamodb:us-east-1:*:table/${self:provider.environment.EVENTSTORE_TABLE}/*'
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+      Resource:
+        - 'arn:aws:dynamodb:us-east-1:*:table/${self:provider.environment.LINKS_TABLE}'
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource: arn:aws:sqs:us-east-1:798099338267:*
+    - Effect: Allow
+      Action:
+        - cognito-idp:ListUsers
+        - cognito-idp:AdminGetUser
+      Resource: arn:aws:cognito-idp:us-east-1:798099338267:userpool/*
+functions:
+  auth:
+    handler: infrastructure/authentication/authorizer.handler
+  ec2ToEventHandlers: #should be renamed to lambdaToEventHandlers
+    handler: infrastructure/eventHandlers/lambda/lambdaToEventHandlers.handler
+  dynamoStreamToSQS:
+    handler: infrastructure/eventHandlers/dynamodbStream/dynamoStreamToSQS.handler
+    events:
+      - stream: arn:aws:dynamodb:us-east-1:798099338267:table/eventstore/stream/2018-10-07T22:30:01.148
+  getFeed:
+    handler: ports/http-query/getFeed.handler
+    events:
+      - http:
+          cors: true
+          path: feed
+          method: get
+          authorizer: auth
+  getFeedPerUser:
+    handler: ports/http-query/getFeedPerUser.handler
+    events:
+      - http:
+          cors: true
+          path: userfeed/{username}
+          method: get
+  getLinkRatings:
+    handler: ports/http-query/getLinkRatings.handler
+    events:
+      - http:
+          cors: true
+          path: linkratings
+          method: get
+  checkLast:
+    handler: ports/http-query/checkLast.handler
+    events:
+      - http:
+          cors: true
+          path: checklast
+          method: get
+          authorizer: auth
+  listUsers:
+    handler: ports/http-query/listUsers.handler
+    events:
+      - http:
+          cors: true
+          path: listUsers
+          method: get
+          authorizer: auth
+  getUserData:
+    handler: ports/http-query/getUserData.handler
+    events:
+      - http:
+          cors: true
+          path: getUserData
+          method: get
+          authorizer: auth
+  linkCommand:
+    handler: ports/http-command/linkCommand.handler
+    events:
+      - http:
+          cors: true
+          path: linkCommand
+          method: post
+          authorizer: auth
+  userCommand:
+    handler: ports/http-command/userCommand.handler
+    events:
+      - http:
+          cors: true
+          path: userCommand
+          method: post
+          authorizer: auth
+  postConfirm:
+    handler: infrastructure/authentication/postConfirm.handler
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+          gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
