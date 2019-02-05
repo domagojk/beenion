@@ -1,5 +1,5 @@
 import { EventStore, GetByIdOptions } from './eventStore'
-import { validateEvents } from '../../../model/eventSchema'
+import { validateEvents } from './eventSchema'
 import { Event } from '../../../model/eventTypes'
 
 let streams = {}

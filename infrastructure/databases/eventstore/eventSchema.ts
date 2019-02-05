@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { Event, Events } from './eventTypes'
+import { Event, Events } from '../../../model/eventTypes'
 
 type EventSchema<Events> = {
   [Event in keyof Events]: { [Prop in keyof Events[Event]]: Joi.AnySchema }

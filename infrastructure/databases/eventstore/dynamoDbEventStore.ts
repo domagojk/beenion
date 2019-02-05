@@ -1,6 +1,6 @@
 import { DynamoDB } from 'aws-sdk'
 import { EventStore, GetByIdOptions } from './eventStore'
-import { validateEvents } from '../../../model/eventSchema'
+import { validateEvents } from './eventSchema'
 import { Event } from '../../../model/eventTypes'
 import { getSyncTime } from './getSyncTime'
 
