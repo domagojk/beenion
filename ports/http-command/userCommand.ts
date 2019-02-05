@@ -4,7 +4,7 @@ import { dynamoDbEventStore } from '../../infrastructure/databases/eventstore/dy
 import { getUserId } from '../../infrastructure/authentication/getUserId'
 import { makeResponse } from '../../infrastructure/http/makeResponse'
 import { parseObject } from '../../infrastructure/http/parseEventBody'
-import { userCommandHandlers } from '../../application/user/user'
+import { userCommandHandlers } from '../../application/user'
 
 export const handler = async (event, context, cb) => {
   const userId = getUserId(event)

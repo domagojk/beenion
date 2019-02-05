@@ -1,6 +1,6 @@
 import { linkCommandHandlers } from './link'
-import { getLinkId } from '../../model/getLinkId'
-import { inMemoryEventStore } from '../../infrastructure/databases/eventstore/inMemoryEventStore'
+import { getLinkId } from '../model/getLinkId'
+import { inMemoryEventStore } from '../infrastructure/databases/eventstore/inMemoryEventStore'
 
 const link = linkCommandHandlers(inMemoryEventStore, 'test-user')
 

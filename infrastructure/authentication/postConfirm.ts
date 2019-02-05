@@ -1,5 +1,5 @@
 import { dynamoDbEventStore } from '../databases/eventstore/dynamoDbEventStore'
-import { userCommandHandlers } from '../../application/user/user'
+import { userCommandHandlers } from '../../application/user'
 
 export const handler = (event, context, cb) => {
   userCommandHandlers(dynamoDbEventStore, event.request.userAttributes.sub)

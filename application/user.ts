@@ -1,8 +1,8 @@
-import { EventStore } from '../../infrastructure/databases/eventstore/eventStore'
-import { userApi } from '../../infrastructure/databases/users/userApi'
-import { userFollowingReducer } from '../../model/user/reducers/userFollowingReducer'
-import { follow } from '../../model/user/command/follow'
-import { unfollow } from '../../model/user/command/unfollow'
+import { EventStore } from '../infrastructure/databases/eventstore/eventStore'
+import { userApi } from '../infrastructure/databases/users/userApi'
+import { userFollowingReducer } from '../model/user/reducers/userFollowingReducer'
+import { follow } from '../model/user/command/follow'
+import { unfollow } from '../model/user/command/unfollow'
 
 export const userCommandHandlers = (
   eventStore: EventStore,

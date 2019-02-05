@@ -1,7 +1,7 @@
-import { getLinkId } from '../../model/getLinkId'
-import { EventStore } from '../../infrastructure/databases/eventstore/eventStore'
-import { linkReducer } from '../../model/link/reducers/linkReducer'
-import { rate } from '../../model/link/command/rate'
+import { getLinkId } from '../model/getLinkId'
+import { EventStore } from '../infrastructure/databases/eventstore/eventStore'
+import { linkReducer } from '../model/link/reducers/linkReducer'
+import { rate } from '../model/link/command/rate'
 
 export const linkCommandHandlers = (
   eventStore: EventStore,
