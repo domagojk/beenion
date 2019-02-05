@@ -1,4 +1,4 @@
-import { getLinkId } from '../model/getLinkId'
+import { getLinkId } from '../model/link/getLinkId'
 import { EventStore } from '../infrastructure/databases/eventstore/eventStore'
 import { linkReducer } from '../model/link/reducers/linkReducer'
 import { rate } from '../model/link/command/rate'
