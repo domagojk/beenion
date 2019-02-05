@@ -1,5 +1,5 @@
 import { Link } from '../reducers/linkReducer'
-import { validationError } from '../../errors'
+import { DomainError } from '../../DomainError'
 import { Event } from '../../eventTypes'
 
 type Params = {
@@ -73,7 +73,7 @@ export function rate(params: Params): Event[] {
 
 function isValidRating(rating: number) {
   if (rating < 0 || rating > 100) {
-    throw validationError('rating must be in 0-100 range')
+    throw new DomainError('rating must be in 0-100 range')
   }
 
   return true

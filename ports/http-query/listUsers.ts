@@ -1,13 +1,13 @@
 import 'source-map-support/register'
 import { getUserId } from '../../infrastructure/authentication/getUserId'
-import { makeResponse } from '../../infrastructure/http/makeResponse'
 import { userApi } from '../../infrastructure/databases/users/userApi'
+import { makeErrorResponse, makeSuccessResponse } from '../../infrastructure/http/makeResponse'
 
 export const handler = (event, context, cb) => {
   const userId = getUserId(event)
 
   if (!userId) {
-    return cb(null, makeResponse(401, 'access denied'))
+    return cb(null, makeErrorResponse(401, 'access denied'))
   }
 
   return userApi
@@ -22,15 +22,6 @@ export const handler = (event, context, cb) => {
         )
         .map(user => user.Username)
     })
-    .then(users => cb(null, makeResponse(200, users)))
-    .catch(err => {
-      console.error(err)
-      cb(
-        null,
-        makeResponse(err.statusCode || 500, {
-          message: err.message,
-          errorCode: err.code
-        })
-      )
-    })
+    .then(res => cb(null, makeSuccessResponse(res)))
+    .catch(err => cb(null, makeErrorResponse(err)))
 }

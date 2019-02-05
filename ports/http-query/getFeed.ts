@@ -1,9 +1,12 @@
 import 'source-map-support/register'
 import { getUserId } from '../../infrastructure/authentication/getUserId'
-import { makeResponse } from '../../infrastructure/http/makeResponse'
 import stream from 'getstream'
 import md5 from 'md5'
 import { userApi } from '../../infrastructure/databases/users/userApi'
+import {
+  makeErrorResponse,
+  makeSuccessResponse
+} from '../../infrastructure/http/makeResponse'
 
 const getStreamClient = stream.connect(
   process.env.GETSTREAM_KEY,
@@ -28,7 +31,7 @@ export const handler = async (event, context, cb) => {
   const userId = getUserId(event)
 
   if (!userId) {
-    return cb(null, makeResponse(401, 'access denied'))
+    return cb(null, makeErrorResponse(401, 'access denied'))
   }
 
   const getFeed = async () => {
@@ -70,15 +73,6 @@ export const handler = async (event, context, cb) => {
         }
       )
     })
-    .then(data => cb(null, makeResponse(200, data)))
-    .catch(err => {
-      console.error(err)
-      cb(
-        null,
-        makeResponse(err.statusCode || 500, {
-          message: err.message,
-          errorCode: err.code
-        })
-      )
-    })
+    .then(res => cb(null, makeSuccessResponse(res)))
+    .catch(err => cb(null, makeErrorResponse(err)))
 }

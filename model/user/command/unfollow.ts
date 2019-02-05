@@ -1,4 +1,4 @@
-import { validationError } from '../../errors'
+import { DomainError } from '../../DomainError'
 import { Event } from '../../eventTypes'
 import { UserFollowing } from '../reducers/userFollowingReducer'
 
@@ -14,7 +14,7 @@ export function unfollow({
   userId
 }: Params): Event[] {
   if (!userFollowers[unfollowedUserId]) {
-    throw validationError('user already unfollowed')
+    throw new DomainError('user already unfollowed')
   }
 
   return [

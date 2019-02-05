@@ -1,4 +1,4 @@
-import { validationError } from '../../errors'
+import { DomainError } from '../../DomainError'
 import { Event } from '../../eventTypes'
 import { UserFollowing } from '../reducers/userFollowingReducer'
 
@@ -14,7 +14,7 @@ export function follow({
   userId
 }: Params): Event[] {
   if (userFollowers[followUserId]) {
-    throw validationError('user already followed')
+    throw new DomainError('user already followed')
   }
 
   return [

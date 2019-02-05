@@ -1,6 +1,9 @@
 import 'source-map-support/register'
 import { DynamoDB } from 'aws-sdk'
-import { makeResponse } from '../../infrastructure/http/makeResponse'
+import {
+  makeErrorResponse,
+  makeSuccessResponse
+} from '../../infrastructure/http/makeResponse'
 
 const region = process.env.REGION || 'us-east-1'
 const linksTable = process.env.LINKS_TABLE || 'links'
@@ -8,13 +11,7 @@ const dynamoClient = new DynamoDB.DocumentClient({ region })
 
 export const handler = async (event, context, cb) => {
   if (!event.queryStringParameters || !event.queryStringParameters.linkHash) {
-    return cb(
-      null,
-      makeResponse(404, {
-        message: 'link not found',
-        errorCode: 404
-      })
-    )
+    return cb(null, makeErrorResponse(404, 'link not found'))
   }
 
   const linkHash = event.queryStringParameters.linkHash
@@ -32,25 +29,12 @@ export const handler = async (event, context, cb) => {
     })
     .then(data => {
       if (!data) {
-        return cb(
-          null,
-          makeResponse(404, {
-            message: 'link not found',
-            errorCode: 404
-          })
-        )
+        return cb(null, makeErrorResponse(404, 'link not found'))
       } else {
-        return cb(null, makeResponse(200, data))
+        return cb(null, makeSuccessResponse(data))
       }
     })
     .catch(err => {
-      console.error(err)
-      cb(
-        null,
-        makeResponse(err.statusCode || 500, {
-          message: err.message,
-          errorCode: err.code
-        })
-      )
+      cb(null, makeErrorResponse(err))
     })
 }

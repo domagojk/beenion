@@ -1,9 +1,12 @@
 import 'source-map-support/register'
 import { getUserId } from '../../infrastructure/authentication/getUserId'
-import { makeResponse } from '../../infrastructure/http/makeResponse'
 import { dynamoDbEventStore } from '../../infrastructure/databases/eventstore/dynamoDbEventStore'
 import { userApi } from '../../infrastructure/databases/users/userApi'
 import { getUserFollowers } from '../../model/user/reducers/userFollowingArrReducer'
+import {
+  makeErrorResponse,
+  makeSuccessResponse
+} from '../../infrastructure/http/makeResponse'
 
 let userIdUsernameCache = {}
 
@@ -14,10 +17,10 @@ async function getUsername(userId) {
     let username = ''
     try {
       username = await userApi.getUsernameByUserId(userId)
-    } catch(err) {
+    } catch (err) {
       username = 'unknown'
     }
-    
+
     userIdUsernameCache[userId] = username
     return username
   }
@@ -27,7 +30,7 @@ export const handler = (event, context, cb) => {
   const userId = getUserId(event)
 
   if (!userId) {
-    return cb(null, makeResponse(401, 'access denied'))
+    return cb(null, makeErrorResponse(401, 'access denied'))
   }
 
   return dynamoDbEventStore
@@ -38,15 +41,6 @@ export const handler = (event, context, cb) => {
     .then(users => {
       return Promise.all(users.map(userId => getUsername(userId)))
     })
-    .then(users => cb(null, makeResponse(200, { following: users })))
-    .catch(err => {
-      console.error(err)
-      cb(
-        null,
-        makeResponse(err.statusCode || 500, {
-          message: err.message,
-          errorCode: err.code
-        })
-      )
-    })
+    .then(users => cb(null, makeSuccessResponse({ following: users })))
+    .catch(err => cb(null, makeErrorResponse(err)))
 }

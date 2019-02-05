@@ -1,6 +1,5 @@
 import { DynamoDB } from 'aws-sdk'
 import { EventStore, GetByIdOptions } from './eventStore'
-import { conflictError, notFoundError } from '../../../model/errors'
 import { validateEvents } from '../../../model/eventSchema'
 import { Event } from '../../../model/eventTypes'
 import { getSyncTime } from './getSyncTime'
@@ -36,11 +35,9 @@ export const dynamoDbEventStore: EventStore = {
         if (options.returnEmptyArrOn404) {
           return []
         }
-        throw notFoundError({
-          id,
-          options,
-          message: 'resource not found'
-        })
+        const notFoundError = new Error('resource not found')
+        notFoundError['statusCode'] = 404
+        throw notFoundError
       }
       return flat(res.Items.map(item => JSON.parse(item.events)))
     })
@@ -122,10 +119,9 @@ export const dynamoDbEventStore: EventStore = {
       }
     }).then(res => {
       if (res.Count === 0) {
-        throw notFoundError({
-          id,
-          message: 'resource not found'
-        })
+        const notFoundError = new Error('resource not found')
+        notFoundError['statusCode'] = 404
+        throw notFoundError
       }
       return flat(
         res.Items.map(item =>
@@ -237,10 +233,8 @@ export const dynamoDbEventStore: EventStore = {
         })
         .catch(err => {
           if (err.name === 'ConditionalCheckFailedException') {
-            throw conflictError({
-              ...params,
-              message: 'A commit already exists with the specified version'
-            })
+            const conflictError = new Error('A commit already exists with the specified version')
+            conflictError['statusCode'] = 409
           }
 
           throw err
