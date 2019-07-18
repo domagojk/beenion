@@ -1,11 +1,11 @@
 import sqsConsumer from 'sqs-consumer'
 import { Lambda } from 'aws-sdk'
+// Note: Queue URLS need to be in process.env
 import { sqsEventHandlerQueues } from '../sqsEventHandlerQueues'
 import { dynamoDbEventStore } from '../../databases/eventstore/dynamoDbEventStore'
 
 const eventHandlerLambda = 'api-dev-ec2ToEventHandlers'
-const region = process.env.REGION || 'us-east-1'
-const lambda = new Lambda({ region })
+const lambda = new Lambda()
 
 function invokeEventHandlers(
   message: {
@@ -44,14 +44,15 @@ function invokeEventHandlers(
     })
 }
 
-sqsEventHandlerQueues.map(queueName => {
-  console.log('starting sqs pool on', queueName)
+sqsEventHandlerQueues.map(queueUrl => {
+  const queueDisplay = queueUrl.split('/').slice(-1)[0];
+  console.log('starting sqs pool on', queueDisplay)
   const app = sqsConsumer.create({
-    queueUrl: 'https://sqs.us-east-1.amazonaws.com/798099338267/' + queueName,
+    queueUrl,
     handleMessage: (res, done) => {
       const message = JSON.parse(res.Body)
       console.log('got', message)
-      return invokeEventHandlers(message, queueName)
+      return invokeEventHandlers(message, queueUrl)
         .then(() => {
           console.log('done', message.streamId, message.version)
           done()
@@ -64,7 +65,7 @@ sqsEventHandlerQueues.map(queueName => {
   })
 
   app.on('error', err => {
-    console.log(queueName, err.message)
+    console.log(queueUrl, err.message)
   })
 
   app.start()
