@@ -9,6 +9,7 @@ provider:
   name: aws
   region: us-east-1
   runtime: nodejs8.10
+  timeout: 30
   versionFunctions: false
   environment:
     STAGE: ${opt:stage, self:provider.stage}
