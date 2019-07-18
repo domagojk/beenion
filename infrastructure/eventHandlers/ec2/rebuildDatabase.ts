@@ -1,5 +1,5 @@
 import { dynamoDbEventStore } from '../../databases/eventstore/dynamoDbEventStore'
-// import { linkDetailsProjection } from '../../../ports/eventHandlers/projection-linkdetails/linkDetailsProjection'
+import { linkDetailsProjection } from '../../../ports/eventHandlers/projection-linkdetails/linkDetailsProjection'
 
 async function rebuild(timestamp) {
   const firstQuery = await dynamoDbEventStore.getByTimestamp(timestamp)
@@ -11,7 +11,7 @@ async function rebuild(timestamp) {
     const res = await getEvent(eventIndex, commitIndex)
     if (res && res.event) {
       console.log('invoke for', res.event.type, res.event.timestamp)
-      // await linkDetailsProjection(res.event)
+      await linkDetailsProjection(res.event)
 
       iterate(getEvent)(res.nextEventIndex, res.nextCommitIndex)
     } else if (res && res.lastEvaluatedKey) {
