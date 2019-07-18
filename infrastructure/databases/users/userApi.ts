@@ -1,11 +1,8 @@
 import { CognitoIdentityServiceProvider } from 'aws-sdk'
 
-const poolId = process.env.POOL_ID || 'us-east-1_rMmQ4QHt7'
-const region = process.env.REGION || 'us-east-1'
+const poolId = process.env.POOL_ID
 
-var cognitoidentityserviceprovider = new CognitoIdentityServiceProvider({
-  region
-})
+var cognitoidentityserviceprovider = new CognitoIdentityServiceProvider()
 
 export const userApi = {
   getUserIdByUsername: (Username: string): Promise<any> => {

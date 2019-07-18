@@ -1,4 +1,4 @@
 export const sqsEventHandlerQueues = [
-  'eventhandler_getstream.fifo',
-  'eventHandler_cosmos.fifo'
+  process.env.GET_STREAM_QUEUE,
+  process.env.COSMOS_QUEUE
 ]
