@@ -1,9 +1,7 @@
 import { SQS } from 'aws-sdk'
 import { sqsEventHandlerQueues } from '../sqsEventHandlerQueues'
 
-const region = process.env.REGION
-const sqsUrlPrefix = process.env.SQS_URL_PREFIX
-const sqs = new SQS({ region })
+const sqs = new SQS()
 
 export const handler = (event, context, cb) => {
   if (!event.Records[0].dynamodb.NewImage) {
@@ -16,11 +14,11 @@ export const handler = (event, context, cb) => {
 
   return Promise.all(
     sqsEventHandlerQueues.map(
-      (queue): Promise<any> => {
+      (queueUrl): Promise<any> => {
         if (events.length == 1) {
           return sqs
             .sendMessage({
-              QueueUrl: sqsUrlPrefix + queue,
+              QueueUrl: queueUrl,
               MessageGroupId: 'domainevent',
               MessageBody: JSON.stringify({
                 streamId,
@@ -34,7 +32,7 @@ export const handler = (event, context, cb) => {
             createChunks(events, batchLength).map((batch, batchIndex) =>
               sqs
                 .sendMessageBatch({
-                  QueueUrl: sqsUrlPrefix + queue,
+                  QueueUrl: queueUrl,
                   Entries: createArray(batch.length).map(i => ({
                     Id: String(batchIndex * batchLength + i),
                     MessageGroupId: 'domainevent',

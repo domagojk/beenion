@@ -8,8 +8,8 @@ type Payload = {
 }
 
 const projections = {
-  'eventhandler_getstream.fifo': getStreamProjection,
-  'eventHandler_cosmos.fifo': linkDetailsProjection
+  [process.env.GETSTREAM_QUEUE]: getStreamProjection,
+  [process.env.COSMOS_QUEUE]: linkDetailsProjection
 }
 
 export const handler = (payload: Payload, context, cb) => {

@@ -3,9 +3,8 @@ import { DynamoDB } from 'aws-sdk'
 import md5 from 'md5'
 import { linkDetailsReducer, Link } from './linkDetailsReducer'
 
-const region = process.env.REGION || 'us-east-1'
-const linksTable = process.env.LINKS_TABLE || 'links'
-const dynamoClient = new DynamoDB.DocumentClient({ region })
+const linksTable = process.env.LINKS_TABLE
+const dynamoClient = new DynamoDB.DocumentClient()
 
 export async function linkDetailsProjection(e: Event): Promise<any> {
   if (

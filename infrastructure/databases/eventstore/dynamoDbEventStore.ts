@@ -4,12 +4,11 @@ import { Event } from '../../../model/eventTypes'
 import { getSyncTime } from './getSyncTime'
 import { Key } from 'aws-sdk/clients/dynamodb'
 
-const region = process.env.REGION || 'us-east-1'
-const esTable = process.env.EVENTSTORE_TABLE || 'eventstore'
+const esTable = process.env.EVENTSTORE_TABLE
 const SNAPSHOT_TABLE = 'getbyid-snapshots'
 const MAX_EVENTS_UNTIL_SAVED = 10
 
-const dynamoClient = new DynamoDB.DocumentClient({ region })
+const dynamoClient = new DynamoDB.DocumentClient()
 
 const emptyQueryRes = {
   Items: [],
