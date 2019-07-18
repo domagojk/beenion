@@ -1,4 +1,4 @@
-import { EventStore, GetByIdOptions } from './eventStore'
+import { EventStore } from './eventStore'
 import { validateEvents } from './eventSchema'
 import { Event } from '../../../model/eventTypes'
 
@@ -6,7 +6,7 @@ let streams = {}
 let allEvents = []
 
 export const inMemoryEventStore: EventStore = {
-  getById: (id: string, options: GetByIdOptions = {}) =>
+  getById: (id: string, options = {}) =>
     new Promise((resolve, reject) => {
       if (streams[id]) {
         resolve(streams[id])

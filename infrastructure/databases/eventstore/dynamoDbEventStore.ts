@@ -1,8 +1,8 @@
 import { DynamoDB } from 'aws-sdk'
-import { EventStore, GetByIdOptions } from './eventStore'
 import { validateEvents } from './eventSchema'
 import { Event } from '../../../model/eventTypes'
 import { getSyncTime } from './getSyncTime'
+import { Key } from 'aws-sdk/clients/dynamodb'
 
 const region = process.env.REGION || 'us-east-1'
 const esTable = process.env.EVENTSTORE_TABLE || 'eventstore'
@@ -17,7 +17,12 @@ const emptyQueryRes = {
   ScannedCount: 0
 }
 
-export const dynamoDbEventStore: EventStore = {
+type GetByIdOptions = {
+  version?: number
+  returnEmptyArrOn404?: boolean
+}
+
+export const dynamoDbEventStore = {
   getById: (id: string, options: GetByIdOptions = {}) => {
     if (!id) {
       throw new Error(`undefined "id" param in getById()`)
@@ -136,12 +141,12 @@ export const dynamoDbEventStore: EventStore = {
     })
   },
 
-  getByTimestamp: (timestamp: number) => {
-    let shouldContinueFrom = null
+  getByTimestamp: (timestamp: number, lastEvaluatedKey?: Key, active = 1) => {
     return dynamoClient
       .query({
         TableName: esTable,
         IndexName: 'active-committedAt-index',
+        ExclusiveStartKey: lastEvaluatedKey,
         KeyConditionExpression:
           'active = :active and committedAt >= :timestamp',
         ExpressionAttributeValues: {
@@ -151,36 +156,49 @@ export const dynamoDbEventStore: EventStore = {
       })
       .promise()
       .then(res => {
-        if (res.LastEvaluatedKey) {
-          const lastTimestamp = res.Items[res.Items.length - 1].committedAt
-          shouldContinueFrom = lastTimestamp + 1 // excluding last one
-        }
-        return res.Items
-      })
-      .then(items => {
-        let index = -1
-        let staged = []
+        const items = res.Items
+
         return {
-          getEvent: () => {
-            if (staged.length) {
-              return staged.shift()
-            }
-            index++
-            if (!items[index]) {
-              if (shouldContinueFrom) {
-                return dynamoDbEventStore.getByTimestamp(shouldContinueFrom)
+          getEvent: async (
+            eventIndex,
+            commitIndex
+          ): Promise<{
+            event: Event
+            nextEventIndex: number
+            nextCommitIndex: number
+            lastEvaluatedKey?: Key
+          }> => {
+            if (!items[eventIndex]) {
+              return {
+                event: null,
+                nextCommitIndex: 0,
+                nextEventIndex: 0,
+                lastEvaluatedKey: res.LastEvaluatedKey
               }
-              return null
             }
             return dynamoDbEventStore
               .getByIdAndVersion(
-                items[index].streamId,
-                items[index].version,
-                false
+                items[eventIndex].streamId,
+                items[eventIndex].version
               )
               .then(events => {
-                staged = events
-                return staged.shift()
+                if (events.length - 1 === commitIndex) {
+                  // is last event in commit
+                  return {
+                    event: events[commitIndex],
+                    nextCommitIndex: 0,
+                    nextEventIndex: eventIndex + 1,
+                    lastEvaluatedKey: res.LastEvaluatedKey
+                  }
+                } else {
+                  // has more events in commit
+                  return {
+                    event: events[commitIndex],
+                    nextCommitIndex: commitIndex + 1,
+                    nextEventIndex: eventIndex,
+                    lastEvaluatedKey: res.LastEvaluatedKey
+                  }
+                }
               })
           }
         }
@@ -233,7 +251,9 @@ export const dynamoDbEventStore: EventStore = {
         })
         .catch(err => {
           if (err.name === 'ConditionalCheckFailedException') {
-            const conflictError = new Error('A commit already exists with the specified version')
+            const conflictError = new Error(
+              'A commit already exists with the specified version'
+            )
             conflictError['statusCode'] = 409
           }
 
