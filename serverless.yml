@@ -29,7 +29,7 @@ provider:
     LINKS_TABLE: !Ref LinksTable
     GETSTREAM_QUEUE: !Ref GetStreamQueue 
     COSMOS_QUEUE: !Ref CosmosQueue
-    # Create this key in SSM with grestream.io secret
+    # Create this key in SSM with getstream.io secret
     GETSTREAM_SECRET: ${ssm:/${self:provider.application}/${self:provider.stage}/getstreamSecret}
   
   iamRoleStatements:
@@ -41,7 +41,6 @@ provider:
         - dynamodb:PutItem
       Resource:
         - !GetAtt EventStoreTable.Arn
-        # - !Join ['/', [!GetAtt EventStoreTable.Arn, '*']] #Stream permissions
     # Dynamp LinkTable Permissions    
     # Dynamo Caches
     - Effect: Allow
