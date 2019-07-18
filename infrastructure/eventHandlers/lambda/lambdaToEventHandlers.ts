@@ -8,7 +8,7 @@ type Payload = {
 }
 
 const projections = {
-  [process.env.GET_STREAM_QUEUE]: getStreamProjection,
+  [process.env.GETSTREAM_QUEUE]: getStreamProjection,
   [process.env.COSMOS_QUEUE]: linkDetailsProjection
 }
 

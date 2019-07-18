@@ -32,7 +32,7 @@ will create a cloudformation stack with lambda functions and other required AWS 
 
 The command and queries use a Cognito Api Gateway authorizer for authentication. A cognito user needs to be created in the user pool in order to test the apis.
 
-* Navigate to Cognito -> Manage User Pools -> beenion-dev (default name)
+* In the AWS console navigate to Cognito -> Manage User Pools -> beenion-dev (default name)
 * Take note of the following 
 
   - "Pool Id" under General Settings <POOL_ID>
