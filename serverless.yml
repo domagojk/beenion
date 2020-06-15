@@ -19,7 +19,7 @@ provider:
   stage: ${env:STAGE, "dev"}
   name: aws
   region: ${env:AWS_REGION, us-east-1}
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   timeout: 30
   versionFunctions: false
   variableSyntax: "\\${((?!AWS)[ ~:a-zA-Z0-9._'\",\\-\\/\\(\\)]+?)}"
@@ -27,11 +27,11 @@ provider:
   environment:
     EVENTSTORE_TABLE: !Ref EventStoreTable
     LINKS_TABLE: !Ref LinksTable
-    GETSTREAM_QUEUE: !Ref GetStreamQueue 
+    GETSTREAM_QUEUE: !Ref GetStreamQueue
     COSMOS_QUEUE: !Ref CosmosQueue
     # Create this key in SSM with getstream.io secret
     GETSTREAM_SECRET: ${ssm:/${self:provider.application}/${self:provider.stage}/getstreamSecret}
-  
+
   iamRoleStatements:
     # Dynamo Event Store Permissions
     - Effect: Allow
@@ -41,7 +41,7 @@ provider:
         - dynamodb:PutItem
       Resource:
         - !GetAtt EventStoreTable.Arn
-    # Dynamp LinkTable Permissions    
+    # Dynamp LinkTable Permissions
     # Dynamo Caches
     - Effect: Allow
       Action:
@@ -51,28 +51,28 @@ provider:
       Resource:
         - !GetAtt LinksTable.Arn
     # SQS Same Account
-    # Required by dynamo stream handler 
+    # Required by dynamo stream handler
     - Effect: Allow
       Action:
         - sqs:*
-      Resource: 
+      Resource:
         # Sub style prevents circular reference
         - !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:*
-      
+
     - Effect: Allow
       Action:
         - cognito-idp:ListUsers
         - cognito-idp:AdminGetUser
-      Resource: 
+      Resource:
         # Sub style prevents circular reference
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/*
-      
+
 functions:
-  
+
   # Invoke via lambda api from sqspoller.ts
   ec2ToEventHandlers: #should be renamed to lambdaToEventHandlers
     handler: infrastructure/eventHandlers/lambda/lambdaToEventHandlers.handler
-    
+
   dynamoStreamToSQS:
     handler: infrastructure/eventHandlers/dynamodbStream/dynamoStreamToSQS.handler
     description: 'Streams Dynamo EventStore Events to SQS FIFO queues'
@@ -83,11 +83,11 @@ functions:
           batchSize: 1 # TODO: Lambda Handler only looks at first Record
           enabled: true
           arn: !GetAtt EventStoreTable.StreamArn
-          
+
   # Query Handlers
   getFeed:
     handler: ports/http-query/getFeed.handler
-    environment:     
+    environment:
       POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
@@ -98,10 +98,10 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId: !Ref CognitoAuthorizer
 
-          
+
   getFeedPerUser:
     handler: ports/http-query/getFeedPerUser.handler
-    environment:     
+    environment:
       POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
@@ -110,12 +110,12 @@ functions:
           method: get
           authorizer:
             type: COGNITO_USER_POOLS
-            authorizerId: !Ref CognitoAuthorizer        
-              
+            authorizerId: !Ref CognitoAuthorizer
+
   getLinkRatings:
     handler: ports/http-query/getLinkRatings.handler
-    environment:     
-      POOL_ID: !Ref CognitoUserPoolBeenion    
+    environment:
+      POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
           cors: true
@@ -123,12 +123,12 @@ functions:
           method: get
           authorizer:
             type: COGNITO_USER_POOLS
-            authorizerId: !Ref CognitoAuthorizer  
-                    
+            authorizerId: !Ref CognitoAuthorizer
+
   checkLast:
     handler: ports/http-query/checkLast.handler
-    environment:     
-      POOL_ID: !Ref CognitoUserPoolBeenion    
+    environment:
+      POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
           cors: true
@@ -137,11 +137,11 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !Ref CognitoAuthorizer
-                      
+
   listUsers:
     handler: ports/http-query/listUsers.handler
-    environment:     
-      POOL_ID: !Ref CognitoUserPoolBeenion    
+    environment:
+      POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
           cors: true
@@ -150,11 +150,11 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !Ref CognitoAuthorizer
-            
+
   getUserData:
     handler: ports/http-query/getUserData.handler
-    environment:     
-      POOL_ID: !Ref CognitoUserPoolBeenion    
+    environment:
+      POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
           cors: true
@@ -163,12 +163,12 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !Ref CognitoAuthorizer
-  
+
   # Command  Handlers
   linkCommand:
     handler: ports/http-command/linkCommand.handler
-    environment:     
-      POOL_ID: !Ref CognitoUserPoolBeenion    
+    environment:
+      POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
           cors: true
@@ -177,11 +177,11 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !Ref CognitoAuthorizer
-            
+
   userCommand:
     handler: ports/http-command/userCommand.handler
-    environment:     
-      POOL_ID: !Ref CognitoUserPoolBeenion    
+    environment:
+      POOL_ID: !Ref CognitoUserPoolBeenion
     events:
       - http:
           cors: true
@@ -190,18 +190,18 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !Ref CognitoAuthorizer
-            
+
   postConfirm:
     handler: infrastructure/authentication/postConfirm.handler
     description: Triggers follow user commandHandler on signup
-    timeout: 5 # Maximum 
+    timeout: 5 # Maximum
     events:
       - cognitoUserPool:
           pool: Beenion
           trigger: PostConfirmation
 resources:
   Resources:
-    
+
     CognitoAuthorizer:
       Type: AWS::ApiGateway::Authorizer
       Properties:
@@ -239,7 +239,7 @@ resources:
         UserPoolId: !Ref CognitoUserPoolBeenion
         RefreshTokenValidity: 7
 
-    
+
     GatewayResponseDefault4XX:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
@@ -249,7 +249,7 @@ resources:
           gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
         ResponseType: DEFAULT_4XX
         RestApiId: !Ref ApiGatewayRestApi
-          
+
     EventStoreTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -296,25 +296,25 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
-          
+
     CosmosQueue:
       Type: AWS::SQS::Queue
       Properties:
         ContentBasedDeduplication: true
-        FifoQueue: true      
-  
+        FifoQueue: true
+
     GetStreamQueue:
       Type: AWS::SQS::Queue
       Properties:
         ContentBasedDeduplication: true
-        FifoQueue: true   
-        
+        FifoQueue: true
+
     QueuePolicy:
       Type: AWS::SQS::QueuePolicy
       Properties:
         Queues:
           - !Ref CosmosQueue
-          - !Ref GetStreamQueue      
+          - !Ref GetStreamQueue
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -323,13 +323,13 @@ resources:
                 AWS: !Sub ${AWS::AccountId}
               Action:
                 - sqs:SendMessage
-              Resource: 
+              Resource:
                 - !GetAtt CosmosQueue.Arn
             - Effect: Allow
               Principal:
                 AWS: !Sub ${AWS::AccountId}
               Action:
                 - sqs:SendMessage
-              Resource: 
-                - !GetAtt GetStreamQueue.Arn                
-                     
+              Resource:
+                - !GetAtt GetStreamQueue.Arn
+
